@@ -14,9 +14,9 @@ Route::get('/booking', function () {
     return "Halaman Booking (Segera Hadir)";
 })->name('booking');
 
-// Placeholder untuk kontak (nanti kita buat)
+// Halaman Kontak
 Route::get('/contact', function () {
-    return "Halaman Kontak Kami (Segera Hadir)";
+    return view('contact');
 })->name('contact');
 
 // Halaman Form Booking (Pilih Tanggal & Jenis)

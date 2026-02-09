@@ -1,35 +1,56 @@
 <x-layouts.app :current-route="'booking'">
-    {{-- Page Header --}}
-    <x-page-header title="Booking Lapangan"
-        subtitle="Pilih jenis lapangan dan tanggal untuk melihat jadwal yang tersedia." :compact="true" />
+    <div class="bg-[var(--color-court-paper)] pb-20 pt-10">
+        <div class="mx-auto mb-10 max-w-7xl px-4 text-center">
+            <h2 class="font-display text-6xl uppercase md:text-8xl text-black">
+                Jadwal <span class="text-[var(--color-court-clay)]">Arena</span>
+            </h2>
+            <p class="font-mono text-gray-600">
+                Cari slot kosong dan amankan lapanganmu sekarang.
+            </p>
+        </div>
 
-    {{-- Booking Form --}}
-    <section class="container-app py-12 -mt-8">
-        <div class="max-w-lg mx-auto">
-            <x-card padding="p-8" class="animate-slide-up">
-                <div class="text-center mb-8">
-                    <h3>Mulai Booking</h3>
-                    <p class="text-muted text-sm mt-2">Isi form di bawah untuk mencari jadwal</p>
+        {{-- Reuse widget but adjust padding container --}}
+        <div class="pt-10">
+            <x-booking-widget />
+        </div>
+
+        {{-- Mock Calendar Grid / Schedule Preview --}}
+        <div class="mx-auto mt-20 max-w-7xl px-4">
+            <div class="border-2 border-black bg-white p-6 shadow-hard">
+                <div class="mb-6 flex items-center justify-between border-b-2 border-black pb-4">
+                    <h3 class="font-display text-2xl uppercase">Slot Tersedia: Hari Ini</h3>
+                    <span class="bg-[var(--color-court-green)] px-3 py-1 font-mono text-xs text-white">LIVE
+                        UPDATE</span>
                 </div>
 
-                <form action="{{ route('booking.search') }}" method="POST">
-                    @csrf
-
-                    <x-form-select name="type" label="Pilih Jenis Lapangan" :options="$types"
-                        placeholder="-- Pilih Lapangan --" :required="true" />
-
-                    <x-form-input type="date" name="date" label="Pilih Tanggal Main" :required="true"
-                        :min="date('Y-m-d')" />
-
-                    <x-button type="submit" variant="primary" size="lg" class="w-full">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        Cek Ketersediaan Jadwal
-                    </x-button>
-                </form>
-            </x-card>
+                <div class="grid gap-4 md:grid-cols-4">
+                    @php
+                        $times = [
+                            '08:00',
+                            '09:00',
+                            '10:00',
+                            '11:00',
+                            '12:00',
+                            '13:00',
+                            '14:00',
+                            '15:00',
+                            '16:00',
+                            '17:00',
+                            '18:00',
+                            '19:00',
+                        ];
+                    @endphp
+                    @foreach ($times as $idx => $time)
+                        <div
+                            class="flex items-center justify-between border-2 border-black p-3 {{ $idx % 3 === 0 ? 'bg-gray-100 opacity-50' : 'bg-white hover:bg-[var(--color-court-yellow)] cursor-pointer' }}">
+                            <span class="font-mono font-bold">{{ $time }}</span>
+                            <span class="font-mono text-xs {{ $idx % 3 === 0 ? 'text-gray-500' : 'text-green-600' }}">
+                                {{ $idx % 3 === 0 ? 'BOOKED' : 'OPEN' }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 </x-layouts.app>

@@ -2,69 +2,77 @@
     'currentRoute' => '',
 ])
 
-<nav class="surface-elevated fixed w-full z-50" x-data="{ open: false, scrolled: false }" @scroll.window="scrolled = (window.scrollY > 20)"
-    :class="{ 'shadow-md': scrolled }">
-    <div class="container-app">
-        <div class="flex justify-between h-16 items-center">
-            <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center gap-2">
-                <span class="text-2xl font-bold" style="font-family: var(--font-display);">
-                    <span class="text-primary">R</span><span style="color: var(--color-accent);">Court</span>
-                </span>
+<nav class="sticky top-0 z-50 w-full border-b-2 border-black bg-[var(--color-court-paper)]" x-data="{ open: false }">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-20 items-center justify-between">
+
+            {{-- Logo --}}
+            <a href="{{ route('home') }}" class="flex flex-shrink-0 cursor-pointer items-center text-decoration-none">
+                <h1 class="font-display text-4xl tracking-tighter text-black select-none mb-0">
+                    R<span class="text-[var(--color-court-clay)]">COURT</span>
+                </h1>
             </a>
 
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center gap-8">
-                <a href="{{ route('home') }}"
-                    class="{{ $currentRoute === 'home' ? 'text-primary font-semibold' : 'text-muted hover:text-primary' }}">
-                    Home
-                </a>
-                <a href="{{ route('booking') }}"
-                    class="{{ $currentRoute === 'booking' ? 'text-primary font-semibold' : 'text-muted hover:text-primary' }}">
-                    Booking Lapangan
-                </a>
-                <a href="{{ route('contact') }}"
-                    class="{{ $currentRoute === 'contact' ? 'text-primary font-semibold' : 'text-muted hover:text-primary' }}">
-                    Kontak
-                </a>
-                <a href="#" class="btn btn-primary btn-sm">
-                    Login
-                </a>
+            {{-- Desktop Menu --}}
+            <div class="hidden md:block">
+                <div class="flex items-center space-x-8">
+                    <a href="{{ route('home') }}"
+                        class="font-mono text-sm font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'home' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
+                        Home
+                    </a>
+                    <a href="{{ route('booking') }}"
+                        class="font-mono text-sm font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'booking' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
+                        Booking Lapangan
+                    </a>
+                    <a href="{{ route('contact') }}"
+                        class="font-mono text-sm font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'contact' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
+                        Kontak
+                    </a>
+
+                    <a href="#" class="btn btn-primary"
+                        style="background-color: transparent; border: 2px solid black; color: black; border-radius: 0.375rem;">
+                        LOGIN
+                    </a>
+                </div>
             </div>
 
-            <!-- Mobile Menu Button -->
-            <button @click="open = !open" class="md:hidden p-2 text-muted hover:text-primary">
-                <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <svg x-show="open" x-cloak class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+            {{-- Mobile Menu Button --}}
+            <div class="md:hidden">
+                <button @click="open = !open"
+                    class="border-2 border-black bg-white p-2 text-black shadow-hard-sm active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
+                    <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg x-show="open" x-cloak class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Mobile Menu -->
-    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-2" class="md:hidden surface-elevated border-t border-subtle">
-        <div class="container-app py-4 flex flex-col gap-2">
+    {{-- Mobile Menu Dropdown --}}
+    <div x-show="open" x-cloak class="border-t-2 border-black bg-[var(--color-court-yellow)] md:hidden">
+        <div class="space-y-4 px-4 py-6">
             <a href="{{ route('home') }}"
-                class="py-3 px-4 rounded-md {{ $currentRoute === 'home' ? 'surface-primary' : 'hover:bg-[var(--color-surface-muted)]' }}">
+                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                 Home
             </a>
             <a href="{{ route('booking') }}"
-                class="py-3 px-4 rounded-md {{ $currentRoute === 'booking' ? 'surface-primary' : 'hover:bg-[var(--color-surface-muted)]' }}">
+                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                 Booking Lapangan
             </a>
             <a href="{{ route('contact') }}"
-                class="py-3 px-4 rounded-md {{ $currentRoute === 'contact' ? 'surface-primary' : 'hover:bg-[var(--color-surface-muted)]' }}">
+                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                 Kontak
             </a>
-            <div class="pt-2 mt-2 border-t border-subtle">
-                <a href="#" class="btn btn-primary btn-md w-full">Login</a>
-            </div>
+            <button class="w-full btn btn-primary py-3"
+                style="background-color: var(--color-court-green); color: white; border: 2px solid black; border-radius: 0.375rem;">
+                LOGIN AGENT
+            </button>
         </div>
     </div>
 </nav>
