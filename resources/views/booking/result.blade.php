@@ -1,85 +1,97 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilih Jadwal - RCourt</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Poppins', sans-serif; } </style>
-</head>
-<body class="bg-gray-100 text-gray-800">
+<x-layouts.app :current-route="'booking'">
+    {{-- Spacer for fixed navbar --}}
+    <div class="h-16"></div>
 
-    <nav class="bg-white shadow mb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">RCourt.</a>
+    <section class="container-app py-8">
+        {{-- Search Summary Card --}}
+        <x-card padding="p-6" class="mb-8 border-l-4 border-[var(--color-primary)]">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h3 class="text-lg mb-2">Hasil Pencarian</h3>
+                    <div class="flex flex-col sm:flex-row gap-4 text-sm">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-muted">Tanggal:</span>
+                            <span
+                                class="font-semibold">{{ \Carbon\Carbon::parse($date)->translatedFormat('l, d F Y') }}</span>
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                            <span class="text-muted">Lapangan:</span>
+                            <span class="font-semibold capitalize">{{ str_replace('_', ' ', $type) }}</span>
+                        </span>
+                    </div>
                 </div>
+                <x-button variant="outline" size="sm" :href="route('booking')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Ganti Pencarian
+                </x-button>
             </div>
-        </div>
-    </nav>
+        </x-card>
 
-    <div class="max-w-4xl mx-auto px-4 pb-20">
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-blue-600">
-            <h2 class="text-xl font-bold text-gray-800">Hasil Pencarian</h2>
-            <div class="mt-2 text-gray-600 flex flex-col sm:flex-row gap-4">
-                <p>📅 Tanggal: <span class="font-bold text-black">{{ \Carbon\Carbon::parse($date)->translatedFormat('l, d F Y') }}</span></p>
-                <p>🏆 Jenis Lapangan: <span class="font-bold text-black capitalize">{{ str_replace('_', ' ', $type) }}</span></p>
+        {{-- Schedule Table --}}
+        <x-card padding="p-0" class="overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="bg-[var(--color-surface-muted)]">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                                Jam Main</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-muted uppercase tracking-wider">
+                                Harga</th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-muted uppercase tracking-wider">
+                                Status</th>
+                            <th class="px-6 py-4 text-center text-xs font-semibold text-muted uppercase tracking-wider">
+                                Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[var(--color-border)]">
+                        @foreach ($slots as $index => $slot)
+                            <tr class="hover:bg-[var(--color-surface-muted)] transition-colors {{ $slot['is_full'] ? 'opacity-60' : '' }}"
+                                style="animation: slideUp 0.3s ease forwards; animation-delay: {{ $index * 50 }}ms;">
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="font-semibold">{{ $slot['start_time'] }}</span>
+                                    <span class="text-muted mx-1">-</span>
+                                    <span class="font-semibold">{{ $slot['end_time'] }}</span>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-primary font-semibold">Rp
+                                        {{ number_format($slot['price'], 0, ',', '.') }}</span>
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    @if ($slot['is_full'])
+                                        <x-badge variant="danger">Penuh</x-badge>
+                                    @else
+                                        <x-badge variant="success">Tersedia ({{ $slot['available_courts'] }})</x-badge>
+                                    @endif
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    @if ($slot['is_full'])
+                                        <span class="text-muted text-sm cursor-not-allowed">Full Booked</span>
+                                    @else
+                                        <x-button variant="primary" size="sm" href="#">
+                                            Pilih
+                                        </x-button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            <a href="{{ route('booking') }}" class="text-sm text-blue-500 hover:underline mt-2 inline-block">&larr; Ganti Tanggal/Lapangan</a>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam Main</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($slots as $slot)
-                    <tr class="{{ $slot['is_full'] ? 'bg-red-50' : 'hover:bg-blue-50' }}">
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $slot['start_time'] }} - {{ $slot['end_time'] }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            Rp {{ number_format($slot['price'], 0, ',', '.') }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            @if($slot['is_full'])
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                    Penuh
-                                </span>
-                            @else
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Tersedia ({{ $slot['available_courts'] }})
-                                </span>
-                            @endif
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                            @if($slot['is_full'])
-                                <button disabled class="text-gray-400 cursor-not-allowed">Full Booked</button>
-                            @else
-                                <a href="#" 
-                                   class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition shadow">
-                                   Pilih
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</body>
-</html>
+        </x-card>
+    </section>
+</x-layouts.app>
