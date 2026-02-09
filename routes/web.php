@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\AdminController;
 
 use App\Http\Controllers\BookingController;
 
@@ -35,3 +35,8 @@ Route::post('/booking/store', [BookingController::class, 'store'])->name('bookin
 Route::get('/booking/success/{id}', function ($id) {
     return view('booking.success', compact('id'));
 })->name('booking.success');
+
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+
+// Proses Update Status (Approve/Reject)
+Route::post('/admin/booking/{id}/update', [AdminController::class, 'updateStatus'])->name('admin.booking.update');
