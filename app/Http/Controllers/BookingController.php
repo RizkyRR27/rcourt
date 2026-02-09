@@ -17,6 +17,7 @@ class BookingController extends Controller
             'basket_indoor' => 'Basket Indoor',
             'basket_outdoor' => 'Basket Outdoor',
             'mini_soccer' => 'Mini Soccer',
+            'padel' => 'Padel',
         ];
 
         return view('booking.index', compact('types'));
@@ -64,6 +65,11 @@ class BookingController extends Controller
                 'weekend' => ['day' => 725000, 'night' => 900000],
                 'split_hour' => 17,
             ],
+                'padel' => [
+                'weekday' => ['day' => 150000, 'night' => 200000], // Contoh Harga
+                'weekend' => ['day' => 175000, 'night' => 250000], // Contoh Harga
+                'split_hour' => 17, // Jam ganti harga (17:00)
+    ],
         ];
 
         // 4. Ambil Total Lapangan yang dimiliki (Misal: Badminton ada 3)

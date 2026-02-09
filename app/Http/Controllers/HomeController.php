@@ -16,6 +16,7 @@ class HomeController extends Controller
             'basket_indoor' => Court::where('type', 'basket_indoor')->count(),
             'basket_outdoor' => Court::where('type', 'basket_outdoor')->count(),
             'mini_soccer' => Court::where('type', 'mini_soccer')->count(),
+            'padel' => Court::where('type', 'padel')->count(),
         ];
 
         // Kirim data $counts ke view 'home'

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\BookingController;
 
 // Halaman Utama
@@ -40,3 +40,9 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard')
 
 // Proses Update Status (Approve/Reject)
 Route::post('/admin/booking/{id}/update', [AdminController::class, 'updateStatus'])->name('admin.booking.update');
+
+// Halaman Riwayat Booking User
+Route::get('/riwayat', [HistoryController::class, 'index'])->name('history');
+
+// Halaman Tiket (Detail)
+Route::get('/riwayat/{id}/tiket', [HistoryController::class, 'show'])->name('history.ticket');

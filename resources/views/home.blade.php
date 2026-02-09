@@ -47,7 +47,7 @@
     <header class="bg-blue-600 text-white pt-32 pb-20 px-6 text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">Selamat Datang di RCourt</h1>
         <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8">
-            Pusat olahraga terlengkap dengan fasilitas terbaik. Nikmati kemudahan booking lapangan Badminton, Futsal, Basket, hingga Mini Soccer secara online.
+            Pusat olahraga dengan fasilitas terbaik. Nikmati kemudahan booking lapangan di RCourt secara online.
         </p>
         <a href="{{ route('booking') }}" class="bg-white text-blue-600 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition transform hover:scale-105">
             Booking Sekarang
@@ -92,9 +92,9 @@
         </div>
     </section>
 
-    <footer class="bg-gray-800 text-white py-8 text-center">
+    <!-- <footer class="bg-gray-800 text-white py-8 text-center">
         <p>&copy; 2024 RCourt. All rights reserved.</p>
-    </footer>
+    </footer> -->
 
 </body>
 </html>
