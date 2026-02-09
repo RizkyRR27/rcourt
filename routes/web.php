@@ -24,3 +24,14 @@ Route::get('/booking', [BookingController::class, 'index'])->name('booking');
 
 // Route untuk memproses pencarian jadwal (Nanti kita pakai ini)
 Route::post('/booking/search', [BookingController::class, 'search'])->name('booking.search');
+
+// Menampilkan Halaman Checkout/Pembayaran
+Route::get('/booking/checkout', [BookingController::class, 'create'])->name('booking.create');
+
+// Menyimpan Data Booking ke Database
+Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
+
+// Halaman Sukses (Setelah booking)
+Route::get('/booking/success/{id}', function ($id) {
+    return view('booking.success', compact('id'));
+})->name('booking.success');

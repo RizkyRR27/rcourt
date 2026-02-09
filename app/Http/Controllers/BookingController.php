@@ -104,4 +104,69 @@ class BookingController extends Controller
 
         return view('booking.result', compact('slots', 'type', 'date'));
     }
+    public function create(Request $request)
+    {
+        // Ambil data dari URL (dikirim dari tombol 'Pilih')
+        $type = $request->type;
+        $date = $request->date;
+        $startTime = $request->start_time;
+        $endTime = $request->end_time;
+        $price = $request->price;
+
+        // CARI LAPANGAN KOSONG
+        // Kita harus cari 1 ID lapangan spesifik (misal: Badminton 1) yang kosong di jam itu
+        $bookedCourtIds = Booking::where('date', $date)
+            ->where('start_time', $startTime)
+            ->where('status', '!=', 'rejected')
+            ->pluck('court_id');
+
+        $availableCourt = Court::where('type', $type)
+            ->whereNotIn('id', $bookedCourtIds)
+            ->first(); // Ambil satu aja yang kosong
+
+        if (!$availableCourt) {
+            return redirect()->back()->with('error', 'Maaf, lapangan baru saja diambil orang lain!');
+        }
+
+        return view('booking.checkout', compact('availableCourt', 'date', 'startTime', 'endTime', 'price'));
+    }
+
+    // --- MENYIMPAN DATA BOOKING ---
+    public function store(Request $request)
+    {
+        // 1. Validasi Input
+        $request->validate([
+            'court_id' => 'required',
+            'date' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'total_price' => 'required',
+            'payment_method' => 'required',
+            'payment_proof' => 'nullable|image|max:2048', // Maksimal 2MB
+        ]);
+
+        // 2. Upload Bukti Bayar (Jika ada)
+        $proofPath = null;
+        if ($request->hasFile('payment_proof')) {
+            // Simpan ke folder: storage/app/public/proofs
+            $proofPath = $request->file('payment_proof')->store('proofs', 'public');
+        }
+
+        // 3. Simpan ke Database
+        $booking = Booking::create([
+            'user_id' => 2, // HARDCODE DULU (Pura-pura jadi User ID 2 karena belum Login)
+            'court_id' => $request->court_id,
+            'date' => $request->date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'total_price' => $request->total_price,
+            'payment_method' => $request->payment_method,
+            'payment_type' => $request->payment_method == 'transfer' ? 'full' : null, // Asumsi lunas kalau transfer
+            'payment_proof' => $proofPath,
+            'status' => 'pending',
+        ]);
+
+        // 4. Redirect ke Halaman Sukses
+        return redirect()->route('booking.success', $booking->id);
+    }
 }

@@ -68,7 +68,13 @@
                             @if($slot['is_full'])
                                 <button disabled class="text-gray-400 cursor-not-allowed">Full Booked</button>
                             @else
-                                <a href="#" 
+                                <a href="{{ route('booking.create', [
+                                    'type' => $type,
+                                    'date' => \Carbon\Carbon::parse($date)->format('Y-m-d'), 
+                                    'start_time' => $slot['start_time'],
+                                    'end_time' => $slot['end_time'],
+                                    'price' => $slot['price']
+                                ]) }}" 
                                    class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition shadow">
                                    Pilih
                                 </a>
