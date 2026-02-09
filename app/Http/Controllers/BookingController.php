@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 class BookingController extends Controller
 {
+
     public function index()
     {
         $types = [
@@ -22,119 +23,135 @@ class BookingController extends Controller
 
         return view('booking.index', compact('types'));
     }
-
-    public function search(Request $request)
+   public function search(Request $request)
     {
-        // 1. Validasi Input
         $request->validate([
             'type' => 'required',
             'date' => 'required|date|after_or_equal:today',
+            'duration' => 'required|integer|min:1|max:5', // Validasi durasi
         ]);
 
         $type = $request->type;
         $date = Carbon::parse($request->date);
-        
-        // 2. Tentukan Apakah Weekend atau Weekday?
-        $isWeekend = $date->isWeekend(); // True jika Sabtu/Minggu
+        $duration = (int) $request->duration;
+        $isWeekend = $date->isWeekend();
 
-        // 3. Konfigurasi Harga (Sesuai Request User)
-        // Format: [Harga Siang, Harga Malam, Batas Jam Ganti Harga]
+        // 1. Ambil Semua Lapangan Fisik sesuai Tipe
+        $courts = Court::where('type', $type)->get();
+
+        // Konfigurasi Harga (Sama seperti sebelumnya)
         $pricingRules = [
-            'badminton' => [
-                'weekday' => ['day' => 30000, 'night' => 40000],
-                'weekend' => ['day' => 35000, 'night' => 45000],
-                'split_hour' => 17, // Jam 17:00 ganti harga
-            ],
-            'futsal' => [
-                'weekday' => ['day' => 85000, 'night' => 105000],
-                'weekend' => ['day' => 90000, 'night' => 115000],
-                'split_hour' => 16, // Khusus Futsal jam 16:00 ganti harga (sesuai request)
-            ],
-            'basket_indoor' => [
-                'weekday' => ['day' => 200000, 'night' => 275000],
-                'weekend' => ['day' => 225000, 'night' => 300000],
-                'split_hour' => 17,
-            ],
-            'basket_outdoor' => [
-                'weekday' => ['day' => 90000, 'night' => 105000],
-                'weekend' => ['day' => 100000, 'night' => 110000],
-                'split_hour' => 17,
-            ],
-            'mini_soccer' => [
-                'weekday' => ['day' => 650000, 'night' => 800000],
-                'weekend' => ['day' => 725000, 'night' => 900000],
-                'split_hour' => 17,
-            ],
-                'padel' => [
-                'weekday' => ['day' => 150000, 'night' => 200000], // Contoh Harga
-                'weekend' => ['day' => 175000, 'night' => 250000], // Contoh Harga
-                'split_hour' => 17, // Jam ganti harga (17:00)
-    ],
+            'badminton' => ['weekday' => ['day' => 30000, 'night' => 40000], 'weekend' => ['day' => 35000, 'night' => 45000], 'split_hour' => 17],
+            'futsal' => ['weekday' => ['day' => 85000, 'night' => 105000], 'weekend' => ['day' => 90000, 'night' => 115000], 'split_hour' => 16],
+            'basket_indoor' => ['weekday' => ['day' => 200000, 'night' => 275000], 'weekend' => ['day' => 225000, 'night' => 300000], 'split_hour' => 17],
+            'basket_outdoor' => ['weekday' => ['day' => 90000, 'night' => 105000], 'weekend' => ['day' => 100000, 'night' => 110000], 'split_hour' => 17],
+            'mini_soccer' => ['weekday' => ['day' => 650000, 'night' => 800000], 'weekend' => ['day' => 725000, 'night' => 900000], 'split_hour' => 17],
+            'padel' => ['weekday' => ['day' => 450000, 'night' => 600000], 'weekend' => ['day' => 500000, 'night' => 750000], 'split_hour' => 17],
         ];
 
-        // 4. Ambil Total Lapangan yang dimiliki (Misal: Badminton ada 3)
-        $totalCourts = Court::where('type', $type)->count();
-        $courtIds = Court::where('type', $type)->pluck('id');
+        // Struktur Data Hasil:
+        // $results = [ 'Badminton 1' => [Slot A, Slot B], 'Badminton 2' => [Slot A] ]
+        $results = [];
 
-        // 5. Generate Slot Waktu (08:00 - 24:00)
-        $slots = [];
-        for ($hour = 8; $hour < 24; $hour++) {
-            $start = sprintf('%02d:00:00', $hour); // Contoh: 08:00:00
-            $end = sprintf('%02d:00:00', $hour + 1); // Contoh: 09:00:00
+        foreach ($courts as $court) {
+            $courtSlots = [];
 
-            // -- Cek Berapa Orang yang Sudah Booking di Jam & Tipe Lapangan ini --
-            $bookedCount = Booking::whereIn('court_id', $courtIds)
-                ->where('date', $date->format('Y-m-d'))
-                ->where('start_time', $start)
-                ->where('status', '!=', 'rejected') // Jangan hitung yang ditolak admin
-                ->count();
+            // Loop jam operasional (08:00 sampai 24:00 dikurangi durasi main)
+            // Kalau main 2 jam, booking terakhir jam 22:00 (selesai 24:00)
+            for ($hour = 8; $hour <= (24 - $duration); $hour++) {
+                
+                $isSlotAvailable = true;
+                $totalPrice = 0;
 
-            // -- Hitung Sisa Lapangan --
-            $available = $totalCourts - $bookedCount;
+                // Cek Ketersediaan & Hitung Harga untuk SETIAP JAM dalam durasi
+                for ($h = 0; $h < $duration; $h++) {
+                    $checkHour = $hour + $h;
+                    $start = sprintf('%02d:00:00', $checkHour);
 
-            // -- Hitung Harga Sesuai Aturan --
-            $rule = $pricingRules[$type];
-            $priceConfig = $isWeekend ? $rule['weekend'] : $rule['weekday'];
-            
-            // Jika jam sekarang < jam batas (split_hour), pakai harga siang.
-            $price = ($hour < $rule['split_hour']) ? $priceConfig['day'] : $priceConfig['night'];
+                    // Cek apakah jam ini sudah dibooking orang lain?
+                    $exists = Booking::where('court_id', $court->id)
+                        ->where('date', $date->format('Y-m-d'))
+                        ->where('start_time', $start)
+                        ->where('status', '!=', 'rejected')
+                        ->exists();
 
-            $slots[] = [
-                'start_time' => sprintf('%02d:00', $hour),
-                'end_time' => sprintf('%02d:00', $hour + 1),
-                'price' => $price,
-                'available_courts' => $available,
-                'is_full' => $available <= 0,
+                    if ($exists) {
+                        $isSlotAvailable = false;
+                        break; // Jika 1 jam saja penuh, maka durasi ini tidak valid
+                    }
+
+                    // Hitung Harga per jam
+                    $rule = $pricingRules[$type];
+                    $priceConfig = $isWeekend ? $rule['weekend'] : $rule['weekday'];
+                    $hourlyPrice = ($checkHour < $rule['split_hour']) ? $priceConfig['day'] : $priceConfig['night'];
+                    
+                    $totalPrice += $hourlyPrice;
+                }
+
+                if ($isSlotAvailable) {
+                    $courtSlots[] = [
+                        'start_time' => sprintf('%02d:00', $hour),
+                        'end_time'   => sprintf('%02d:00', $hour + $duration),
+                        'price'      => $totalPrice,
+                    ];
+                }
+            }
+
+            // Simpan slot milik lapangan ini
+            $results[] = [
+                'court_name' => $court->name,
+                'court_id'   => $court->id,
+                'slots'      => $courtSlots
             ];
         }
 
-        return view('booking.result', compact('slots', 'type', 'date'));
+        return view('booking.result', compact('results', 'type', 'date', 'duration'));
     }
     public function create(Request $request)
     {
-        // Ambil data dari URL (dikirim dari tombol 'Pilih')
-        $type = $request->type;
+        // 1. Ambil Data dari URL
+        $courtId = $request->court_id;
         $date = $request->date;
         $startTime = $request->start_time;
         $endTime = $request->end_time;
         $price = $request->price;
 
-        // CARI LAPANGAN KOSONG
-        // Kita harus cari 1 ID lapangan spesifik (misal: Badminton 1) yang kosong di jam itu
-        $bookedCourtIds = Booking::where('date', $date)
-            ->where('start_time', $startTime)
+        // 2. VALIDASI KEAMANAN (DOUBLE CHECK)
+        // Kita harus pastikan lapangan ID ini BENAR-BENAR KOSONG di jam tsb.
+        // Logic: Cari booking di lapangan ini yang waktunya bertabrakan.
+        
+        $isBooked = Booking::where('court_id', $courtId)
+            ->where('date', $date)
             ->where('status', '!=', 'rejected')
-            ->pluck('court_id');
+            ->where(function ($query) use ($startTime, $endTime) {
+                // Cek irisan waktu (Overlap)
+                $query->where(function($q) use ($startTime, $endTime) {
+                    $q->where('start_time', '>=', $startTime)
+                      ->where('start_time', '<', $endTime);
+                })
+                ->orWhere(function($q) use ($startTime, $endTime) {
+                    $q->where('end_time', '>', $startTime)
+                      ->where('end_time', '<=', $endTime);
+                });
+            })
+            ->exists(); // True jika sudah ada yang booking
 
-        $availableCourt = Court::where('type', $type)
-            ->whereNotIn('id', $bookedCourtIds)
-            ->first(); // Ambil satu aja yang kosong
-
-        if (!$availableCourt) {
-            return redirect()->back()->with('error', 'Maaf, lapangan baru saja diambil orang lain!');
+        // Jika ternyata sudah dibooking orang lain
+        if ($isBooked) {
+            return redirect()->route('booking')->with('error', 'Maaf, lapangan ini baru saja diambil orang lain beberapa detik yang lalu!');
         }
 
-        return view('booking.checkout', compact('availableCourt', 'date', 'startTime', 'endTime', 'price'));
+        // 3. Ambil Data Lapangan
+        $availableCourt = Court::find($courtId);
+
+        // 4. Tampilkan Halaman Checkout
+        return view('booking.checkout', [
+            'availableCourt' => $availableCourt,
+            'date' => $date,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
+            'price' => $price
+        ]);
     }
 
     // --- MENYIMPAN DATA BOOKING ---

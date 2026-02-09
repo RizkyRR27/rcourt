@@ -43,6 +43,16 @@
                        class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:border-blue-500 bg-gray-50" 
                        min="{{ date('Y-m-d') }}" required>
             </div>
+            <div class="mb-6">
+    <label for="duration" class="block text-gray-700 font-bold mb-2">Durasi Main</label>
+    <select name="duration" id="duration" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:border-blue-500 bg-gray-50" required>
+        <option value="1">1 Jam</option>
+        <option value="2">2 Jam</option>
+        <option value="3">3 Jam</option>
+        <option value="3">4 Jam</option>
+        <option value="3">5 Jam</option>
+    </select>
+</div>
 
             <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition duration-300">
                 Cek Ketersediaan Jadwal

@@ -3,88 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilih Jadwal - RCourt</title>
+    <title>Pilih Lapangan - RCourt</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style> body { font-family: 'Poppins', sans-serif; } </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 pb-20">
 
-    <nav class="bg-white shadow mb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">RCourt.</a>
-                </div>
+    <nav class="bg-white shadow mb-8 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-600">RCourt.</a>
+                <a href="{{ route('booking') }}" class="text-sm text-gray-500 hover:text-blue-600">Ganti Pencarian</a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-4xl mx-auto px-4 pb-20">
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-blue-600">
-            <h2 class="text-xl font-bold text-gray-800">Hasil Pencarian</h2>
-            <div class="mt-2 text-gray-600 flex flex-col sm:flex-row gap-4">
-                <p>📅 Tanggal: <span class="font-bold text-black">{{ \Carbon\Carbon::parse($date)->translatedFormat('l, d F Y') }}</span></p>
-                <p>🏆 Jenis Lapangan: <span class="font-bold text-black capitalize">{{ str_replace('_', ' ', $type) }}</span></p>
+    <div class="max-w-6xl mx-auto px-4">
+        
+        <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg mb-8">
+            <h1 class="text-2xl font-bold mb-2">Pilih Lapangan & Jam Main</h1>
+            <div class="flex gap-6 text-blue-100 text-sm">
+                <p>📅 {{ \Carbon\Carbon::parse($date)->translatedFormat('l, d F Y') }}</p>
+                <p>🏆 {{ ucfirst($type) }}</p>
+                <p>⏱ Durasi: {{ $duration }} Jam</p>
             </div>
-            <a href="{{ route('booking') }}" class="text-sm text-blue-500 hover:underline mt-2 inline-block">&larr; Ganti Tanggal/Lapangan</a>
         </div>
 
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jam Main</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($slots as $slot)
-                    <tr class="{{ $slot['is_full'] ? 'bg-red-50' : 'hover:bg-blue-50' }}">
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{ $slot['start_time'] }} - {{ $slot['end_time'] }}
-                        </td>
+        <div class="space-y-8">
+            @foreach($results as $court)
+            <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-800">🏟 {{ $court['court_name'] }}</h3>
+                    <span class="text-xs font-semibold bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        {{ count($court['slots']) }} Slot Tersedia
+                    </span>
+                </div>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            Rp {{ number_format($slot['price'], 0, ',', '.') }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                            @if($slot['is_full'])
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                    Penuh
-                                </span>
-                            @else
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    Tersedia ({{ $slot['available_courts'] }})
-                                </span>
-                            @endif
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                            @if($slot['is_full'])
-                                <button disabled class="text-gray-400 cursor-not-allowed">Full Booked</button>
-                            @else
+                <div class="p-6">
+                    @if(empty($court['slots']))
+                        <div class="text-center text-gray-400 py-4">
+                            🚫 Yah, lapangan ini penuh seharian. Cek lapangan lain ya!
+                        </div>
+                    @else
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            @foreach($court['slots'] as $slot)
                                 <a href="{{ route('booking.create', [
                                     'type' => $type,
-                                    'date' => \Carbon\Carbon::parse($date)->format('Y-m-d'), 
+                                    'date' => \Carbon\Carbon::parse($date)->format('Y-m-d'),
                                     'start_time' => $slot['start_time'],
                                     'end_time' => $slot['end_time'],
                                     'price' => $slot['price']
                                 ]) }}" 
-                                   class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition shadow">
-                                   Pilih
+                                class="block border-2 border-green-500 bg-green-50 hover:bg-green-600 hover:text-white hover:border-green-600 rounded-lg p-3 text-center transition group">
+                                    
+                                    <div class="text-sm font-bold group-hover:text-white text-gray-800">
+                                        {{ substr($slot['start_time'], 0, 5) }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 group-hover:text-green-100 mb-1">
+                                        s/d {{ substr($slot['end_time'], 0, 5) }}
+                                    </div>
+                                    <div class="text-xs font-bold text-green-700 group-hover:text-white">
+                                        Rp {{ number_format($slot['price']/1000, 0) }}k
+                                    </div>
                                 </a>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+            @endforeach
         </div>
+
     </div>
 
 </body>
