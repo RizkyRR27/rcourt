@@ -49,14 +49,15 @@
                     @else
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                             @foreach($court['slots'] as $slot)
-                                <a href="{{ route('booking.create', [
-                                    'type' => $type,
-                                    'date' => \Carbon\Carbon::parse($date)->format('Y-m-d'),
-                                    'start_time' => $slot['start_time'],
-                                    'end_time' => $slot['end_time'],
-                                    'price' => $slot['price']
-                                ]) }}" 
-                                class="block border-2 border-green-500 bg-green-50 hover:bg-green-600 hover:text-white hover:border-green-600 rounded-lg p-3 text-center transition group">
+                               <a href="{{ route('booking.create', [
+                                        'court_id' => $court['court_id'],  // <--- TAMBAHKAN BARIS INI (Wajib!)
+                                        'type' => $type,
+                                        'date' => \Carbon\Carbon::parse($date)->format('Y-m-d'),
+                                        'start_time' => $slot['start_time'],
+                                        'end_time' => $slot['end_time'],
+                                        'price' => $slot['price']
+                                    ]) }}" 
+                                    class="block border-2 border-green-500 ...">
                                     
                                     <div class="text-sm font-bold group-hover:text-white text-gray-800">
                                         {{ substr($slot['start_time'], 0, 5) }}
