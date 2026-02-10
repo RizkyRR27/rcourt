@@ -13,7 +13,7 @@ class CourtSeeder extends Seeder
             ['type' => 'badminton', 'count' => 3],
             ['type' => 'futsal', 'count' => 2],
             ['type' => 'basket_indoor', 'count' => 2],
-            ['type' => 'basket_outdoor', 'count' => 1],
+            ['type' => 'Tennis', 'count' => 2],
             ['type' => 'mini_soccer', 'count' => 1],
             ['type' => 'padel', 'count' => 3],
         ];

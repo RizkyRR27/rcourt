@@ -14,7 +14,7 @@ class HomeController extends Controller
             'badminton' => Court::where('type', 'badminton')->count(),
             'futsal' => Court::where('type', 'futsal')->count(),
             'basket_indoor' => Court::where('type', 'basket_indoor')->count(),
-            'basket_outdoor' => Court::where('type', 'basket_outdoor')->count(),
+            'Tennis' => Court::where('type', 'Tennis')->count(),
             'mini_soccer' => Court::where('type', 'mini_soccer')->count(),
             'padel' => Court::where('type', 'padel')->count(),
         ];

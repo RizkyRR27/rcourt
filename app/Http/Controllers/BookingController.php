@@ -16,7 +16,7 @@ class BookingController extends Controller
             'badminton' => 'Badminton',
             'futsal' => 'Futsal',
             'basket_indoor' => 'Basket Indoor',
-            'basket_outdoor' => 'Basket Outdoor',
+            'Tennis' => 'Tennis',
             'mini_soccer' => 'Mini Soccer',
             'padel' => 'Padel',
         ];
@@ -44,7 +44,7 @@ class BookingController extends Controller
             'badminton' => ['weekday' => ['day' => 30000, 'night' => 40000], 'weekend' => ['day' => 35000, 'night' => 45000], 'split_hour' => 17],
             'futsal' => ['weekday' => ['day' => 85000, 'night' => 105000], 'weekend' => ['day' => 90000, 'night' => 115000], 'split_hour' => 16],
             'basket_indoor' => ['weekday' => ['day' => 200000, 'night' => 275000], 'weekend' => ['day' => 225000, 'night' => 300000], 'split_hour' => 17],
-            'basket_outdoor' => ['weekday' => ['day' => 90000, 'night' => 105000], 'weekend' => ['day' => 100000, 'night' => 110000], 'split_hour' => 17],
+            'Tennis' => ['weekday' => ['day' => 50000, 'night' => 70000], 'weekend' => ['day' => 70000, 'night' => 100000], 'split_hour' => 17],
             'mini_soccer' => ['weekday' => ['day' => 650000, 'night' => 800000], 'weekend' => ['day' => 725000, 'night' => 900000], 'split_hour' => 17],
             'padel' => ['weekday' => ['day' => 450000, 'night' => 600000], 'weekend' => ['day' => 500000, 'night' => 750000], 'split_hour' => 17],
         ];

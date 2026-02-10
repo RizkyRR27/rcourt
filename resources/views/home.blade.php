@@ -78,15 +78,21 @@
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition border-t-4 border-yellow-500">
-                <h3 class="text-xl font-bold mb-2">🌤️ Basket Outdoor</h3>
+                <h3 class="text-xl font-bold mb-2">🎾 Tennis</h3>
                 <p class="text-gray-600">Lapangan outdoor dengan suasana segar dan lantai standar.</p>
-                <div class="mt-4 text-3xl font-bold text-yellow-600">{{ $counts['basket_outdoor'] }} <span class="text-sm font-normal text-gray-500">Lapangan</span></div>
+                <div class="mt-4 text-3xl font-bold text-yellow-600">{{ $counts['Tennis'] }} <span class="text-sm font-normal text-gray-500">Lapangan</span></div>
             </div>
 
              <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition border-t-4 border-red-500 sm:col-span-2 lg:col-span-1">
                 <h3 class="text-xl font-bold mb-2">🥅 Mini Soccer</h3>
                 <p class="text-gray-600">Lapangan luas cocok untuk pertandingan 7 vs 7.</p>
                 <div class="mt-4 text-3xl font-bold text-red-600">{{ $counts['mini_soccer'] }} <span class="text-sm font-normal text-gray-500">Lapangan</span></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition border-t-4 border-pink-500 sm:col-span-2 lg:col-span-1">
+                <h3 class="text-xl font-bold mb-2">🤾 Padel</h3>
+                <p class="text-gray-600">Lapangan dengan standar yang sesuai dengan regulasi dunia</p>
+                <div class="mt-4 text-3xl font-bold text-red-600">{{ $counts['padel'] }} <span class="text-sm font-normal text-gray-500">Lapangan</span></div>
             </div>
 
         </div>
