@@ -24,13 +24,17 @@
                         class="font-mono text-sm font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'booking' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
                         Booking Lapangan
                     </a>
+                    <a href="{{ route('tournament') }}"
+                        class="font-mono text-sm font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'tournament' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
+                        Turnamen
+                    </a>
                     <a href="{{ route('contact') }}"
                         class="font-mono text-sm font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'contact' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
                         Kontak
                     </a>
 
                     <a href="#" class="btn btn-primary"
-                        style="background-color: transparent; border: 2px solid black; color: black; border-radius: 0.375rem;">
+                        style="background-color: transparent; color: black;">
                         LOGIN
                     </a>
                 </div>
@@ -65,13 +69,17 @@
                 class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                 Booking Lapangan
             </a>
+            <a href="{{ route('tournament') }}"
+                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
+                Turnamen
+            </a>
             <a href="{{ route('contact') }}"
                 class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                 Kontak
             </a>
             <button class="w-full btn btn-primary py-3"
-                style="background-color: var(--color-court-green); color: white; border: 2px solid black; border-radius: 0.375rem;">
-                LOGIN AGENT
+                style="background-color: var(--color-court-green); color: white;">
+                LOGIN
             </button>
         </div>
     </div>

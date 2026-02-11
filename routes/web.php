@@ -15,12 +15,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 //     return "Halaman Booking (Segera Hadir)";
 // })->name('booking');
 
-<<<<<<< HEAD
 // Halaman Kontak
-=======
-
-// Halaman Kontak Kami
->>>>>>> 44926623542cb29c83159a1eb3320e011f0f83a8
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
