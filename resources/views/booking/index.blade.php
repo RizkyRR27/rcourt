@@ -10,7 +10,7 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-    <nav x-data="{ open: false }" class="bg-white shadow mb-8 sticky top-0 z-50">
+     <nav x-data="{ open: false }" class="bg-white shadow mb-8 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             
@@ -23,6 +23,11 @@
                 <a href="{{ route('home') }}" 
                    class="{{ request()->routeIs('home') ? 'text-blue-600 font-bold' : 'text-gray-600 font-medium hover:text-blue-600' }} transition">
                     Home
+                </a>
+
+                 <a href="{{ route('tournament') }}" 
+                   class="{{ request()->routeIs('tournament') ? 'text-blue-600 font-bold' : 'text-gray-600 font-medium hover:text-blue-600' }} transition">
+                    Info Tournamen 🏆
                 </a>
 
                 <a href="{{ route('booking') }}" 
@@ -57,6 +62,12 @@
                 Home
             </a>
 
+            <a href="{{ route('tournament') }}" 
+               class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition
+               {{ request()->routeIs('tournament') ? 'border-blue-500 text-blue-700 bg-blue-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }}">
+                info Turnamen 🏆
+            </a>
+
             <a href="{{ route('booking') }}" 
                class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition
                {{ request()->routeIs('booking*') ? 'border-blue-500 text-blue-700 bg-blue-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }}">
@@ -75,6 +86,23 @@
 
     <div class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
         <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Mulai Booking</h2>
+
+       @if (session('error'))
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <p class="font-bold">Gagal Mencari Jadwal</p>
+        <p>{{ session('error') }}</p>
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+        <ul class="list-disc pl-5">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif`
         
         <form action="{{ route('booking.search') }}" method="POST">
             @csrf <div class="mb-6">

@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('courts', function (Blueprint $table) {
         $table->id();
         $table->string('name'); // Contoh: "Badminton 1"
-        $table->enum('type', ['badminton', 'futsal', 'basket_indoor', 'Tennis', 'mini_soccer', 'padel']);
+        $table->enum('type', ['badminton', 'futsal', 'basket_indoor', 'tennis', 'mini_soccer', 'padel']);
         $table->timestamps();
     });
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\TournamentController;
 
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -47,3 +48,5 @@ Route::get('/riwayat', [HistoryController::class, 'index'])->name('history');
 
 // Halaman Tiket (Detail)
 Route::get('/riwayat/{id}/tiket', [HistoryController::class, 'show'])->name('history.ticket');
+
+Route::get('/turnamen', [TournamentController::class, 'index'])->name('tournament');

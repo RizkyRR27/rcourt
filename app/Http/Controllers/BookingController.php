@@ -16,19 +16,20 @@ class BookingController extends Controller
             'badminton' => 'Badminton',
             'futsal' => 'Futsal',
             'basket_indoor' => 'Basket Indoor',
-            'Tennis' => 'Tennis',
+            'tennis' => 'Tennis',
             'mini_soccer' => 'Mini Soccer',
             'padel' => 'Padel',
         ];
 
         return view('booking.index', compact('types'));
     }
-   public function search(Request $request)
+   // --- 2. LOGIKA PENCARIAN (DENGAN BLOKIR TANGGAL LOMBA) ---
+    public function search(Request $request)
     {
         $request->validate([
             'type' => 'required',
             'date' => 'required|date|after_or_equal:today',
-            'duration' => 'required|integer|min:1|max:5', // Validasi durasi
+            'duration' => 'required|integer|min:1|max:5',
         ]);
 
         $type = $request->type;
@@ -36,39 +37,45 @@ class BookingController extends Controller
         $duration = (int) $request->duration;
         $isWeekend = $date->isWeekend();
 
-        // 1. Ambil Semua Lapangan Fisik sesuai Tipe
+        // --- LOGIKA BLOKIR TANGGAL TURNAMEN ---
+        
+        // 1. Grand Opening (Hanya Tahun 2026, Tanggal 5-12 Mei)
+        if ($date->year == 2026 && $date->month == 5 && $date->day >= 5 && $date->day <= 12) {
+             return redirect()->back()->with('error', 'Maaf, tanggal 5-12 Mei 2026 tutup total untuk Grand Opening Tournament.');
+        }
+
+        // 2. R Cup (Setiap Tahun, Tanggal 12-17 Januari)
+        if ($date->month == 1 && $date->day >= 12 && $date->day <= 17) {
+            return redirect()->back()->with('error', 'Maaf, tanggal 12-17 Januari lapangan digunakan untuk R-Cup (Event Tahunan).');
+        }
+
+        // ---------------------------------------
+
+        // Ambil Semua Lapangan Fisik sesuai Tipe
         $courts = Court::where('type', $type)->get();
 
-        // Konfigurasi Harga (Sama seperti sebelumnya)
+        // Konfigurasi Harga
         $pricingRules = [
             'badminton' => ['weekday' => ['day' => 30000, 'night' => 40000], 'weekend' => ['day' => 35000, 'night' => 45000], 'split_hour' => 17],
             'futsal' => ['weekday' => ['day' => 85000, 'night' => 105000], 'weekend' => ['day' => 90000, 'night' => 115000], 'split_hour' => 16],
             'basket_indoor' => ['weekday' => ['day' => 200000, 'night' => 275000], 'weekend' => ['day' => 225000, 'night' => 300000], 'split_hour' => 17],
-            'Tennis' => ['weekday' => ['day' => 50000, 'night' => 70000], 'weekend' => ['day' => 70000, 'night' => 100000], 'split_hour' => 17],
+            'tennis' => ['weekday' => ['day' => 90000, 'night' => 105000], 'weekend' => ['day' => 100000, 'night' => 110000], 'split_hour' => 17],
             'mini_soccer' => ['weekday' => ['day' => 650000, 'night' => 800000], 'weekend' => ['day' => 725000, 'night' => 900000], 'split_hour' => 17],
-            'padel' => ['weekday' => ['day' => 450000, 'night' => 600000], 'weekend' => ['day' => 500000, 'night' => 750000], 'split_hour' => 17],
+            'padel' => ['weekday' => ['day' => 150000, 'night' => 200000], 'weekend' => ['day' => 175000, 'night' => 250000], 'split_hour' => 17],
         ];
 
-        // Struktur Data Hasil:
-        // $results = [ 'Badminton 1' => [Slot A, Slot B], 'Badminton 2' => [Slot A] ]
         $results = [];
 
         foreach ($courts as $court) {
             $courtSlots = [];
-
-            // Loop jam operasional (08:00 sampai 24:00 dikurangi durasi main)
-            // Kalau main 2 jam, booking terakhir jam 22:00 (selesai 24:00)
             for ($hour = 8; $hour <= (24 - $duration); $hour++) {
-                
                 $isSlotAvailable = true;
                 $totalPrice = 0;
 
-                // Cek Ketersediaan & Hitung Harga untuk SETIAP JAM dalam durasi
                 for ($h = 0; $h < $duration; $h++) {
                     $checkHour = $hour + $h;
                     $start = sprintf('%02d:00:00', $checkHour);
 
-                    // Cek apakah jam ini sudah dibooking orang lain?
                     $exists = Booking::where('court_id', $court->id)
                         ->where('date', $date->format('Y-m-d'))
                         ->where('start_time', $start)
@@ -77,14 +84,12 @@ class BookingController extends Controller
 
                     if ($exists) {
                         $isSlotAvailable = false;
-                        break; // Jika 1 jam saja penuh, maka durasi ini tidak valid
+                        break;
                     }
 
-                    // Hitung Harga per jam
                     $rule = $pricingRules[$type];
                     $priceConfig = $isWeekend ? $rule['weekend'] : $rule['weekday'];
                     $hourlyPrice = ($checkHour < $rule['split_hour']) ? $priceConfig['day'] : $priceConfig['night'];
-                    
                     $totalPrice += $hourlyPrice;
                 }
 
@@ -97,7 +102,6 @@ class BookingController extends Controller
                 }
             }
 
-            // Simpan slot milik lapangan ini
             $results[] = [
                 'court_name' => $court->name,
                 'court_id'   => $court->id,

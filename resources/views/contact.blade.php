@@ -25,6 +25,11 @@
                     Home
                 </a>
 
+                 <a href="{{ route('tournament') }}" 
+                   class="{{ request()->routeIs('tournament') ? 'text-blue-600 font-bold' : 'text-gray-600 font-medium hover:text-blue-600' }} transition">
+                    Info Tournamen 🏆
+                </a>
+
                 <a href="{{ route('booking') }}" 
                    class="{{ request()->routeIs('booking*') ? 'text-blue-600 font-bold' : 'text-gray-600 font-medium hover:text-blue-600' }} transition">
                     Booking Lapangan
@@ -55,6 +60,12 @@
                class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition
                {{ request()->routeIs('home') ? 'border-blue-500 text-blue-700 bg-blue-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }}">
                 Home
+            </a>
+
+            <a href="{{ route('tournament') }}" 
+               class="block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition
+               {{ request()->routeIs('tournament') ? 'border-blue-500 text-blue-700 bg-blue-50' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800' }}">
+                info Turnamen 🏆
             </a>
 
             <a href="{{ route('booking') }}" 
