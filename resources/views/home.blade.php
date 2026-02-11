@@ -61,155 +61,37 @@
             </div>
 
             <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                {{-- Badminton Card --}}
-                <div
-                    class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
-                    <div>
-                        <div class="mb-6 flex items-start justify-between">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
-                                <span class="text-2xl">🏸</span>
-                            </div>
-                            <div class="border-2 border-black bg-black px-2 py-1 text-white">
-                                <span class="font-mono text-xs font-bold uppercase">Indoor</span>
-                            </div>
-                        </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">BADMINTON</h3>
-                        <p class="mb-6 font-mono text-sm text-gray-600">Lapangan karpet standar internasional dengan
-                            pencahayaan optimal.</p>
-                    </div>
-                    <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
+                @foreach ($facilities as $facility)
+                    <div
+                        class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
                         <div>
-                            <span
-                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['badminton'] }}</span>
-                            <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 80K/hr</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Futsal Card --}}
-                <div
-                    class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
-                    <div>
-                        <div class="mb-6 flex items-start justify-between">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
-                                <span class="text-2xl">⚽</span>
+                            <div class="mb-6 flex items-start justify-between">
+                                <div
+                                    class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
+                                    <span class="text-2xl">{{ $facility['icon'] }}</span>
+                                </div>
+                                <div class="border-2 border-black bg-black px-2 py-1 text-white">
+                                    <span
+                                        class="font-mono text-xs font-bold uppercase">{{ $facility['category'] }}</span>
+                                </div>
                             </div>
-                            <div class="border-2 border-black bg-black px-2 py-1 text-white">
-                                <span class="font-mono text-xs font-bold uppercase">Indoor</span>
+                            <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">{{ $facility['label'] }}
+                            </h3>
+                            <p class="mb-6 font-mono text-sm text-gray-600">{{ $facility['description'] }}</p>
+                        </div>
+                        <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
+                            <div>
+                                <span
+                                    class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $facility['count'] }}</span>
+                                <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
                             </div>
-                        </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">FUTSAL</h3>
-                        <p class="mb-6 font-mono text-sm text-gray-600">Rumput sintetis berkualitas tinggi nyaman untuk
-                            bermain.</p>
-                    </div>
-                    <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
-                        <div>
-                            <span
-                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['futsal'] }}</span>
-                            <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 150K/hr</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Basket Indoor Card --}}
-                <div
-                    class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
-                    <div>
-                        <div class="mb-6 flex items-start justify-between">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
-                                <span class="text-2xl">🏀</span>
-                            </div>
-                            <div class="border-2 border-black bg-black px-2 py-1 text-white">
-                                <span class="font-mono text-xs font-bold uppercase">Indoor</span>
+                            <div class="text-right">
+                                <span class="font-mono text-xs text-gray-500">Starts from</span>
+                                <p class="font-mono text-lg font-bold">{{ $facility['price'] }}</p>
                             </div>
                         </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">BASKET INDOOR</h3>
-                        <p class="mb-6 font-mono text-sm text-gray-600">Lantai parket kayu, full AC, dan papan skor
-                            digital.</p>
                     </div>
-                    <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
-                        <div>
-                            <span
-                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['basket_indoor'] }}</span>
-                            <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 200K/hr</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Basket Outdoor Card --}}
-                <div
-                    class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
-                    <div>
-                        <div class="mb-6 flex items-start justify-between">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
-                                <span class="text-2xl">☀️</span>
-                            </div>
-                            <div class="border-2 border-black bg-black px-2 py-1 text-white">
-                                <span class="font-mono text-xs font-bold uppercase">Outdoor</span>
-                            </div>
-                        </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">BASKET OUTDOOR</h3>
-                        <p class="mb-6 font-mono text-sm text-gray-600">Lapangan outdoor dengan suasana segar dan lantai
-                            standar.</p>
-                    </div>
-                    <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
-                        <div>
-                            <span
-                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['basket_outdoor'] }}</span>
-                            <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 120K/hr</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Mini Soccer Card --}}
-                <div
-                    class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
-                    <div>
-                        <div class="mb-6 flex items-start justify-between">
-                            <div
-                                class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
-                                <span class="text-2xl">🥅</span>
-                            </div>
-                            <div class="border-2 border-black bg-black px-2 py-1 text-white">
-                                <span class="font-mono text-xs font-bold uppercase">Outdoor</span>
-                            </div>
-                        </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">MINI SOCCER</h3>
-                        <p class="mb-6 font-mono text-sm text-gray-600">Lapangan luas cocok untuk pertandingan 7 vs 7.
-                        </p>
-                    </div>
-                    <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
-                        <div>
-                            <span
-                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['mini_soccer'] }}</span>
-                            <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 300K/hr</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
