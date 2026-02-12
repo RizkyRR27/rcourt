@@ -61,7 +61,7 @@ class BookingController extends Controller
             'basket_indoor' => ['weekday' => ['day' => 200000, 'night' => 275000], 'weekend' => ['day' => 225000, 'night' => 300000], 'split_hour' => 17],
             'tennis' => ['weekday' => ['day' => 90000, 'night' => 105000], 'weekend' => ['day' => 100000, 'night' => 110000], 'split_hour' => 17],
             'mini_soccer' => ['weekday' => ['day' => 650000, 'night' => 800000], 'weekend' => ['day' => 725000, 'night' => 900000], 'split_hour' => 17],
-            'padel' => ['weekday' => ['day' => 150000, 'night' => 200000], 'weekend' => ['day' => 175000, 'night' => 250000], 'split_hour' => 17],
+            'padel' => ['weekday' => ['day' => 200000, 'night' => 275000], 'weekend' => ['day' => 250000, 'night' => 315000], 'split_hour' => 17],
         ];
 
         $results = [];
@@ -192,30 +192,35 @@ class BookingController extends Controller
         ]);
 
         // 2. Upload Bukti Bayar (Jika ada)
-        $proofPath = null;
+       $proofPath = null;
         if ($request->hasFile('payment_proof')) {
-            // Simpan ke folder: storage/app/public/proofs
             $proofPath = $request->file('payment_proof')->store('proofs', 'public');
         }
 
+        // 2. Tentukan Nilai Payment Method untuk Database
+        // Database cuma mau 'cod' atau 'transfer', jadi kita ubah 'transfer_bca' jadi 'transfer'
+        $dbPaymentMethod = ($request->payment_method == 'cod') ? 'cod' : 'transfer';
+
         // 3. Simpan ke Database
         $booking = Booking::create([
-            'user_id' => 2, // HARDCODE DULU (Pura-pura jadi User ID 2 karena belum Login)
+            'user_id' => 2, // HARDCODE DULU (Sesuai kode kamu)
             'court_id' => $request->court_id,
             'date' => $request->date,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'total_price' => $request->total_price,
-            'payment_method' => $request->payment_method,
-            'payment_type' => $request->payment_method == 'transfer' ? 'full' : null, // Asumsi lunas kalau transfer
+            
+            // PERBAIKAN DI SINI:
+            'payment_method' => $dbPaymentMethod, 
+            
+            // Perbaikan Logika Payment Type (Cek apakah diawali kata transfer)
+            'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
+            
             'payment_proof' => $proofPath,
             'status' => 'pending',
         ]);
 
-        // Bersihkan session booking setelah tersimpan
-        session()->forget('booking');
-
-        // 4. Redirect ke Halaman Sukses
+        // ... (Redirect di bawah biarkan saja) ...
         return redirect()->route('booking.success', $booking->id);
     }
 }

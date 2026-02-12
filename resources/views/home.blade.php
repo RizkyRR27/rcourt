@@ -21,8 +21,8 @@
             </h1>
 
             <p class="mx-auto mb-10 max-w-2xl font-mono text-sm leading-relaxed text-gray-300 md:text-base">
-                Pusat olahraga terlengkap dengan fasilitas terbaik. Nikmati kemudahan
-                booking lapangan Badminton, Futsal, Basket, hingga Mini Soccer secara
+                Pusat olahraga dengan fasilitas terbaik. Nikmati kemudahan
+                booking lapangan Kami secara
                 online. Jangan biarkan jadwal kosong menghalangi permainanmu.
             </p>
 
@@ -86,7 +86,7 @@
                         </div>
                         <div class="text-right">
                             <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 80K/hr</p>
+                            <p class="font-mono text-lg font-bold">IDR 30K/hr</p>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                         </div>
                         <div class="text-right">
                             <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 150K/hr</p>
+                            <p class="font-mono text-lg font-bold">IDR 85K/hr</p>
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
                                 <span class="font-mono text-xs font-bold uppercase">Indoor</span>
                             </div>
                         </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">BASKET INDOOR</h3>
+                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">BASKET</h3>
                         <p class="mb-6 font-mono text-sm text-gray-600">Lantai parket kayu, full AC, dan papan skor
                             digital.</p>
                     </div>
@@ -216,7 +216,7 @@
                         </div>
                         <div class="text-right">
                             <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 300K/hr</p>
+                            <p class="font-mono text-lg font-bold">IDR 650K/hr</p>
                         </div>
                     </div>
                 </div>
@@ -231,7 +231,7 @@
                                 <span class="text-2xl">🤾</span>
                             </div>
                             <div class="border-2 border-black bg-black px-2 py-1 text-white">
-                                <span class="font-mono text-xs font-bold uppercase">Outdoor</span>
+                                <span class="font-mono text-xs font-bold uppercase">Semi Outdoor</span>
                             </div>
                         </div>
                         <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">PADEL</h3>
@@ -246,7 +246,7 @@
                         </div>
                         <div class="text-right">
                             <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 450K/hr</p>
+                            <p class="font-mono text-lg font-bold">IDR 200K/hr</p>
                         </div>
                     </div>
                 </div>
