@@ -1,104 +1,96 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - RCourt</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen py-10">
-
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-200">
-        <h2 class="text-2xl font-bold mb-6 border-b pb-4 text-gray-800">Konfirmasi Booking</h2>
-
-        @if ($errors->any())
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-                <strong class="font-bold">Gagal!</strong>
-                <ul class="mt-1 list-disc list-inside text-sm">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-8">
-    <h3 class="font-bold text-blue-800 mb-4 text-lg">Rincian:</h3>
-    
-    <div class="space-y-2 text-sm text-gray-700">
-        <div class="flex justify-between">
-            <span class="font-bold">Lapangan:</span>
-            <span>{{ $court->name }}</span>
-        </div>
+<x-layouts.app :current-route="'booking'">
+    <div class="bg-[var(--color-court-paper)] pb-20 pt-10">
         
-        <div class="flex justify-between">
-            <span class="font-bold">Tanggal:</span>
-            <span>{{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</span>
-        </div>
-        
-        <div class="flex justify-between">
-            <span class="font-bold">Jam:</span>
-            <span>{{ substr($startTime, 0, 5) }} - {{ substr($endTime, 0, 5) }}</span>
-        </div>
-    </div>
-
-    <div class="mt-4 pt-4 border-t border-blue-200 flex justify-between items-center">
-        <span class="font-bold text-blue-900 text-lg">Total Bayar:</span>
-        <span class="font-bold text-blue-900 text-xl">
-            Rp {{ number_format($price, 0, ',', '.') }}
-        </span>
-    </div>
-</div>
-
-        <form action="{{ route('booking.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            
-            <input type="hidden" name="court_id" value="{{ $court->id }}">
-            <input type="hidden" name="date" value="{{ $date }}">
-            <input type="hidden" name="start_time" value="{{ $startTime }}">
-            <input type="hidden" name="end_time" value="{{ $endTime }}">
-            <input type="hidden" name="total_price" value="{{ $price }}">
-
-            <div class="mb-6">
-                <label class="block font-bold mb-2 text-gray-700">Metode Pembayaran</label>
-                <select name="payment_method" id="payment_method" class="w-full border border-gray-300 p-3 rounded-lg" onchange="toggleUpload()">
-                    <option value="cod">Bayar di Tempat (COD)</option>
-                    <option value="transfer">Transfer Bank (BCA / Mandiri)</option>
-                </select>
+        <div class="mx-auto max-w-3xl px-4">
+            {{-- Header Judul yang Benar --}}
+            <div class="mb-8 text-center">
+                <h2 class="font-display text-4xl uppercase">Konfirmasi Booking</h2>
+                <p class="font-mono text-gray-500">Cek kembali detail pesanan Anda sebelum membayar.</p>
             </div>
 
-            <div id="upload_section" class="mb-8 hidden">
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
-                    <p class="text-sm text-yellow-800">
-                        Transfer ke <strong>BCA: 1234567890 (RCourt)</strong><br>
-                        Lalu upload bukti di bawah ini.
-                    </p>
+            {{-- Card Rincian --}}
+            <div class="border-2 border-black bg-white p-6 shadow-hard mb-8">
+                <h3 class="font-display text-xl uppercase mb-4 border-b-2 border-gray-100 pb-2">Rincian Pesanan:</h3>
+                
+                <div class="space-y-3 font-mono text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Lapangan:</span>
+                        <span class="font-bold">{{ $court->name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Tanggal:</span>
+                        {{-- Cek apakah tanggal ada --}}
+                        <span class="font-bold {{ !$date ? 'text-red-600' : '' }}">
+                            {{ $date ? \Carbon\Carbon::parse($date)->translatedFormat('d F Y') : 'DATA TANGGAL HILANG! (Silakan Kembali)' }}
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Jam:</span>
+                        <span class="font-bold">{{ substr($startTime, 0, 5) }} - {{ substr($endTime, 0, 5) }}</span>
+                    </div>
                 </div>
-                <label class="block font-bold mb-2 text-gray-700">Upload Bukti Transfer</label>
-                <input type="file" name="payment_proof" class="w-full border border-gray-300 p-2 rounded-lg bg-gray-50">
+
+                <div class="mt-6 pt-4 border-t-2 border-black flex justify-between items-center">
+                    <span class="font-display text-lg uppercase">Total Bayar:</span>
+                    <span class="font-display text-2xl text-[var(--color-court-clay)]">
+                        Rp {{ number_format($price, 0, ',', '.') }}
+                    </span>
+                </div>
             </div>
 
-            <button type="submit" class="w-full bg-green-600 text-white font-bold py-4 rounded-lg hover:bg-green-700 transition shadow-md text-lg">
-                Konfirmasi & Booking Sekarang
-            </button>
-        </form>
+            {{-- FORMULIR PENGISIAN DATA --}}
+            <div class="border-2 border-black bg-white p-8 shadow-hard">
+                
+                {{-- Cek Error Validasi --}}
+                @if ($errors->any())
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
+                        <ul class="list-disc pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-        <div class="mt-6 text-center">
-            <a href="{{ route('booking') }}" class="text-gray-500 hover:text-red-500 text-sm">Batal & Kembali</a>
+                <form action="{{ route('booking.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    @csrf
+                    
+                    {{-- INPUT HIDDEN (PENTING!) --}}
+                    <input type="hidden" name="court_id" value="{{ $court->id }}">
+                    <input type="hidden" name="date" value="{{ $date }}">
+                    <input type="hidden" name="start_time" value="{{ $startTime }}">
+                    <input type="hidden" name="end_time" value="{{ $endTime }}">
+                    <input type="hidden" name="total_price" value="{{ $price }}">
+
+                    {{-- Input Nama --}}
+                    <div>
+                        <label class="block font-mono text-xs font-bold uppercase text-gray-500 mb-2">Nama Lengkap</label>
+                        <input type="text" name="name" required 
+                               class="w-full border-2 border-black p-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none" 
+                               placeholder="Masukkan nama pemesan">
+                    </div>
+
+                    {{-- Input Metode Pembayaran --}}
+                    <div>
+                        <label class="block font-mono text-xs font-bold uppercase text-gray-500 mb-2">Metode Pembayaran</label>
+                        <div class="relative">
+                            <select name="payment_method" class="w-full appearance-none border-2 border-black bg-white p-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none">
+                                <option value="cod">Bayar di Tempat (COD)</option>
+                                <option value="transfer">Transfer Bank (BCA)</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4">
+                                <div class="h-0 w-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Tombol Konfirmasi --}}
+                    <button type="submit" class="w-full border-2 border-black bg-[var(--color-court-green)] py-4 font-mono font-bold uppercase text-white shadow-hard transition-all hover:bg-green-700 hover:shadow-none active:translate-x-[2px] active:translate-y-[2px]">
+                        Konfirmasi Booking
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
-
-    <script>
-        function toggleUpload() {
-            var method = document.getElementById("payment_method").value;
-            var section = document.getElementById("upload_section");
-            if (method === "transfer") {
-                section.classList.remove("hidden");
-            } else {
-                section.classList.add("hidden");
-            }
-        }
-    </script>
-
-</body>
-</html>
+</x-layouts.app>

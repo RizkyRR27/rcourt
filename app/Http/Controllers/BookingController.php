@@ -33,19 +33,19 @@ class BookingController extends Controller
         ]);
 
         $type = $request->type;
-        $date = Carbon::parse($request->date);
+        $dateObj = Carbon::parse($request->date);
         $duration = (int) $request->duration;
-        $isWeekend = $date->isWeekend();
+        $isWeekend = $dateObj->isWeekend();
 
         // --- LOGIKA BLOKIR TANGGAL TURNAMEN ---
         
         // 1. Grand Opening (Hanya Tahun 2026, Tanggal 5-12 Mei)
-        if ($date->year == 2026 && $date->month == 5 && $date->day >= 5 && $date->day <= 12) {
+        if ($dateObj->year == 2026 && $dateObj->month == 5 && $dateObj->day >= 5 && $dateObj->day <= 12) {
              return redirect()->back()->with('error', 'Maaf, tanggal 5-12 Mei 2026 tutup total untuk Grand Opening Tournament.');
         }
 
         // 2. R Cup (Setiap Tahun, Tanggal 12-17 Januari)
-        if ($date->month == 1 && $date->day >= 12 && $date->day <= 17) {
+        if ($dateObj->month == 1 && $dateObj->day >= 12 && $dateObj->day <= 17) {
             return redirect()->back()->with('error', 'Maaf, tanggal 12-17 Januari lapangan digunakan untuk R-Cup (Event Tahunan).');
         }
 
@@ -77,7 +77,7 @@ class BookingController extends Controller
                     $start = sprintf('%02d:00:00', $checkHour);
 
                     $exists = Booking::where('court_id', $court->id)
-                        ->where('date', $date->format('Y-m-d'))
+                        ->where('date', $dateObj->format('Y-m-d'))
                         ->where('start_time', $start)
                         ->where('status', '!=', 'rejected')
                         ->exists();
@@ -109,16 +109,20 @@ class BookingController extends Controller
             ];
         }
 
+        // Kirim ke view sebagai string 'Y-m-d' agar URL query konsisten
+        $date = $dateObj->format('Y-m-d');
         return view('booking.result', compact('results', 'type', 'date', 'duration'));
     }
     public function create(Request $request)
     {
         // 1. Ambil Data dari URL
-        $courtId = $request->court_id;
-       $date = $request->query('date');
-        $startTime = $request->start_time;
-        $endTime = $request->end_time;
-        $price = $request->price;
+        $courtId = $request->input('court_id') ?? $request->query('court_id');
+
+        // Terima nilai dari query string atau input POST (fallback ke keduanya)
+        $date = $request->input('date') ?? $request->query('date');
+        $startTime = $request->input('start_time') ?? $request->query('start_time');
+        $endTime = $request->input('end_time') ?? $request->query('end_time');
+        $price = $request->input('price') ?? $request->query('price');
 
         // 2. VALIDASI KEAMANAN (DOUBLE CHECK)
         // Kita harus pastikan lapangan ID ini BENAR-BENAR KOSONG di jam tsb.
@@ -149,6 +153,15 @@ class BookingController extends Controller
         $availableCourt = Court::find($courtId);
 
         // 4. Tampilkan Halaman Checkout
+       // Simpan sementara ke session sebagai fallback jika form hidden hilang
+       session(['booking' => [
+           'court_id' => $courtId,
+           'date' => $date,
+           'start_time' => $startTime,
+           'end_time' => $endTime,
+           'total_price' => $price,
+       ]]);
+
        return view('booking.checkout', [
             'court' => $availableCourt, 
             'date' => $date,
@@ -161,7 +174,13 @@ class BookingController extends Controller
     // --- MENYIMPAN DATA BOOKING ---
     public function store(Request $request)
     {
-        // 1. Validasi Input
+        // 1. Merge fallback values from session (in case hidden inputs are missing)
+        $sessionBooking = session('booking', []);
+        if (!empty($sessionBooking)) {
+            $request->merge($sessionBooking);
+        }
+
+        // 2. Validasi Input
         $request->validate([
             'court_id' => 'required',
             'date' => 'required',
@@ -192,6 +211,9 @@ class BookingController extends Controller
             'payment_proof' => $proofPath,
             'status' => 'pending',
         ]);
+
+        // Bersihkan session booking setelah tersimpan
+        session()->forget('booking');
 
         // 4. Redirect ke Halaman Sukses
         return redirect()->route('booking.success', $booking->id);
