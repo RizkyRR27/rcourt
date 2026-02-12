@@ -22,20 +22,38 @@
             </div>
         @endif
 
-        <div class="bg-blue-50 p-5 rounded-lg mb-8 border border-blue-100">
-            <h3 class="font-bold text-blue-800 mb-2">Rincian:</h3>
-            <p><strong>Lapangan:</strong> {{ $availableCourt->name }}</p>
-            <p><strong>Tanggal:</strong> {{ $date ?? '-' }}</p> 
-            <p><strong>Jam:</strong> {{ $startTime }} - {{ $endTime }}</p>
-            <div class="mt-4 pt-4 border-t border-blue-200">
-                <p class="text-xl font-bold text-blue-900">Total Bayar: Rp {{ number_format($price, 0, ',', '.') }}</p>
-            </div>
+        <div class="bg-blue-50 p-6 rounded-xl border border-blue-100 mb-8">
+    <h3 class="font-bold text-blue-800 mb-4 text-lg">Rincian:</h3>
+    
+    <div class="space-y-2 text-sm text-gray-700">
+        <div class="flex justify-between">
+            <span class="font-bold">Lapangan:</span>
+            <span>{{ $court->name }}</span>
         </div>
+        
+        <div class="flex justify-between">
+            <span class="font-bold">Tanggal:</span>
+            <span>{{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</span>
+        </div>
+        
+        <div class="flex justify-between">
+            <span class="font-bold">Jam:</span>
+            <span>{{ substr($startTime, 0, 5) }} - {{ substr($endTime, 0, 5) }}</span>
+        </div>
+    </div>
+
+    <div class="mt-4 pt-4 border-t border-blue-200 flex justify-between items-center">
+        <span class="font-bold text-blue-900 text-lg">Total Bayar:</span>
+        <span class="font-bold text-blue-900 text-xl">
+            Rp {{ number_format($price, 0, ',', '.') }}
+        </span>
+    </div>
+</div>
 
         <form action="{{ route('booking.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
-            <input type="hidden" name="court_id" value="{{ $availableCourt->id }}">
+            <input type="hidden" name="court_id" value="{{ $court->id }}">
             <input type="hidden" name="date" value="{{ $date }}">
             <input type="hidden" name="start_time" value="{{ $startTime }}">
             <input type="hidden" name="end_time" value="{{ $endTime }}">

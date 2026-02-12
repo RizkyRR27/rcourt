@@ -151,32 +151,42 @@
                     </div>
                 </div>
 
-                {{-- Basket Outdoor Card --}}
+               {{-- Tennis Card (Menggantikan Basket Outdoor) --}}
                 <div
                     class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
                     <div>
                         <div class="mb-6 flex items-start justify-between">
+                            {{-- Ikon Bola Tenis --}}
                             <div
                                 class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
-                                <span class="text-2xl">☀️</span>
+                                <span class="text-2xl">🎾</span>
                             </div>
+                            {{-- Label Outdoor --}}
                             <div class="border-2 border-black bg-black px-2 py-1 text-white">
                                 <span class="font-mono text-xs font-bold uppercase">Outdoor</span>
                             </div>
                         </div>
-                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">BASKET OUTDOOR</h3>
-                        <p class="mb-6 font-mono text-sm text-gray-600">Lapangan outdoor dengan suasana segar dan lantai
-                            standar.</p>
+                        
+                        {{-- Judul Tennis --}}
+                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">TENNIS</h3>
+                        
+                        {{-- Deskripsi Tennis --}}
+                        <p class="mb-6 font-mono text-sm text-gray-600">
+                            Lapangan standar internasional dengan permukaan hard court yang presisi.
+                        </p>
                     </div>
+                    
                     <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
                         <div>
+                            {{-- Variabel Count (Pastikan 'tennis' huruf kecil) --}}
                             <span
-                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['basket_outdoor'] }}</span>
+                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['Tennis']}}</span>
                             <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
                         </div>
                         <div class="text-right">
                             <span class="font-mono text-xs text-gray-500">Starts from</span>
-                            <p class="font-mono text-lg font-bold">IDR 120K/hr</p>
+                            {{-- Harga Tennis (90rb) --}}
+                            <p class="font-mono text-lg font-bold">IDR 90K/hr</p>
                         </div>
                     </div>
                 </div>
@@ -207,6 +217,36 @@
                         <div class="text-right">
                             <span class="font-mono text-xs text-gray-500">Starts from</span>
                             <p class="font-mono text-lg font-bold">IDR 300K/hr</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Padel card --}}
+                <div
+                    class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
+                    <div>
+                        <div class="mb-6 flex items-start justify-between">
+                            <div
+                                class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
+                                <span class="text-2xl">🤾</span>
+                            </div>
+                            <div class="border-2 border-black bg-black px-2 py-1 text-white">
+                                <span class="font-mono text-xs font-bold uppercase">Outdoor</span>
+                            </div>
+                        </div>
+                        <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">PADEL</h3>
+                        <p class="mb-6 font-mono text-sm text-gray-600">Lapangan Dengan Dinding Kaca dan Ukuran Lapangan yang Sudah Sesuai Dengan Standar Internasional.
+                        </p>
+                    </div>
+                    <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
+                        <div>
+                            <span
+                                class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $counts['padel'] }}</span>
+                            <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-mono text-xs text-gray-500">Starts from</span>
+                            <p class="font-mono text-lg font-bold">IDR 450K/hr</p>
                         </div>
                     </div>
                 </div>

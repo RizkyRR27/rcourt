@@ -115,7 +115,7 @@ class BookingController extends Controller
     {
         // 1. Ambil Data dari URL
         $courtId = $request->court_id;
-        $date = $request->date;
+       $date = $request->query('date');
         $startTime = $request->start_time;
         $endTime = $request->end_time;
         $price = $request->price;
@@ -149,8 +149,8 @@ class BookingController extends Controller
         $availableCourt = Court::find($courtId);
 
         // 4. Tampilkan Halaman Checkout
-        return view('booking.checkout', [
-            'availableCourt' => $availableCourt,
+       return view('booking.checkout', [
+            'court' => $availableCourt, 
             'date' => $date,
             'startTime' => $startTime,
             'endTime' => $endTime,
