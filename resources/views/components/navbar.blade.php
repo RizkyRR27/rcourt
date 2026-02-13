@@ -33,8 +33,8 @@
                         Kontak
                     </a>
 
-                    <a href="#" class="btn btn-primary"
-                        style="background-color: transparent; color: black;">
+                    <a href="#"
+                        class="font-mono text-md font-bold uppercase tracking-widest text-black transition-colors border-2 border-black px-4 py-2 hover:text-[var(--color-court-clay)] hover:border-[var(--color-court-clay)]">
                         LOGIN
                     </a>
                 </div>
@@ -77,10 +77,10 @@
                 class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                 Kontak
             </a>
-            <button class="w-full btn btn-primary py-3"
-                style="background-color: var(--color-court-green); color: white;">
+            <a href="#"
+                class="block w-full border-2 border-black bg-[var(--color-court-green)] px-4 py-3 text-center font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
                 LOGIN
-            </button>
+            </a>
         </div>
     </div>
 </nav>
