@@ -74,7 +74,7 @@
                 <div class="grid md:grid-cols-2">
                     
                     {{-- Google Maps Embed (Sudah Diperbaiki) --}}
-                    <div class="h-96 w-full border-b-2 border-black bg-gray-200 md:border-b-0 md:border-r-2 relative group">
+                    <div class="h-full w-full border-b-2 border-black bg-gray-200 md:border-b-0 md:border-r-2 relative group">
                         <iframe 
                             width="100%" 
                             height="100%" 
