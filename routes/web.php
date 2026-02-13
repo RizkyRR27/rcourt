@@ -24,7 +24,7 @@ Route::get('/contact', function () {
 Route::get('/booking', [BookingController::class, 'index'])->name('booking');
 
 // Route untuk memproses pencarian jadwal (Nanti kita pakai ini)
-Route::post('/booking/search', [BookingController::class, 'search'])->name('booking.search');
+Route::get('/booking/search', [BookingController::class, 'search'])->name('booking.search');
 
 // Menampilkan Halaman Checkout/Pembayaran
 Route::get('/booking/checkout', [BookingController::class, 'create'])->name('booking.create');
