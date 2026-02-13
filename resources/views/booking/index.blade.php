@@ -13,6 +13,48 @@
             </p>
         </div>
 
+        {{-- ... Form Pencarian di atas ... --}}
+
+{{-- INFO JADWAL LIBUR / TURNAMEN --}}
+<div class="mt-8 max-w-4xl mx-auto">
+    <div class="border-2 border-black bg-yellow-50 p-6 shadow-hard relative">
+        <div class="absolute -top-3 -left-3 bg-red-600 text-white font-mono font-bold px-4 py-1 transform -rotate-2 border-2 border-black shadow-sm">
+            📢 INFO PENTING
+        </div>
+
+        <h3 class="font-display text-xl uppercase mt-2 mb-4">Jadwal Penutupan Lapangan:</h3>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+            @php
+                $tournaments = \App\Models\Tournament::all();
+            @endphp
+
+            @foreach($tournaments as $event)
+                <div class="flex items-start gap-3 border-b-2 border-black/10 pb-2">
+                    <!-- <div class="text-2xl">
+                        {{ $event->is_recurring }}
+                    </div> -->
+                    <div>
+                        <h4 class="font-bold font-mono text-sm uppercase">{{ $event->name }}</h4>
+                        <p class="text-xs text-gray-600 font-mono mt-1">
+                            @if($event->is_recurring)
+                                <span class="bg-blue-100 px-1 border border-black text-[10px]">TIAP TAHUN</span>
+                                {{ \Carbon\Carbon::parse($event->start_date)->format('d M') }} 
+                                s/d 
+                                {{ \Carbon\Carbon::parse($event->end_date)->format('d M') }}
+                            @else
+                                <span class="bg-gray-200 px-1 border border-black text-[10px]">SEKALI SAJA</span>
+                                {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                            @endif
+                        </p>
+                        <p class="text-[10px] text-gray-500 italic mt-1">"{{ $event->description }}"</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+
         {{-- AREA NOTIFIKASI ERROR --}}
         <div class="mx-auto max-w-4xl px-4 mb-8">
             @if (session('error'))

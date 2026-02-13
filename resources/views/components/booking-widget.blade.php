@@ -170,7 +170,7 @@
     function datePicker() {
         return {
             isOpen: false,
-            selectedDate: '{{ old('date', '') }}',
+            selectedDate: '{{ old('date'   , '') }}',
             currentMonth: null,
             currentYear: null,
             daysInMonth: [],
