@@ -43,7 +43,7 @@
                                 s/d 
                                 {{ \Carbon\Carbon::parse($event->end_date)->format('d M') }}
                             @else
-                                <span class="bg-gray-200 px-1 border border-black text-[10px]">SEKALI SAJA</span>
+                                <span class="bg-gray-200 px-1 border border-black text-[10px]">Seminggu</span>
                                 {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
                             @endif
                         </p>

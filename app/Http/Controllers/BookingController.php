@@ -74,12 +74,12 @@ class BookingController extends Controller
     $cekTglUser = $request->input('date');
     $cekTurnamenSekali = \App\Models\Tournament::where('is_recurring', 0)->get();
     
-    dd([
-        'STATUS' => 'DEBUGGING MODE',
-        'TANGGAL_YANG_DICARI_USER' => $cekTglUser,
-        'TOTAL_TURNAMEN_SEKALI_PAKAI' => $cekTurnamenSekali->count(),
-        'LIST_DATA_DATABASE' => $cekTurnamenSekali->toArray()
-    ]);
+    // dd([
+    //     'STATUS' => 'DEBUGGING MODE',
+    //     'TANGGAL_YANG_DICARI_USER' => $cekTglUser,
+    //     'TOTAL_TURNAMEN_SEKALI_PAKAI' => $cekTurnamenSekali->count(),
+    //     'LIST_DATA_DATABASE' => $cekTurnamenSekali->toArray()
+    // ]);
 
 
         // try {
