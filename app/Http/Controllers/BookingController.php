@@ -252,6 +252,11 @@ class BookingController extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             'court_id' => 'required',
+            'total_price' => 'required',
+            'phone' => 'required|numeric', // <--- Cuma butuh ini
+        ], [
+            'phone.required' => 'Nomor WhatsApp wajib diisi untuk pengiriman notifikasi.',
+            'phone.numeric' => 'Nomor WhatsApp harus berupa angka.',
         ]);
 
         // =================================================================
@@ -289,10 +294,6 @@ class BookingController extends Controller
             );
         }
 
-        // =================================================================
-        // JIKA AMAN, BARU PROSES SIMPAN
-        // =================================================================
-
         // Upload Bukti (Jika ada)
         $proofPath = null;
         if ($request->hasFile('payment_proof')) {
@@ -303,8 +304,8 @@ class BookingController extends Controller
         $dbPaymentMethod = ($request->payment_method == 'cod') ? 'cod' : 'transfer';
 
         // Create Data
-        $booking = Booking::create([
-            'user_id' => 2, // Hardcode User ID (sementara)
+      $booking = Booking::create([
+            'user_id' => 2, 
             'court_id' => $request->court_id,
             'date' => $request->date,
             'start_time' => $request->start_time,
@@ -314,6 +315,8 @@ class BookingController extends Controller
             'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
             'payment_proof' => $proofPath,
             'status' => 'pending',
+            'phone' => $request->phone, // <--- Simpan No WA
+            // 'email' => null, // Email tidak perlu disimpan
         ]);
 
         return redirect()->route('booking.success', $booking->id);

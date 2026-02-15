@@ -28,7 +28,7 @@
             
             {{-- BAGIAN 1: KARTU SPESIAL (ARENA UTAMA) --}}
             <div class="mb-12 border-2 border-black bg-white p-6 shadow-hard relative overflow-hidden">
-                <div class="absolute -top-3 -left-3 bg-[var(--color-court-clay)] text-white font-mono font-bold px-4 py-1 border-2 border-black shadow-sm z-10">
+                <div class="absolute -top-3 -left-3 bg-[var(--color-court-clay)] text-white font-mono font-bold px-5 py-3 border-2 border-black shadow-sm z-10">
                     🏆 ARENA UTAMA
                 </div>
 

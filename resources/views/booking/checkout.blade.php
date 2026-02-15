@@ -69,6 +69,27 @@
                                class="w-full border-2 border-black p-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none" 
                                placeholder="Masukkan nama pemesan">
                     </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+
+                    {{-- Input WhatsApp --}}
+                    <div class="mb-4">
+                    <label class="block font-mono text-xs font-bold uppercase text-gray-500 mb-1">
+                        Nomor WhatsApp (Wajib Diisi) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" name="phone" value="{{ old('phone') }}" 
+                        class="w-full border-2 border-black p-2 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none"
+                        placeholder="Contoh: 08123456789 (Pastikan aktif)">
+                    <p class="text-xs text-gray-400 mt-1">* Notifikasi status booking akan dikirim ke nomor ini.</p>
+                    
+                    @error('phone')
+                        <p class="text-red-500 text-xs font-mono mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                                </div>
+                {{-- Tampilkan Error Validasi Khusus --}}
+                @if($errors->has('email') || $errors->has('phone'))
+                    <p class="text-red-500 text-xs font-mono mb-4">* Wajib isi salah satu (Email atau WA) untuk pengiriman Invoice.</p>
+                @endif
 
                     {{-- Input Metode Pembayaran --}}
                    <div class="mb-10">
