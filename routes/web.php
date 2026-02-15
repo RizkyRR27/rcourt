@@ -49,3 +49,5 @@ Route::get('/riwayat', [HistoryController::class, 'index'])->name('history');
 Route::get('/riwayat/{id}/tiket', [HistoryController::class, 'show'])->name('history.ticket');
 
 Route::get('/turnamen', [TournamentController::class, 'index'])->name('tournament');
+
+Route::get('/facilities', [App\Http\Controllers\HomeController::class, 'facilities'])->name('facilities');

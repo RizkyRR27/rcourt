@@ -33,10 +33,17 @@
                         Kontak
                     </a>
 
+                     <a href="{{ route('facilities') }}"
+                        class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'contact' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
+                        Fasilitas
+                    </a>
+
                     <a href="#"
                         class="font-mono text-md font-bold uppercase tracking-widest text-black transition-colors border-2 border-black px-4 py-2 hover:text-[var(--color-court-clay)] hover:border-[var(--color-court-clay)]">
                         LOGIN
                     </a>
+
+
                 </div>
             </div>
 

@@ -82,4 +82,8 @@ class HomeController extends Controller
 
         return view('home', compact('facilities'));
     }
+    public function facilities()
+{
+    return view('facilities');
+}
 }
