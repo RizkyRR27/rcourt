@@ -3,7 +3,7 @@
 ])
 
 <nav class="sticky top-0 z-50 w-full border-b-2 border-black bg-[var(--color-court-paper)]" x-data="{ open: false }">
-    <div class="mx-auto  px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex h-20 items-center justify-between">
 
             {{-- Logo --}}
@@ -16,35 +16,44 @@
             {{-- Desktop Menu --}}
             <div class="hidden md:block">
                 <div class="flex items-center space-x-8">
-                    <a href="{{ route('home') }}"
-                        class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'home' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
-                        Home
-                    </a>
-                    <a href="{{ route('booking') }}"
-                        class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'booking' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
-                        Booking Lapangan
-                    </a>
-                    <a href="{{ route('tournament') }}"
-                        class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'tournament' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
-                        Turnamen
-                    </a>
-                   
-                     <a href="{{ route('facilities') }}"
-                        class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'facilities' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
-                        Fasilitas
-                    </a>
+                    {{-- Menu Items --}}
+                    @foreach(['home' => 'Home', 'booking' => 'Booking Lapangan', 'tournament' => 'Turnamen', 'facilities' => 'Fasilitas', 'contact' => 'Kontak'] as $route => $label)
+                        <a href="{{ route($route) }}"
+                           class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === $route ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
 
-                     <a href="{{ route('contact') }}"
-                        class="font-mono text-md font-bold uppercase tracking-widest transition-colors hover:text-[var(--color-court-clay)] {{ $currentRoute === 'contact' ? 'text-[var(--color-court-clay)] decoration-2 underline-offset-4 underline' : 'text-black' }}">
-                        Kontak
-                    </a>
+                    {{-- LOGIKA AUTHENTICATION (Desktop) --}}
+                    @auth
+                        {{-- JIKA SUDAH LOGIN --}}
+                        <div class="relative group ml-4">
+                            <button class="flex items-center gap-2 border-2 border-black bg-white px-3 py-1 font-mono font-bold uppercase hover:bg-[var(--color-court-yellow)] transition-colors shadow-hard active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                                <span>👤 {{ Str::limit(Auth::user()->name, 10) }}</span>
+                                <span class="text-[10px]">▼</span>
+                            </button>
 
-                    <a href="#"
-                        class="font-mono text-md font-bold uppercase tracking-widest text-black transition-colors border-2 border-black px-4 py-2 hover:text-[var(--color-court-clay)] hover:border-[var(--color-court-clay)]">
-                        LOGIN
-                    </a>
-
-
+                            {{-- Dropdown Menu --}}
+                            <div class="absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-hard-lg hidden group-hover:block z-50">
+                                <a href="{{ route('history') }}" class="block px-4 py-3 font-mono text-sm border-b-2 border-black hover:bg-gray-100 transition-colors text-black">
+                                    📜 Riwayat Booking
+                                </a>
+                                
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-3 font-mono text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors">
+                                        🚪 Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        {{-- JIKA BELUM LOGIN (TAMU) --}}
+                        <a href="{{ route('login') }}"
+                           class="font-mono text-md font-bold uppercase tracking-widest text-black transition-colors border-2 border-black px-4 py-2 hover:text-[var(--color-court-clay)] hover:border-[var(--color-court-clay)] shadow-hard hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]">
+                            LOGIN
+                        </a>
+                    @endauth
                 </div>
             </div>
 
@@ -53,13 +62,10 @@
                 <button @click="open = !open"
                     class="border-2 border-black bg-white p-2 text-black shadow-hard-sm active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
                     <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
-                    <svg x-show="open" x-cloak class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+                    <svg x-show="open" x-cloak class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -69,38 +75,34 @@
     {{-- Mobile Menu Dropdown --}}
     <div x-show="open" x-cloak class="border-t-2 border-black bg-[var(--color-court-yellow)] md:hidden">
         <div class="space-y-4 px-4 py-6">
-            <a href="{{ route('home') }}"
-                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
-                Home
-            </a>
-            <a href="{{ route('booking') }}"
-                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
-                Booking Lapangan
-            </a>
-            <a href="{{ route('tournament') }}"
-                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
-                Turnamen
-            </a>
-            <a href="{{ route('facilities') }}"
-                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
-                Fasilitas
-            </a>
+            @foreach(['home' => 'Home', 'booking' => 'Booking Lapangan', 'tournament' => 'Turnamen', 'facilities' => 'Fasilitas', 'contact' => 'Kontak'] as $route => $label)
+                <a href="{{ route($route) }}"
+                   class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
+                    {{ $label }}
+                </a>
+            @endforeach
 
-            <a href="{{ route('contact') }}"
-                class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
-                Kontak
-            </a>
+            {{-- LOGIKA AUTHENTICATION (Mobile) --}}
+            @auth
+                <a href="{{ route('history') }}" class="block w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
+                    📜 Riwayat Booking
+                </a>
 
-            <a href="#"
-                class="block w-full border-2 border-black bg-[var(--color-court-green)] px-4 py-3 text-center font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
-                LOGIN
-            </a>
+                <form action="{{ route('logout') }}" method="POST" class="block w-full">
+                    @csrf
+                    <button type="submit" class="block w-full border-2 border-black bg-red-600 px-4 py-3 text-center font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                        LOGOUT ({{ Str::limit(Auth::user()->name, 8) }})
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="block w-full border-2 border-black bg-[var(--color-court-green)] px-4 py-3 text-center font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                    LOGIN
+                </a>
+            @endauth
         </div>
     </div>
 </nav>
 
 <style>
-    [x-cloak] {
-        display: none !important;
-    }
+    [x-cloak] { display: none !important; }
 </style>

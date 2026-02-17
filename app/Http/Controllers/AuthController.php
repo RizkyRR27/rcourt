@@ -57,10 +57,16 @@ class AuthController extends Controller
     }
 
     // --- LOGOUT ---
-    public function logout(Request $request) {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
-    }
+    // app/Http/Controllers/AuthController.php
+
+public function logout(Request $request)
+{
+    Auth::logout(); // Hapus sesi login
+ 
+    $request->session()->invalidate(); // Matikan session lama
+ 
+    $request->session()->regenerateToken(); // Buat token baru (keamanan)
+ 
+    return redirect('/')->with('success', 'Anda berhasil keluar. Sampai jumpa!');
+}
 }

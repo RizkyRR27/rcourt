@@ -62,7 +62,9 @@ Route::middleware('guest')->group(function () {
 });
 
 // ROUTE LOGOUT (User Only)
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::get('/logout', [AuthController::class, 'logout'])
+    ->name('logout')
+    ->middleware('auth');
 
 Route::get('/my-history', [HistoryController::class, 'index'])
     ->name('history')
