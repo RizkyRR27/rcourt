@@ -17,14 +17,14 @@ class HomeController extends Controller
             'icon' => '🏸',
             'description' => 'Lapangan karpet standar internasional dengan pencahayaan optimal.',
             'category' => 'Indoor',
-            'price' => 'IDR 80K/hr',
+            'price' => 'IDR 30K/hr',
         ],
         'futsal' => [
             'label' => 'FUTSAL',
             'icon' => '⚽',
             'description' => 'Rumput sintetis berkualitas tinggi nyaman untuk bermain.',
             'category' => 'Indoor',
-            'price' => 'IDR 150K/hr',
+            'price' => 'IDR 90K/hr',
         ],
         'basket_indoor' => [
             'label' => 'BASKET INDOOR',
@@ -38,21 +38,21 @@ class HomeController extends Controller
             'icon' => '🎾',
             'description' => 'Lapangan outdoor dengan suasana segar dan lantai standar.',
             'category' => 'Outdoor',
-            'price' => 'IDR 120K/hr',
+            'price' => 'IDR 70K/hr',
         ],
         'mini_soccer' => [
             'label' => 'MINI SOCCER',
             'icon' => '🥅',
             'description' => 'Lapangan luas cocok untuk pertandingan 7 vs 7.',
             'category' => 'Outdoor',
-            'price' => 'IDR 300K/hr',
+            'price' => 'IDR 650K/hr',
         ],
         'padel' => [
             'label' => 'PADEL',
             'icon' => '🤾',
             'description' => 'Lapangan dengan standar yang sesuai dengan regulasi dunia.',
             'category' => 'Indoor',
-            'price' => 'IDR 100K/hr',
+            'price' => 'IDR 300K/hr',
         ],
     ];
 

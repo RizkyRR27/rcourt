@@ -117,13 +117,57 @@ class BookingController extends Controller
 
             // DEBUGGING: Kalau database ternyata kosong, kita kasih harga minimal 
             // (Hapus baris ini kalau database sudah fix, tapi ini membantu biar gak Rp 0)
+           // ------- FIX HARGA DARURAT -------
             if ($standardPrice == 0) {
-                 // Cek tipe lapangan untuk harga darurat
-                 if($type == 'badminton') $standardPrice = 30000;
-                 elseif($type == 'futsal') $standardPrice = 100000;
-                 else $standardPrice = 50000;
+                 // Gunakan Underscore (_) sesuai value di <option> HTML
+                 if($type == 'badminton') {
+                     $standardPrice = 30000;
+                 }
+                 elseif($type == 'futsal') {
+                     $standardPrice = 90000;
+                 }
+                 elseif($type == 'basket_indoor') { // <--- Pakai underscore
+                     $standardPrice = 200000;
+                 }
+                 elseif($type == 'tennis') {
+                     $standardPrice = 70000;
+                 }
+                 elseif($type == 'mini_soccer') { // <--- Pakai underscore
+                     $standardPrice = 650000;
+                 }
+                 elseif($type == 'padel') {
+                     $standardPrice = 300000;
+                 }
+                 else {
+                     $standardPrice = 50000; // Harga default jika tidak ada yang cocok
+                 }
             }
-            // -------------------------------
+         $cekHari = Carbon::parse($date);
+            
+            if ($cekHari->isWeekend()) { 
+                // Jika Sabtu atau Minggu, harga dasar dinaikkan
+                if($type == 'badminton') {
+                     $standardPrice = 45000;
+                 }
+                 elseif($type == 'futsal') {
+                     $standardPrice = 110000;
+                 }
+                 elseif($type == 'basket_indoor') { // <--- Pakai underscore
+                     $standardPrice = 230000;
+                 }
+                 elseif($type == 'tennis') {
+                     $standardPrice = 90000;
+                 }
+                 elseif($type == 'mini_soccer') { // <--- Pakai underscore
+                     $standardPrice = 700000;
+                 }
+                 elseif($type == 'padel') {
+                     $standardPrice = 320000;
+                 }
+                 else {
+                     $standardPrice = 50000; // Harga default jika tidak ada yang cocok
+                 } 
+            }
 
             $slots = [];
 
@@ -153,9 +197,26 @@ class BookingController extends Controller
                         // Mulai dari harga dasar yg sudah kita ambil di atas
                         $hourPrice = $standardPrice;
 
-                        // Logic Tambahan Malam (Misal: Jam 17 ke atas nambah 10rb)
                         if ($currentHour >= 17) {
-                            $hourPrice += 10000; 
+                            $biayaLampu = 0;
+
+                            // Tentukan harga lampu berdasarkan jenis lapangan
+                            if ($type == 'mini_soccer') {
+                                $biayaLampu = 50000; // Paling Mahal (Lampu Sorot Besar)
+                            } 
+                            elseif ($type == 'tennis' || $type == 'padel') {
+                                $biayaLampu = 30000; // Butuh penerangan ekstra
+                            } 
+                            elseif ($type == 'futsal' || $type == 'basket_indoor') {
+                                $biayaLampu = 25000; // Standard Indoor Besar
+                            } 
+                            else {
+                                // Badminton (Default)
+                                $biayaLampu = 10000; // Area kecil
+                            }
+
+                            // Tambahkan ke harga per jam
+                            $hourPrice += $biayaLampu; 
                         }
 
                         $totalPrice += $hourPrice;
