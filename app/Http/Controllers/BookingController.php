@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Court;
 use App\Models\Booking;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -306,6 +308,12 @@ class BookingController extends Controller
     // --- MENYIMPAN DATA BOOKING ---
     public function store(Request $request)
     {
+
+         if (!Auth::check()) {
+        return redirect()->route('login')->with('error', 'Silakan login dulu untuk booking.');
+    }
+    $user = Auth::user();
+    
         // 1. VALIDASI DATA INPUT
         $request->validate([
             'name' => 'required',
@@ -334,6 +342,30 @@ class BookingController extends Controller
                 'GAGAL BOOKING! Tanggal ' . $request->date . ' dipakai untuk event: ' . $isTournament->name
             );
         }
+       // $duration = (int)$request->duration;
+        $totalPlayedHours = Booking::where('user_id', $user->id)
+                        ->where('status', 'approved')
+                        // Asumsi kita hitung selisih waktu
+                        ->get()
+                        ->sum(function($b) {
+                             return \Carbon\Carbon::parse($b->end_time)->diffInHours(\Carbon\Carbon::parse($b->start_time));
+                        });
+                        $finalPrice = $request->total_price;
+    $isDiscounted = false;
+
+    // Jika sudah main lebih dari 30 jam, dapat diskon 10%
+    if ($totalPlayedHours >= 30) {
+        $discountAmount = $finalPrice * 0.10; // 10%
+        $finalPrice = $finalPrice - $discountAmount;
+        $isDiscounted = true;
+    }
+
+
+
+
+
+
+       
 
         // =================================================================
         // SATPAM 2: CEK BENTROK JAM (LAGI)
@@ -366,20 +398,22 @@ class BookingController extends Controller
 
         // Create Data
       $booking = Booking::create([
-            'user_id' => 2, 
-            'court_id' => $request->court_id,
-            'date' => $request->date,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-            'total_price' => $request->total_price,
-            'payment_method' => $dbPaymentMethod,
-            'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
-            'payment_proof' => $proofPath,
-            'status' => 'pending',
-            'phone' => $request->phone, // <--- Simpan No WA
-            // 'email' => null, // Email tidak perlu disimpan
-        ]);
+        'user_id' => $user->id, // <--- PAKAI USER ASLI
+        'court_id' => $request->court_id,
+        'date' => $request->date,
+        'start_time' => $request->start_time,
+        'end_time' => $request->end_time,
+        'total_price' => $finalPrice, // <--- HARGA SETELAH DISKON (JIKA ADA)
+        'payment_method' => $dbPaymentMethod,
+        'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
+        'payment_proof' => $proofPath,
+        'status' => 'pending',
+        'phone' => $request->phone,
+    ]);
+        if($isDiscounted) {
+        session()->flash('success', 'Selamat! Anda mendapatkan Diskon Member Setia 10%.');
+    }
 
-        return redirect()->route('booking.success', $booking->id);
+    return redirect()->route('booking.success', $booking->id);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Court;
+use App\Models\User;
+use App\Models\Booking;
 
 class HomeController extends Controller
 {
@@ -58,6 +60,11 @@ class HomeController extends Controller
 
     public function index()
     {
+
+    $totalCourts = Court::count();
+    $totalMembers = User::where('role', '!=', 'admin')->count();
+    $totalBookings = Booking::where('status', 'approved')->count();
+
         // Ambil semua tipe lapangan yang ada di database dan hitung jumlahnya
         $courtTypes = Court::selectRaw('type, COUNT(*) as total')
             ->groupBy('type')
@@ -80,7 +87,12 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('home', compact('facilities'));
+        return view('welcome', compact(
+        'facilities', 
+        'totalCourts', 
+        'totalMembers', 
+        'totalBookings'
+    ));
     }
     public function facilities()
 {
