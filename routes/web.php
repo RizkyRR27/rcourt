@@ -62,7 +62,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // ROUTE LOGOUT (User Only)
-Route::get('/logout', [AuthController::class, 'logout'])
+Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout')
     ->middleware('auth');
 
