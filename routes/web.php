@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\TournamentController;
+use App\Http\Controllers\AuthController;
 
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -50,4 +51,15 @@ Route::get('/riwayat/{id}/tiket', [HistoryController::class, 'show'])->name('his
 
 Route::get('/turnamen', [TournamentController::class, 'index'])->name('tournament');
 
+
 Route::get('/facilities', [App\Http\Controllers\HomeController::class, 'facilities'])->name('facilities');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'processLogin']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'processRegister']);
+});
+
+// ROUTE LOGOUT (User Only)
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
