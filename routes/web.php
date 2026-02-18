@@ -41,10 +41,12 @@ Route::get('/booking/success/{id}', function ($id) {
     return view('booking.success', compact('booking'));
 })->name('booking.success');
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 
-// Proses Update Status (Approve/Reject)
-Route::post('/admin/booking/{id}/update', [AdminController::class, 'updateStatus'])->name('admin.booking.update');
+    // Proses Update Status (Approve/Reject)
+    Route::post('/admin/booking/{id}/update', [AdminController::class, 'updateStatus'])->name('admin.booking.update');
+});
 
 // Halaman Riwayat Booking User
 Route::get('/riwayat', [HistoryController::class, 'index'])->name('history');
