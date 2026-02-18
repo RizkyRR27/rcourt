@@ -58,7 +58,7 @@
 
                 <div class="mb-8">
                     <h2 class="font-display text-4xl md:text-5xl uppercase text-black">
-                        🏆 PROGRESS <span class="text-[var(--color-court-clay)]">JUARA</span>
+                        PROGRESS <span class="text-[var(--color-court-clay)]">JUARA</span>
                     </h2>
                     <p class="font-mono text-gray-600 mt-2">
                         Kumpulkan 30 Jam bermain di setiap cabang olahraga untuk mendapatkan Hadiah Spesial!
