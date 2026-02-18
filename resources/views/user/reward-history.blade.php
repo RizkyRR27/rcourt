@@ -119,6 +119,43 @@
                 </div>
             @endforelse
 
+            {{-- Pagination --}}
+            @if ($rewards->hasPages())
+                <div class="mt-8 flex justify-center">
+                    <nav class="flex items-center gap-2 font-mono text-sm">
+                        @if ($rewards->onFirstPage())
+                            <span
+                                class="px-3 py-2 border-2 border-gray-300 text-gray-300 bg-gray-50 font-bold uppercase cursor-not-allowed">&laquo;
+                                Prev</span>
+                        @else
+                            <a href="{{ $rewards->previousPageUrl() }}"
+                                class="px-3 py-2 border-2 border-black bg-white font-bold uppercase hover:bg-[var(--color-court-yellow)] transition-all shadow-hard-sm">&laquo;
+                                Prev</a>
+                        @endif
+
+                        @foreach ($rewards->getUrlRange(1, $rewards->lastPage()) as $page => $url)
+                            @if ($page == $rewards->currentPage())
+                                <span
+                                    class="px-3 py-2 border-2 border-black bg-black text-white font-bold">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}"
+                                    class="px-3 py-2 border-2 border-black bg-white font-bold hover:bg-[var(--color-court-yellow)] transition-all shadow-hard-sm">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        @if ($rewards->hasMorePages())
+                            <a href="{{ $rewards->nextPageUrl() }}"
+                                class="px-3 py-2 border-2 border-black bg-white font-bold uppercase hover:bg-[var(--color-court-yellow)] transition-all shadow-hard-sm">Next
+                                &raquo;</a>
+                        @else
+                            <span
+                                class="px-3 py-2 border-2 border-gray-300 text-gray-300 bg-gray-50 font-bold uppercase cursor-not-allowed">Next
+                                &raquo;</span>
+                        @endif
+                    </nav>
+                </div>
+            @endif
+
         </div>
     </div>
 </x-layouts.app>

@@ -24,7 +24,7 @@ class RewardController extends Controller
         $rewards = UserReward::where('user_id', Auth::id())
             ->where('reward_type', '!=', 'pending')
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->paginate(5);
         return view('user.reward-history', compact('rewards'));
     }
 
