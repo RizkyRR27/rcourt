@@ -80,4 +80,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+});
+
+// Halaman Reward (Member Only)
+Route::middleware('auth')->group(function () {
+    Route::get('/reward', [App\Http\Controllers\RewardController::class, 'index'])->name('reward.index');
+    Route::post('/reward/{id}/choose', [App\Http\Controllers\RewardController::class, 'choose'])->name('reward.choose');
 });
