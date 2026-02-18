@@ -12,9 +12,9 @@ class HistoryController extends Controller
     {
         // Hanya ambil booking milik user yang sedang login
         $bookings = Booking::where('user_id', Auth::id())
-                    ->with('court')
-                    ->latest()
-                    ->get();
+            ->with('court')
+            ->latest()
+            ->paginate(10);
 
         return view('user.history', compact('bookings'));
     }

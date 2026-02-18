@@ -52,6 +52,46 @@
                     </tbody>
                 </table>
             </div>
+
+            {{-- Pagination --}}
+            @if ($bookings->hasPages())
+                <div class="mt-6 flex justify-center">
+                    <nav class="flex items-center gap-2 font-mono text-sm">
+                        {{-- Previous --}}
+                        @if ($bookings->onFirstPage())
+                            <span
+                                class="px-3 py-2 border-2 border-gray-300 text-gray-300 bg-gray-50 font-bold uppercase cursor-not-allowed">&laquo;
+                                Prev</span>
+                        @else
+                            <a href="{{ $bookings->previousPageUrl() }}"
+                                class="px-3 py-2 border-2 border-black bg-white font-bold uppercase hover:bg-[var(--color-court-yellow)] transition-all shadow-hard-sm">&laquo;
+                                Prev</a>
+                        @endif
+
+                        {{-- Page Numbers --}}
+                        @foreach ($bookings->getUrlRange(1, $bookings->lastPage()) as $page => $url)
+                            @if ($page == $bookings->currentPage())
+                                <span
+                                    class="px-3 py-2 border-2 border-black bg-black text-white font-bold">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}"
+                                    class="px-3 py-2 border-2 border-black bg-white font-bold hover:bg-[var(--color-court-yellow)] transition-all shadow-hard-sm">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        {{-- Next --}}
+                        @if ($bookings->hasMorePages())
+                            <a href="{{ $bookings->nextPageUrl() }}"
+                                class="px-3 py-2 border-2 border-black bg-white font-bold uppercase hover:bg-[var(--color-court-yellow)] transition-all shadow-hard-sm">Next
+                                &raquo;</a>
+                        @else
+                            <span
+                                class="px-3 py-2 border-2 border-gray-300 text-gray-300 bg-gray-50 font-bold uppercase cursor-not-allowed">Next
+                                &raquo;</span>
+                        @endif
+                    </nav>
+                </div>
+            @endif
         @endif
     </div>
 </x-layouts.app>

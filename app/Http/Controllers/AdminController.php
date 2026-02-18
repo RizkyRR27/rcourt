@@ -13,7 +13,7 @@ class AdminController extends Controller
     // 1. TAMPILKAN SEMUA BOOKING
     public function index()
     {
-        $bookings = Booking::with(['court'])->latest()->get();
+        $bookings = Booking::with(['court'])->latest()->paginate(10);
         return view('admin.index', compact('bookings'));
     }
 
