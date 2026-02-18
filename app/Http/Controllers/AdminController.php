@@ -27,20 +27,20 @@ class AdminController extends Controller
         $booking = Booking::findOrFail($id);
 
         $oldStatus = $booking->status;
-        $newStatus = $request->status; 
+        $newStatus = $request->status;
 
         // Update Status di Database
         $booking->update(['status' => $newStatus]);
-        
+
         if ($newStatus == 'approved' && $oldStatus != 'approved') {
-            
+
             // a. Hitung Durasi Main (Selisih Jam)
             $start = \Carbon\Carbon::parse($booking->start_time);
             $end = \Carbon\Carbon::parse($booking->end_time);
             $hours = $end->diffInHours($start);
 
             // b. Ambil Tipe Olahraga (Karena progress dipisah per cabang)
-            $sportType = $booking->court->type; 
+            $sportType = $booking->court->type;
 
             // c. Ambil Data Progress User (Buat baru jika belum ada)
             // Pastikan Anda sudah import model: use App\Models\LoyaltyProgress;
@@ -56,7 +56,8 @@ class AdminController extends Controller
             if ($progress->total_hours >= 30) {
                 // RESET POIN: Kurangi 30 jam
                 // (Sisa jam, misal total 32, maka sisa 2 jam tetap disimpan untuk periode berikutnya)
-                $progress->total_hours = $progress->total_hours - 30;
+                // Gunakan max(0, ...) sebagai safeguard agar tidak minus
+                $progress->total_hours = max(0, $progress->total_hours - 30);
 
                 // BERIKAN HADIAH (UserReward)
                 // Pastikan Anda sudah import model: use App\Models\UserReward;
@@ -75,7 +76,7 @@ class AdminController extends Controller
         // ======================================================
         // 🚀 LOGIKA PENGIRIMAN NOTIFIKASI WHATSAPP
         // ======================================================
-        
+
         if ($booking->phone) {
             try {
                 $this->sendWhatsappNotification($booking, $newStatus);
@@ -93,53 +94,53 @@ class AdminController extends Controller
     private function sendWhatsappNotification($booking, $status)
     {
         $target = $booking->phone;
-        
+
         // Format Pesan
-        if($status == 'approved') {
+        if ($status == 'approved') {
             $pesan = "*HALO! BOOKING ANDA DITERIMA* ✅\n\n" .
-                     "Hai, booking lapangan Anda sudah kami validasi.\n\n" .
-                     "📅 Tanggal: " . \Carbon\Carbon::parse($booking->date)->format('d F Y') . "\n" .
-                     "⏰ Jam: {$booking->start_time} s/d {$booking->end_time}\n" .
-                     "🏟️ Lapangan: {$booking->court->name}\n\n" .
-                     "Silakan tunjukkan pesan ini kepada petugas saat datang. Terima kasih!";
+                "Hai, booking lapangan Anda sudah kami validasi.\n\n" .
+                "📅 Tanggal: " . \Carbon\Carbon::parse($booking->date)->format('d F Y') . "\n" .
+                "⏰ Jam: {$booking->start_time} s/d {$booking->end_time}\n" .
+                "🏟️ Lapangan: {$booking->court->name}\n\n" .
+                "Silakan tunjukkan pesan ini kepada petugas saat datang. Terima kasih!";
         } else {
             $pesan = "*MOHON MAAF, BOOKING DITOLAK* ❌\n\n" .
-                     "Booking lapangan untuk tanggal " . \Carbon\Carbon::parse($booking->date)->format('d F Y') . " tidak dapat kami terima.\n\n" .
-                     "Alasan: Slot waktu penuh atau bukti pembayaran tidak valid.\n" .
-                     "Silakan cek website kami untuk info slot lainnya.";
+                "Booking lapangan untuk tanggal " . \Carbon\Carbon::parse($booking->date)->format('d F Y') . " tidak dapat kami terima.\n\n" .
+                "Alasan: Slot waktu penuh atau bukti pembayaran tidak valid.\n" .
+                "Silakan cek website kami untuk info slot lainnya.";
         }
 
         // --- SKRIP API FONNTE ---
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://api.fonnte.com/send',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS => array(
-            'target' => $target,
-            'message' => $pesan,
-            'countryCode' => '62', // Otomatis ubah 08 jadi 628
-          ),
-          CURLOPT_HTTPHEADER => array(
-            // GANTI TOKEN DI BAWAH INI DENGAN TOKEN ANDA
-            "Authorization: BpWsSn2H4cADV7kzaJW5" 
-          ),
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'target' => $target,
+                'message' => $pesan,
+                'countryCode' => '62', // Otomatis ubah 08 jadi 628
+            ),
+            CURLOPT_HTTPHEADER => array(
+                // GANTI TOKEN DI BAWAH INI DENGAN TOKEN ANDA
+                "Authorization: BpWsSn2H4cADV7kzaJW5"
+            ),
         ));
 
         $response = curl_exec($curl);
-        
+
         // Cek error cURL
         if (curl_errno($curl)) {
             $error_msg = curl_error($curl);
             Log::error("Fonnte cURL Error: " . $error_msg);
         }
-        
+
         curl_close($curl);
     }
 }
