@@ -21,16 +21,28 @@
                     class="flex flex-col items-center justify-center gap-2 border-b-2 border-dashed border-black/30 pb-6 text-center">
                     <span class="font-mono text-xs font-bold uppercase text-gray-500">KODE BOOKING</span>
                     <span
-                        class="font-mono text-3xl font-bold tracking-widest text-[var(--color-court-primary)]">#{{ $id }}</span>
+                        class="font-mono text-3xl font-bold tracking-widest text-[var(--color-court-primary)]">#{{ $booking->id }}</span>
                 </div>
 
                 <div class="pt-6 text-center">
                     <span class="mb-2 block font-mono text-xs font-bold uppercase text-gray-500">STATUS
                         PEMBAYARAN</span>
-                    <span
-                        class="inline-block border-2 border-black bg-[var(--color-court-yellow)] px-3 py-1 font-mono text-sm font-bold uppercase tracking-wider text-black shadow-hard-sm">
-                        PENDING CONFIRMATION
-                    </span>
+                    @if ($booking->status == 'pending')
+                        <span
+                            class="inline-block border-2 border-black bg-[var(--color-court-yellow)] px-3 py-1 font-mono text-sm font-bold uppercase tracking-wider text-black shadow-hard-sm">
+                            PENDING
+                        </span>
+                    @elseif ($booking->status == 'approved')
+                        <span
+                            class="inline-block border-2 border-black bg-[var(--color-court-green)] px-3 py-1 font-mono text-sm font-bold uppercase tracking-wider text-white shadow-hard-sm">
+                            APPROVED
+                        </span>
+                    @else
+                        <span
+                            class="inline-block border-2 border-black bg-red-600 px-3 py-1 font-mono text-sm font-bold uppercase tracking-wider text-white shadow-hard-sm">
+                            REJECTED
+                        </span>
+                    @endif
                 </div>
             </div>
 

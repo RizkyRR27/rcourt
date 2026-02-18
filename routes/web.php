@@ -35,7 +35,8 @@ Route::post('/booking/store', [BookingController::class, 'store'])->name('bookin
 
 // Halaman Sukses (Setelah booking)
 Route::get('/booking/success/{id}', function ($id) {
-    return view('booking.success', compact('id'));
+    $booking = \App\Models\Booking::findOrFail($id);
+    return view('booking.success', compact('booking'));
 })->name('booking.success');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');

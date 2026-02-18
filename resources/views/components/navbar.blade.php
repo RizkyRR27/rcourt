@@ -2,7 +2,7 @@
     'currentRoute' => '',
 ])
 
-<nav class="sticky top-0 z-50 w-full border-b-2 border-black bg-[var(--color-court-paper)]" x-data="{ open: false }">
+<nav class="sticky top-0 z-50 w-full border-b-2 border-black bg-[var(--color-court-paper)]" x-data="{ open: false, showLogoutModal: false }">
     <div class="mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex h-20 items-center justify-between">
 
@@ -67,20 +67,17 @@
                                     Riwayat Booking
                                 </a>
 
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf {{-- Token keamanan ini WAJIB ada --}}
-                                    <button type="submit"
-                                        class="flex items-center gap-2 w-full text-left px-4 py-3 font-mono text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                                            <polyline points="16 17 21 12 16 7" />
-                                            <line x1="21" x2="9" y1="12" y2="12" />
-                                        </svg>
-                                        Logout
-                                    </button>
-                                </form>
+                                <button type="button" @click="showLogoutModal = true"
+                                    class="flex items-center gap-2 w-full text-left px-4 py-3 font-mono text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-800 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                        <polyline points="16 17 21 12 16 7" />
+                                        <line x1="21" x2="9" y1="12" y2="12" />
+                                    </svg>
+                                    Logout
+                                </button>
                             </div>
                         </div>
                     @else
@@ -131,27 +128,63 @@
                     Riwayat Booking
                 </a>
 
-                <form action="{{ route('logout') }}" method="POST" class="block w-full">
+                <button type="button" @click="showLogoutModal = true"
+                    class="flex items-center justify-center gap-2 w-full border-2 border-black bg-red-600 px-4 py-3 font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-red-700 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" x2="9" y1="12" y2="12" />
+                    </svg>
+                    <span>LOGOUT ({{ Str::limit(Auth::user()->name, 8) }})</span>
+                </button>
+            @else
+                <a href="{{ route('login') }}"
+                    class="block w-full border-2 border-black bg-[var(--color-court-green)] px-4 py-3 text-center font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                    LOGIN
+                </a>
+            @endauth
+        </div>
+    </div>
+
+    {{-- Logout Confirmation Modal --}}
+    <div x-show="showLogoutModal" x-cloak
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+        x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="w-full max-w-md border-2 border-black bg-white p-8 shadow-hard"
+            @click.outside="showLogoutModal = false" x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+            <div class="mb-6 text-center">
+                <div
+                    class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-black bg-red-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" x2="9" y1="12" y2="12" />
+                    </svg>
+                </div>
+                <h2 class="font-display text-2xl uppercase text-black">Keluar?</h2>
+                <p class="mt-2 font-mono text-sm text-gray-600">Apakah Anda yakin ingin keluar dari akun Anda?</p>
+            </div>
+            <div class="flex gap-3">
+                <button type="button" @click="showLogoutModal = false"
+                    class="flex-1 border-2 border-black bg-white px-4 py-3 font-mono font-bold uppercase text-black shadow-hard-sm transition-all hover:-translate-y-px active:translate-y-0 active:shadow-none">
+                    Batal
+                </button>
+                <form action="{{ route('logout') }}" method="POST" class="flex-1">
                     @csrf
                     <button type="submit"
-                        class="flex items-center justify-center gap-2 w-full border-2 border-black bg-red-600 px-4 py-3 font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none hover:bg-red-700 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" x2="9" y1="12" y2="12" />
-                        </svg>
-                        <span>LOGOUT ({{ Str::limit(Auth::user()->name, 8) }})</span>
+                        class="w-full border-2 border-black bg-red-600 px-4 py-3 font-mono font-bold uppercase text-white shadow-hard-sm transition-all hover:-translate-y-px hover:bg-red-700 active:translate-y-0 active:shadow-none">
+                        Ya, Keluar
+                    </button>
+                </form>
             </div>
-            </form>
-        @else
-            <a href="{{ route('login') }}"
-                class="block w-full border-2 border-black bg-[var(--color-court-green)] px-4 py-3 text-center font-mono font-bold uppercase text-white shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
-                LOGIN
-            </a>
-        @endauth
-    </div>
+        </div>
     </div>
 </nav>
 
