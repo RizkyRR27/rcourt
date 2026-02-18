@@ -87,7 +87,7 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('welcome', compact(
+        return view('home', compact(
         'facilities', 
         'totalCourts', 
         'totalMembers', 
@@ -96,6 +96,6 @@ class HomeController extends Controller
     }
     public function facilities()
 {
-    return view('facilities');
+    return view('home', compact('facilities'));
 }
 }

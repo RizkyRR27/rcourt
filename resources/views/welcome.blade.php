@@ -1,254 +1,185 @@
-<x-layouts.app current-route="home">
-    {{-- HERO SECTION --}}
-    <div class="relative bg-black text-white py-24 px-6 text-center border-b-4 border-[var(--color-court-clay)]">
-        <h1 class="font-display text-6xl md:text-8xl uppercase mb-4 text-[var(--color-court-yellow)]">
-            Main <span class="text-white">Sepuasnya</span>
-        </h1>
-        <p class="font-mono text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-300">
-            Booking lapangan Badminton, Futsal, Basket, dan Mini Soccer dengan mudah. Jadilah juara di arena kami!
-        </p>
+<x-layouts.app :current-route="'home'">
+    
+    {{-- ===============================================================
+         1. HERO SECTION (Desain Retro Brutalist)
+       =============================================================== --}}
+    <section class="relative overflow-hidden bg-[var(--color-court-green)] pb-32 pt-20 text-[var(--color-court-paper)]">
+        
+        {{-- Background Grid Pattern --}}
+        <div class="absolute inset-0 opacity-10 pointer-events-none"
+             style="background-image: linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px); background-size: 40px 40px;">
+        </div>
 
-        @auth
-            <a href="{{ route('booking') }}"
-                class="inline-block bg-[var(--color-court-clay)] text-white px-8 py-4 font-mono font-bold uppercase border-2 border-white hover:bg-red-700 transition-all transform hover:scale-105 shadow-hard">
-                Booking Sekarang
-            </a>
-        @else
-            <div class="flex justify-center gap-4">
-                <a href="{{ route('login') }}"
-                    class="bg-white text-black px-8 py-3 font-mono font-bold uppercase border-2 border-black hover:bg-gray-200 shadow-hard">
-                    Masuk
-                </a>
-                <a href="{{ route('register') }}"
-                    class="bg-[var(--color-court-clay)] text-white px-8 py-3 font-mono font-bold uppercase border-2 border-white hover:bg-red-700 shadow-hard">
-                    Daftar
-                </a>
+        <div class="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+            <div class="mb-4 inline-flex items-center gap-2 border border-[var(--color-court-yellow)] px-3 py-1 text-xs font-bold uppercase tracking-widest text-[var(--color-court-yellow)]">
+                <span class="h-2 w-2 bg-red-500 rounded-full animate-pulse"></span>
+                Live Booking Available
             </div>
-        @endauth
-    </div>
 
-    {{-- STATISTIK BAR (Retro Style) --}}
-    <div class="bg-[var(--color-court-paper)] border-b-2 border-black py-8">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div class="animate-slide-up border-2 border-black bg-white p-4 shadow-hard"
-                style="animation-delay: 100ms; animation-fill-mode: both;" x-data="{ current: 0, target: {{ $totalCourts }} }"
-                x-init="let step = Math.ceil(target / 100);
-                if (step < 1) step = 1;
-                let timer = setInterval(() => {
-                    current += step;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                }, 40);">
-                <h3 class="font-display text-4xl"><span x-text="current"></span>+</h3>
-                <p class="font-mono text-xs uppercase text-gray-500">Lapangan Tersedia</p>
-            </div>
-            <div class="animate-slide-up border-2 border-black bg-white p-4 shadow-hard"
-                style="animation-delay: 200ms; animation-fill-mode: both;" x-data="{ current: 0, target: {{ $totalMembers }} }"
-                x-init="let step = Math.ceil(target / 100);
-                if (step < 1) step = 1;
-                let timer = setInterval(() => {
-                    current += step;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                }, 40);">
-                <h3 class="font-display text-4xl"><span x-text="current"></span>+</h3>
-                <p class="font-mono text-xs uppercase text-gray-500">Member Aktif</p>
-            </div>
-            <div class="animate-slide-up border-2 border-black bg-white p-4 shadow-hard"
-                style="animation-delay: 300ms; animation-fill-mode: both;" x-data="{ current: 0, target: {{ $totalBookings }} }"
-                x-init="let step = Math.ceil(target / 100);
-                if (step < 1) step = 1;
-                let timer = setInterval(() => {
-                    current += step;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                }, 40);">
-                <h3 class="font-display text-4xl"><span x-text="current"></span>+</h3>
-                <p class="font-mono text-xs uppercase text-gray-500">Pertandingan Sukses</p>
+            <h1 class="mb-6 font-display text-6xl uppercase leading-[0.9] tracking-tighter md:text-9xl lg:text-[10rem] text-white">
+                Selamat Datang <br />
+                <span class="text-stroke-white">Di RCOURT</span>
+            </h1>
+
+            <p class="mx-auto mb-10 max-w-2xl font-mono text-sm leading-relaxed text-gray-300 md:text-base">
+                Pusat olahraga dengan fasilitas terbaik. Nikmati kemudahan booking lapangan Kami secara online. 
+                Jangan biarkan jadwal kosong menghalangi permainanmu.
+            </p>
+
+            <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <a href="{{ route('booking') }}"
+                   class="font-mono font-bold uppercase transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none border-2 border-black px-6 py-3 text-sm md:text-base tracking-wider bg-[var(--color-court-clay)] text-white shadow-hard hover:bg-red-600 min-w-[200px] text-center">
+                    BOOKING SEKARANG
+                </a>
+                <a href="#facilities"
+                   class="font-mono font-bold uppercase transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none border-2 border-[var(--color-court-paper)] px-6 py-3 text-sm md:text-base tracking-wider bg-transparent text-[var(--color-court-paper)] shadow-hard hover:bg-[var(--color-court-paper)] hover:text-[var(--color-court-green)] min-w-[200px] text-center">
+                    LIHAT FASILITAS
+                </a>
             </div>
         </div>
-    </div>
+    </section>
 
+    {{-- Booking Widget --}}
+    <x-booking-widget />
 
-
-    {{-- FEATURES SECTION --}}
-    <div class="py-16 px-4 bg-white border-b-2 border-black">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="font-display text-4xl md:text-5xl uppercase mb-12">Kenapa <span
-                    class="text-[var(--color-court-clay)]">RCourt?</span></h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {{-- Feature 1 --}}
-                <div class="animate-slide-up p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform"
-                    style="animation-delay: 400ms; animation-fill-mode: both;">
-                    <div class="text-6xl mb-4">🏆</div>
-                    <h3 class="font-display text-xl uppercase mb-2">Standar Internasional</h3>
-                    <p class="font-mono text-sm text-gray-600">Lantai karpet vinyl & rumput sintetis kualitas terbaik
-                        untuk
-                        performa maksimal.</p>
+    {{-- ===============================================================
+         2. LOYALTY SECTION (HANYA MUNCUL JIKA LOGIN)
+       =============================================================== --}}
+    @auth
+    <section class="py-12 bg-[var(--color-court-paper)] border-b-2 border-black">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="bg-white border-4 border-black p-6 md:p-8 shadow-hard relative overflow-hidden">
+                
+                {{-- Hiasan Label --}}
+                <div class="absolute top-0 right-0 bg-black text-white px-4 py-2 font-mono text-xs font-bold uppercase">
+                    MEMBER AREA
                 </div>
 
-                {{-- Feature 2 --}}
-                <div class="animate-slide-up p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform"
-                    style="animation-delay: 500ms; animation-fill-mode: both;">
-                    <div class="text-6xl mb-4">📍</div>
-                    <h3 class="font-display text-xl uppercase mb-2">Lokasi Strategis</h3>
-                    <p class="font-mono text-sm text-gray-600">Mudah diakses dari pusat kota, parkir luas, dan aman 24
-                        jam.
+                <div class="mb-8">
+                    <h2 class="font-display text-4xl md:text-5xl uppercase text-black">
+                        🏆 PROGRESS <span class="text-[var(--color-court-clay)]">JUARA</span>
+                    </h2>
+                    <p class="font-mono text-gray-600 mt-2">
+                        Kumpulkan 30 Jam bermain di setiap cabang olahraga untuk mendapatkan Hadiah Spesial!
                     </p>
                 </div>
 
-                {{-- Feature 3 --}}
-                <div class="animate-slide-up p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform"
-                    style="animation-delay: 600ms; animation-fill-mode: both;">
-                    <div class="text-6xl mb-4">💡</div>
-                    <h3 class="font-display text-xl uppercase mb-2">Fasilitas Lengkap</h3>
-                    <p class="font-mono text-sm text-gray-600">Wi-Fi, Kantin, Musholla, dan Ruang Ganti yang bersih dan
-                        nyaman.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+                {{-- Grid Progress Bar --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @php
+                        $sports = ['badminton', 'futsal', 'mini_soccer', 'basket_indoor', 'tennis', 'padel'];
+                    @endphp
 
-    {{-- PROMO LOYALTY SECTION --}}
-    <div class="py-16 px-4 bg-yellow-50 border-b-2 border-black">
-        <div
-            class="max-w-5xl mx-auto border-4 border-black bg-white p-8 md:p-12 shadow-hard-lg relative overflow-hidden">
-            <div
-                class="absolute top-0 right-0 bg-red-600 text-white font-mono font-bold px-12 py-2 transform rotate-45 translate-x-14 translate-y-6 border-2 border-black">
-                HOT PROMO
-            </div>
-
-            <div class="flex flex-col md:flex-row items-center gap-8">
-                <div class="text-6xl">🏆</div>
-                <div>
-                    <h2 class="font-display text-4xl uppercase mb-2">Tantangan 30 Jam!</h2>
-                    <p class="font-mono text-gray-700 mb-4">
-                        Tunjukkan dedikasimu! Akumulasikan total bermain hingga
-                        <span class="font-bold bg-yellow-200 px-1">30 JAM</span>
-                        di cabang olahraga apapun, dan dapatkan status
-                        <span class="font-bold text-red-600">VIP MEMBER</span>
-                        (Diskon 10% seumur hidup!).
-                    </p>
-
-                    @auth
+                    @foreach($sports as $sport)
                         @php
-                            // Hitung Jam Main User yang Sedang Login
-                            $myHours = \App\Models\Booking::where('user_id', Auth::id())
-                                ->where('status', 'approved')
-                                ->sum(\DB::raw('TIMESTAMPDIFF(HOUR, start_time, end_time)'));
-                            $progress = min(100, ($myHours / 30) * 100);
+                            $prog = \App\Models\LoyaltyProgress::where('user_id', Auth::id())
+                                    ->where('sport_type', $sport)
+                                    ->first();
+                            $current = $prog ? $prog->total_hours : 0;
+                            $percent = min(100, ($current / 30) * 100);
                         @endphp
 
-                        <div class="bg-gray-200 h-6 w-full border-2 border-black rounded-full overflow-hidden relative">
-                            <div class="bg-[var(--color-court-green)] h-full" style="width:{{ $progress }}%;"></div>
-                            <span class="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold text-yellow-800">
-                                Progress Anda: {{ $myHours }} / 30 Jam
-                            </span>
+                        <div class="border-2 border-black bg-gray-50 p-4 transition-transform hover:-translate-y-1">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="font-mono font-bold uppercase text-sm">{{ str_replace('_', ' ', $sport) }}</span>
+                                <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">
+                                    {{ $current }} / 30 JAM
+                                </span>
+                            </div>
+                            <div class="w-full h-4 bg-gray-200 border-2 border-black relative">
+                                <div class="h-full bg-[var(--color-court-green)] transition-all duration-1000" 
+                                     style="width: {{ $percent }}%"></div>
+                            </div>
+                            @if($current >= 25 && $current < 30)
+                                <p class="text-[10px] text-red-600 font-bold mt-1 text-right animate-pulse">Sedikit lagi!</p>
+                            @endif
                         </div>
-                    @else
-                        <p class="font-mono text-xs text-red-500">* Login untuk melihat progress Anda.</p>
-                    @endauth
+                    @endforeach
                 </div>
+
+                {{-- NOTIFIKASI KLAIM HADIAH --}}
+                @php
+                    $pendingRewards = \App\Models\UserReward::where('user_id', Auth::id())
+                                      ->where('reward_type', 'pending')
+                                      ->count();
+                @endphp
+
+                @if($pendingRewards > 0)
+                    <div class="mt-8 bg-yellow-100 border-2 border-dashed border-black p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-pulse">
+                        <div class="flex items-center gap-4">
+                            <span class="text-4xl">🎁</span>
+                            <div>
+                                <h3 class="font-display text-xl uppercase">Selamat! Anda punya {{ $pendingRewards }} Hadiah</h3>
+                                <p class="font-mono text-xs text-gray-600">Diskon, Tumbler, atau Voucher Cukur menanti!</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('reward.index') }}" 
+                           class="bg-red-600 text-white font-mono font-bold uppercase px-6 py-2 border-2 border-black shadow-hard hover:bg-red-700 hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                            KLAIM SEKARANG
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
-    </div>
+    </section>
+    @endauth
 
-    {{-- TESTIMONIALS SECTION --}}
-    <div class="py-16 px-4 bg-[var(--color-court-paper)] border-b-2 border-black">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="font-display text-4xl md:text-5xl uppercase mb-12">Apa Kata <span
-                    class="text-[var(--color-court-clay)]">Atlet?</span></h2>
+    {{-- ===============================================================
+         3. FACILITIES SECTION
+       =============================================================== --}}
+    <section id="facilities" class="py-20 bg-[var(--color-court-paper)]">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mb-16 text-center">
+                <span class="mb-4 inline-block border-2 border-black bg-[var(--color-court-yellow)] px-4 py-1 font-mono text-sm font-bold uppercase tracking-widest shadow-hard-sm">
+                    Fasilitas Kami
+                </span>
+                <h2 class="mt-4 font-display text-5xl uppercase md:text-7xl text-black">
+                    CHOOSE YOUR <span class="text-stroke-black md:text-black">ARENA</span>
+                </h2>
+            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {{-- Testimoni 1 --}}
-                <div class="animate-slide-up bg-white p-6 border-2 border-black shadow-hard relative"
-                    style="animation-delay: 700ms; animation-fill-mode: both;">
-                    <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
-                    <p class="font-mono text-sm italic mb-4">"Lapangannya gokil! Karpetnya empuk banget, lutut aman buat
-                        main 3 set berturut-turut. Recommended!"</p>
-                    <div class="font-bold uppercase text-xs border-t-2 border-black pt-2">Budi Santoso - Badminton Lover
+            <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($facilities as $facility)
+                    <div class="group relative flex flex-col justify-between border-2 border-black bg-white p-8 shadow-hard transition-all duration-300 hover:-translate-y-2 hover:shadow-[8px_8px_0px_0px_var(--color-court-clay)]">
+                        <div>
+                            <div class="mb-6 flex items-start justify-between">
+                                <div class="flex h-14 w-14 items-center justify-center border-2 border-black bg-[var(--color-court-paper)] text-black">
+                                    <span class="text-2xl">{{ $facility['icon'] }}</span>
+                                </div>
+                                <div class="border-2 border-black bg-black px-2 py-1 text-white">
+                                    <span class="font-mono text-xs font-bold uppercase">{{ $facility['category'] }}</span>
+                                </div>
+                            </div>
+                            <h3 class="mb-2 font-display text-3xl uppercase tracking-tight">{{ $facility['label'] }}</h3>
+                            <p class="mb-6 font-mono text-sm text-gray-600">{{ $facility['description'] }}</p>
+                        </div>
+                        <div class="mt-auto flex items-end justify-between border-t-2 border-gray-100 pt-6">
+                            <div>
+                                <span class="block font-display text-5xl text-[var(--color-court-clay)]">{{ $facility['count'] }}</span>
+                                <span class="font-mono text-xs font-bold uppercase text-black">Lapangan</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-mono text-xs text-gray-500">Starts from</span>
+                                <p class="font-mono text-lg font-bold">{{ $facility['price'] }}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                {{-- Testimoni 2 --}}
-                <div class="animate-slide-up bg-white p-6 border-2 border-black shadow-hard relative"
-                    style="animation-delay: 800ms; animation-fill-mode: both;">
-                    <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
-                    <p class="font-mono text-sm italic mb-4">"Mini Soccernya mantap. Rumput sintetisnya standar FIFA.
-                        Booking gampang, admin ramah."</p>
-                    <div class="font-bold uppercase text-xs border-t-2 border-black pt-2">Arema - Tim Futsal</div>
-                </div>
-
-                {{-- Testimoni 3 --}}
-                <div class="animate-slide-up bg-white p-6 border-2 border-black shadow-hard relative"
-                    style="animation-delay: 900ms; animation-fill-mode: both;">
-                    <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
-                    <p class="font-mono text-sm italic mb-4">"Tempat paling asik buat sparing basket. Ringnya enak,
-                        bolanya
-                        juga baru-baru. Top markotop!"</p>
-                    <div class="font-bold uppercase text-xs border-t-2 border-black pt-2">Dimas - Basket Addict</div>
-                </div>
+                @endforeach
             </div>
         </div>
-    </div>
+    </section>
 
-    {{-- FAQ SECTION --}}
-    <div class="py-16 px-4 bg-white" x-data="{ active: null }">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="font-display text-4xl text-center uppercase mb-8">Pertanyaan <span
-                    class="text-[var(--color-court-clay)]">Umum</span></h2>
-
-            <div class="space-y-4">
-                {{-- FAQ 1 --}}
-                <div class="border-2 border-black shadow-sm">
-                    <button @click="active === 1 ? active = null : active = 1"
-                        class="w-full text-left px-6 py-4 font-mono font-bold uppercase flex justify-between items-center bg-gray-50 hover:bg-[var(--color-court-yellow)] transition-colors">
-                        <span>Bagaimana cara booking lapangan?</span>
-                        <span x-text="active === 1 ? '-' : '+'" class="text-xl"></span>
-                    </button>
-                    <div x-show="active === 1" x-collapse
-                        class="px-6 py-4 font-mono text-sm text-gray-700 bg-white border-t-2 border-black">
-                        Silakan login, pilih menu "Booking Lapangan", pilih tanggal dan jam yang tersedia, lalu lakukan
-                        pembayaran via transfer atau COD.
-                    </div>
-                </div>
-
-                {{-- FAQ 2 --}}
-                <div class="border-2 border-black shadow-sm">
-                    <button @click="active === 2 ? active = null : active = 2"
-                        class="w-full text-left px-6 py-4 font-mono font-bold uppercase flex justify-between items-center bg-gray-50 hover:bg-[var(--color-court-yellow)] transition-colors">
-                        <span>Apakah bisa membatalkan booking?</span>
-                        <span x-text="active === 2 ? '-' : '+'" class="text-xl"></span>
-                    </button>
-                    <div x-show="active === 2" x-collapse
-                        class="px-6 py-4 font-mono text-sm text-gray-700 bg-white border-t-2 border-black">
-                        Pembatalan maksimal H-1 sebelum jadwal main. Biaya akan dikembalikan 100% ke saldo member atau
-                        diproses refund (potongan admin 5%).
-                    </div>
-                </div>
-
-                {{-- FAQ 3 --}}
-                <div class="border-2 border-black shadow-sm">
-                    <button @click="active === 3 ? active = null : active = 3"
-                        class="w-full text-left px-6 py-4 font-mono font-bold uppercase flex justify-between items-center bg-gray-50 hover:bg-[var(--color-court-yellow)] transition-colors">
-                        <span>Apa saja metode pembayaran yang tersedia?</span>
-                        <span x-text="active === 3 ? '-' : '+'" class="text-xl"></span>
-                    </button>
-                    <div x-show="active === 3" x-collapse
-                        class="px-6 py-4 font-mono text-sm text-gray-700 bg-white border-t-2 border-black">
-                        Kami menerima Transfer Bank (BCA, Mandiri, BNI), E-Wallet (Gopay, OVO, Dana), dan pembayaran
-                        tunai
-                        di kasir (COD) dengan DP minimal 50%.
-                    </div>
-                </div>
-            </div>
+    {{-- CTA SECTION --}}
+    <section class="border-t-2 border-black bg-[var(--color-court-yellow)] py-20">
+        <div class="mx-auto max-w-4xl px-4 text-center">
+            <h2 class="mb-6 font-display text-5xl uppercase text-black md:text-7xl">
+                SIAP BERMAIN?
+            </h2>
+            <a href="{{ route('booking') }}"
+               class="font-mono font-bold uppercase inline-block transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none border-2 border-black px-6 py-3 tracking-wider bg-[var(--color-court-clay)] text-white shadow-hard hover:bg-red-600">
+                BOOKING SEKARANG
+            </a>
         </div>
-    </div>
+    </section>
+
 </x-layouts.app>

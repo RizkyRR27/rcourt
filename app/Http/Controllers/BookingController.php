@@ -343,30 +343,22 @@ class BookingController extends Controller
             );
         }
        // $duration = (int)$request->duration;
-        $totalPlayedHours = Booking::where('user_id', $user->id)
-                        ->where('status', 'approved')
-                        // Asumsi kita hitung selisih waktu
-                        ->get()
-                        ->sum(function($b) {
-                             return \Carbon\Carbon::parse($b->end_time)->diffInHours(\Carbon\Carbon::parse($b->start_time));
-                        });
-                        $finalPrice = $request->total_price;
+        $discountReward = \App\Models\UserReward::where('user_id', $user->id)
+                      ->where('reward_type', 'discount') // Hanya tipe diskon
+                      ->where('is_used', false)          // Yang belum dipakai
+                      ->first();
+
+    $finalPrice = $request->total_price;
     $isDiscounted = false;
 
-    // Jika sudah main lebih dari 30 jam, dapat diskon 10%
-    if ($totalPlayedHours >= 30) {
-        $discountAmount = $finalPrice * 0.10; // 10%
+    if ($discountReward) {
+        // Terapkan Diskon 10%
+        $discountAmount = $finalPrice * 0.10;
         $finalPrice = $finalPrice - $discountAmount;
         $isDiscounted = true;
+        // PENTING: Kita tandai 'used' NANTI setelah booking berhasil disimpan (di bawah)
+        // supaya kalau booking gagal (karena bentrok), tiketnya tidak hangus duluan.
     }
-
-
-
-
-
-
-       
-
         // =================================================================
         // SATPAM 2: CEK BENTROK JAM (LAGI)
         // Pastikan slot ini belum diambil orang lain sedetik yang lalu
@@ -410,10 +402,13 @@ class BookingController extends Controller
         'status' => 'pending',
         'phone' => $request->phone,
     ]);
-        if($isDiscounted) {
-        session()->flash('success', 'Selamat! Anda mendapatkan Diskon Member Setia 10%.');
+       if ($isDiscounted && $discountReward) {
+        $discountReward->update(['is_used' => true]);
+        session()->flash('success', 'Booking Berhasil! Diskon Hadiah 10% telah digunakan.');
+    } else {
+        session()->flash('success', 'Booking Berhasil!');
     }
 
     return redirect()->route('booking.success', $booking->id);
-    }
+}
 }
