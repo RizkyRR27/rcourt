@@ -37,7 +37,14 @@ class AdminController extends Controller
             // a. Hitung Durasi Main (Selisih Jam)
             $start = \Carbon\Carbon::parse($booking->start_time);
             $end = \Carbon\Carbon::parse($booking->end_time);
-            $hours = $end->diffInHours($start);
+
+            // Jika end < start (misal 00:00 < 23:00), berarti lewat tengah malam (Time Wrap)
+            // Maka end-nya dianggap besoknya
+            if ($end->lt($start)) {
+                $end->addDay();
+            }
+
+            $hours = abs($end->diffInHours($start));
 
             // b. Ambil Tipe Olahraga (Karena progress dipisah per cabang)
             $sportType = $booking->court->type;
