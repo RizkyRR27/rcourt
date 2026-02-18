@@ -10,11 +10,13 @@ use App\Models\User;
 class AuthController extends Controller
 {
     // --- HALAMAN LOGIN ---
-    public function showLogin() {
+    public function showLogin()
+    {
         return view('auth.login');
     }
 
-    public function processLogin(Request $request) {
+    public function processLogin(Request $request)
+    {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -31,16 +33,29 @@ class AuthController extends Controller
     }
 
     // --- HALAMAN REGISTER ---
-    public function showRegister() {
+    public function showRegister()
+    {
         return view('auth.register');
     }
 
-    public function processRegister(Request $request) {
+    public function processRegister(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed', // butuh input name="password_confirmation"
-            'phone' => 'required|numeric',
+            'password' => 'required|min:6|confirmed',
+            'phone' => ['required', 'regex:/^(\+62|62|0)8[1-9][0-9]{6,9}$/'],
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.max' => 'Nama maksimal 255 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 6 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'phone.required' => 'Nomor WhatsApp wajib diisi.',
+            'phone.regex' => 'Format nomor tidak valid. Gunakan format Indonesia (contoh: 081234567890).',
         ]);
 
         $user = User::create([
@@ -59,14 +74,14 @@ class AuthController extends Controller
     // --- LOGOUT ---
     // app/Http/Controllers/AuthController.php
 
-public function logout(Request $request)
-{
-    Auth::logout(); // Hapus sesi login
- 
-    $request->session()->invalidate(); // Matikan session lama
- 
-    $request->session()->regenerateToken(); // Buat token baru (keamanan)
- 
-    return redirect('/')->with('success', 'Anda berhasil keluar. Sampai jumpa!');
-}
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Hapus sesi login
+
+        $request->session()->invalidate(); // Matikan session lama
+
+        $request->session()->regenerateToken(); // Buat token baru (keamanan)
+
+        return redirect('/')->with('success', 'Anda berhasil keluar. Sampai jumpa!');
+    }
 }

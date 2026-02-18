@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Tournament;
 use Illuminate\Http\Request;
 use App\Models\Court;
 use App\Models\Booking;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
@@ -25,27 +26,28 @@ class BookingController extends Controller
 
         return view('booking.index', compact('types'));
     }
-  public function search(Request $request)
+    public function search(Request $request)
     {
         // 1. Ambil Input
         $type = $request->input('type');
         $date = $request->input('date');
         $duration = $request->input('duration');
-       
+
 
         if (!$type || !$date || !$duration) {
             return redirect()->back()->withErrors(['msg' => 'Data tidak lengkap']);
         }
-         $userDate = Carbon::parse($date);
+        $userDate = Carbon::parse($date);
 
-         $oneTimeEvent = Tournament::where('is_recurring', false)
+        $oneTimeEvent = Tournament::where('is_recurring', false)
             ->whereDate('start_date', '<=', $userDate)
             ->whereDate('end_date', '>=', $userDate)
             ->first();
 
         if ($oneTimeEvent) {
             // Kalau kena tanggal ini, langsung tolak!
-            return redirect()->route('booking')->with('error', 
+            return redirect()->route('booking')->with(
+                'error',
                 '⛔ MAAF! Tanggal ' . $userDate->format('d M Y') . ' ditutup untuk event: ' . $oneTimeEvent->name
             );
         }
@@ -57,31 +59,32 @@ class BookingController extends Controller
             // Kita "paksa" tahun turnamen jadi tahun pilihan user
             // Tambahkan startOfDay() agar jamnya mulai 00:00:00
             $start = Carbon::parse($event->start_date)
-                        ->setYear($userDate->year)
-                        ->startOfDay(); 
-            
+                ->setYear($userDate->year)
+                ->startOfDay();
+
             // Tambahkan endOfDay() agar jamnya berakhir 23:59:59
             $end   = Carbon::parse($event->end_date)
-                        ->setYear($userDate->year)
-                        ->endOfDay();
+                ->setYear($userDate->year)
+                ->endOfDay();
 
             // Cek apakah tanggal user ada di antara rentang itu
             if ($userDate->between($start, $end)) {
-                return redirect()->route('booking')->with('error', 
+                return redirect()->route('booking')->with(
+                    'error',
                     '⛔ MAAF! Tanggal ini kena jadwal rutin tahunan: ' . $event->name
                 );
             }
         }
 
-    $cekTglUser = $request->input('date');
-    $cekTurnamenSekali = \App\Models\Tournament::where('is_recurring', 0)->get();
-    
-    // dd([
-    //     'STATUS' => 'DEBUGGING MODE',
-    //     'TANGGAL_YANG_DICARI_USER' => $cekTglUser,
-    //     'TOTAL_TURNAMEN_SEKALI_PAKAI' => $cekTurnamenSekali->count(),
-    //     'LIST_DATA_DATABASE' => $cekTurnamenSekali->toArray()
-    // ]);
+        $cekTglUser = $request->input('date');
+        $cekTurnamenSekali = \App\Models\Tournament::where('is_recurring', 0)->get();
+
+        // dd([
+        //     'STATUS' => 'DEBUGGING MODE',
+        //     'TANGGAL_YANG_DICARI_USER' => $cekTglUser,
+        //     'TOTAL_TURNAMEN_SEKALI_PAKAI' => $cekTurnamenSekali->count(),
+        //     'LIST_DATA_DATABASE' => $cekTurnamenSekali->toArray()
+        // ]);
 
 
         // try {
@@ -119,63 +122,51 @@ class BookingController extends Controller
 
             // DEBUGGING: Kalau database ternyata kosong, kita kasih harga minimal 
             // (Hapus baris ini kalau database sudah fix, tapi ini membantu biar gak Rp 0)
-           // ------- FIX HARGA DARURAT -------
+            // ------- FIX HARGA DARURAT -------
             if ($standardPrice == 0) {
-                 // Gunakan Underscore (_) sesuai value di <option> HTML
-                 if($type == 'badminton') {
-                     $standardPrice = 30000;
-                 }
-                 elseif($type == 'futsal') {
-                     $standardPrice = 90000;
-                 }
-                 elseif($type == 'basket_indoor') { // <--- Pakai underscore
-                     $standardPrice = 200000;
-                 }
-                 elseif($type == 'tennis') {
-                     $standardPrice = 70000;
-                 }
-                 elseif($type == 'mini_soccer') { // <--- Pakai underscore
-                     $standardPrice = 650000;
-                 }
-                 elseif($type == 'padel') {
-                     $standardPrice = 300000;
-                 }
-                 else {
-                     $standardPrice = 50000; // Harga default jika tidak ada yang cocok
-                 }
+                // Gunakan Underscore (_) sesuai value di <option> HTML
+                if ($type == 'badminton') {
+                    $standardPrice = 30000;
+                } elseif ($type == 'futsal') {
+                    $standardPrice = 90000;
+                } elseif ($type == 'basket_indoor') { // <--- Pakai underscore
+                    $standardPrice = 200000;
+                } elseif ($type == 'tennis') {
+                    $standardPrice = 70000;
+                } elseif ($type == 'mini_soccer') { // <--- Pakai underscore
+                    $standardPrice = 650000;
+                } elseif ($type == 'padel') {
+                    $standardPrice = 300000;
+                } else {
+                    $standardPrice = 50000; // Harga default jika tidak ada yang cocok
+                }
             }
-         $cekHari = Carbon::parse($date);
-            
-            if ($cekHari->isWeekend()) { 
+            $cekHari = Carbon::parse($date);
+
+            if ($cekHari->isWeekend()) {
                 // Jika Sabtu atau Minggu, harga dasar dinaikkan
-                if($type == 'badminton') {
-                     $standardPrice = 45000;
-                 }
-                 elseif($type == 'futsal') {
-                     $standardPrice = 110000;
-                 }
-                 elseif($type == 'basket_indoor') { // <--- Pakai underscore
-                     $standardPrice = 230000;
-                 }
-                 elseif($type == 'tennis') {
-                     $standardPrice = 90000;
-                 }
-                 elseif($type == 'mini_soccer') { // <--- Pakai underscore
-                     $standardPrice = 700000;
-                 }
-                 elseif($type == 'padel') {
-                     $standardPrice = 320000;
-                 }
-                 else {
-                     $standardPrice = 50000; // Harga default jika tidak ada yang cocok
-                 } 
+                if ($type == 'badminton') {
+                    $standardPrice = 45000;
+                } elseif ($type == 'futsal') {
+                    $standardPrice = 110000;
+                } elseif ($type == 'basket_indoor') { // <--- Pakai underscore
+                    $standardPrice = 230000;
+                } elseif ($type == 'tennis') {
+                    $standardPrice = 90000;
+                } elseif ($type == 'mini_soccer') { // <--- Pakai underscore
+                    $standardPrice = 700000;
+                } elseif ($type == 'padel') {
+                    $standardPrice = 320000;
+                } else {
+                    $standardPrice = 50000; // Harga default jika tidak ada yang cocok
+                }
             }
 
             $slots = [];
 
             // Loop Waktu
             for ($i = $openTime; $i <= ($closeTime - $duration); $i++) {
-                
+
                 $slotStart = sprintf('%02d:00:00', $i);
                 $slotEnd   = sprintf('%02d:00:00', $i + $duration);
 
@@ -185,17 +176,17 @@ class BookingController extends Controller
                     ->where('status', '!=', 'rejected')
                     ->where(function ($query) use ($slotStart, $slotEnd) {
                         $query->where('start_time', '<', $slotEnd)
-                              ->where('end_time', '>', $slotStart);
+                            ->where('end_time', '>', $slotStart);
                     })
                     ->exists();
 
                 // B. HITUNG HARGA TOTAL
                 if (!$isBooked) {
                     $totalPrice = 0;
-                    
+
                     for ($h = 0; $h < $duration; $h++) {
                         $currentHour = $i + $h;
-                        
+
                         // Mulai dari harga dasar yg sudah kita ambil di atas
                         $hourPrice = $standardPrice;
 
@@ -205,20 +196,17 @@ class BookingController extends Controller
                             // Tentukan harga lampu berdasarkan jenis lapangan
                             if ($type == 'mini_soccer') {
                                 $biayaLampu = 50000; // Paling Mahal (Lampu Sorot Besar)
-                            } 
-                            elseif ($type == 'tennis' || $type == 'padel') {
+                            } elseif ($type == 'tennis' || $type == 'padel') {
                                 $biayaLampu = 30000; // Butuh penerangan ekstra
-                            } 
-                            elseif ($type == 'futsal' || $type == 'basket_indoor') {
+                            } elseif ($type == 'futsal' || $type == 'basket_indoor') {
                                 $biayaLampu = 25000; // Standard Indoor Besar
-                            } 
-                            else {
+                            } else {
                                 // Badminton (Default)
                                 $biayaLampu = 10000; // Area kecil
                             }
 
                             // Tambahkan ke harga per jam
-                            $hourPrice += $biayaLampu; 
+                            $hourPrice += $biayaLampu;
                         }
 
                         $totalPrice += $hourPrice;
@@ -261,20 +249,20 @@ class BookingController extends Controller
         // 2. VALIDASI KEAMANAN (DOUBLE CHECK)
         // Kita harus pastikan lapangan ID ini BENAR-BENAR KOSONG di jam tsb.
         // Logic: Cari booking di lapangan ini yang waktunya bertabrakan.
-        
+
         $isBooked = Booking::where('court_id', $courtId)
             ->where('date', $date)
             ->where('status', '!=', 'rejected')
             ->where(function ($query) use ($startTime, $endTime) {
                 // Cek irisan waktu (Overlap)
-                $query->where(function($q) use ($startTime, $endTime) {
+                $query->where(function ($q) use ($startTime, $endTime) {
                     $q->where('start_time', '>=', $startTime)
-                      ->where('start_time', '<', $endTime);
+                        ->where('start_time', '<', $endTime);
                 })
-                ->orWhere(function($q) use ($startTime, $endTime) {
-                    $q->where('end_time', '>', $startTime)
-                      ->where('end_time', '<=', $endTime);
-                });
+                    ->orWhere(function ($q) use ($startTime, $endTime) {
+                        $q->where('end_time', '>', $startTime)
+                            ->where('end_time', '<=', $endTime);
+                    });
             })
             ->exists(); // True jika sudah ada yang booking
 
@@ -287,17 +275,17 @@ class BookingController extends Controller
         $availableCourt = Court::find($courtId);
 
         // 4. Tampilkan Halaman Checkout
-       // Simpan sementara ke session sebagai fallback jika form hidden hilang
-       session(['booking' => [
-           'court_id' => $courtId,
-           'date' => $date,
-           'start_time' => $startTime,
-           'end_time' => $endTime,
-           'total_price' => $price,
-       ]]);
+        // Simpan sementara ke session sebagai fallback jika form hidden hilang
+        session(['booking' => [
+            'court_id' => $courtId,
+            'date' => $date,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'total_price' => $price,
+        ]]);
 
-       return view('booking.checkout', [
-            'court' => $availableCourt, 
+        return view('booking.checkout', [
+            'court' => $availableCourt,
             'date' => $date,
             'startTime' => $startTime,
             'endTime' => $endTime,
@@ -309,11 +297,11 @@ class BookingController extends Controller
     public function store(Request $request)
     {
 
-         if (!Auth::check()) {
-        return redirect()->route('login')->with('error', 'Silakan login dulu untuk booking.');
-    }
-    $user = Auth::user();
-    
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login dulu untuk booking.');
+        }
+        $user = Auth::user();
+
         // 1. VALIDASI DATA INPUT
         $request->validate([
             'name' => 'required',
@@ -322,10 +310,10 @@ class BookingController extends Controller
             'end_time' => 'required',
             'court_id' => 'required',
             'total_price' => 'required',
-            'phone' => 'required|numeric', // <--- Cuma butuh ini
+            'phone' => ['required', 'regex:/^(\+62|62|0)8[1-9][0-9]{6,9}$/'],
         ], [
             'phone.required' => 'Nomor WhatsApp wajib diisi untuk pengiriman notifikasi.',
-            'phone.numeric' => 'Nomor WhatsApp harus berupa angka.',
+            'phone.regex' => 'Format nomor tidak valid. Gunakan format Indonesia (contoh: 081234567890).',
         ]);
 
         // =================================================================
@@ -338,27 +326,28 @@ class BookingController extends Controller
 
         if ($isTournament) {
             // Kalau ketahuan tanggal turnamen, tolak mentah-mentah!
-            return redirect()->route('booking')->with('error', 
+            return redirect()->route('booking')->with(
+                'error',
                 'GAGAL BOOKING! Tanggal ' . $request->date . ' dipakai untuk event: ' . $isTournament->name
             );
         }
-       // $duration = (int)$request->duration;
+        // $duration = (int)$request->duration;
         $discountReward = \App\Models\UserReward::where('user_id', $user->id)
-                      ->where('reward_type', 'discount') // Hanya tipe diskon
-                      ->where('is_used', false)          // Yang belum dipakai
-                      ->first();
+            ->where('reward_type', 'discount') // Hanya tipe diskon
+            ->where('is_used', false)          // Yang belum dipakai
+            ->first();
 
-    $finalPrice = $request->total_price;
-    $isDiscounted = false;
+        $finalPrice = $request->total_price;
+        $isDiscounted = false;
 
-    if ($discountReward) {
-        // Terapkan Diskon 10%
-        $discountAmount = $finalPrice * 0.10;
-        $finalPrice = $finalPrice - $discountAmount;
-        $isDiscounted = true;
-        // PENTING: Kita tandai 'used' NANTI setelah booking berhasil disimpan (di bawah)
-        // supaya kalau booking gagal (karena bentrok), tiketnya tidak hangus duluan.
-    }
+        if ($discountReward) {
+            // Terapkan Diskon 10%
+            $discountAmount = $finalPrice * 0.10;
+            $finalPrice = $finalPrice - $discountAmount;
+            $isDiscounted = true;
+            // PENTING: Kita tandai 'used' NANTI setelah booking berhasil disimpan (di bawah)
+            // supaya kalau booking gagal (karena bentrok), tiketnya tidak hangus duluan.
+        }
         // =================================================================
         // SATPAM 2: CEK BENTROK JAM (LAGI)
         // Pastikan slot ini belum diambil orang lain sedetik yang lalu
@@ -369,12 +358,13 @@ class BookingController extends Controller
             ->where(function ($query) use ($request) {
                 // Rumus Overlap Matematika
                 $query->where('start_time', '<', $request->end_time)
-                      ->where('end_time', '>', $request->start_time);
+                    ->where('end_time', '>', $request->start_time);
             })
             ->exists();
 
         if ($isBooked) {
-            return redirect()->route('booking')->with('error', 
+            return redirect()->route('booking')->with(
+                'error',
                 'Waduh! Slot jam ini baru saja diserobot orang lain. Silakan cari jam lain.'
             );
         }
@@ -389,26 +379,26 @@ class BookingController extends Controller
         $dbPaymentMethod = ($request->payment_method == 'cod') ? 'cod' : 'transfer';
 
         // Create Data
-      $booking = Booking::create([
-        'user_id' => $user->id, // <--- PAKAI USER ASLI
-        'court_id' => $request->court_id,
-        'date' => $request->date,
-        'start_time' => $request->start_time,
-        'end_time' => $request->end_time,
-        'total_price' => $finalPrice, // <--- HARGA SETELAH DISKON (JIKA ADA)
-        'payment_method' => $dbPaymentMethod,
-        'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
-        'payment_proof' => $proofPath,
-        'status' => 'pending',
-        'phone' => $request->phone,
-    ]);
-       if ($isDiscounted && $discountReward) {
-        $discountReward->update(['is_used' => true]);
-        session()->flash('success', 'Booking Berhasil! Diskon Hadiah 10% telah digunakan.');
-    } else {
-        session()->flash('success', 'Booking Berhasil!');
-    }
+        $booking = Booking::create([
+            'user_id' => $user->id, // <--- PAKAI USER ASLI
+            'court_id' => $request->court_id,
+            'date' => $request->date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'total_price' => $finalPrice, // <--- HARGA SETELAH DISKON (JIKA ADA)
+            'payment_method' => $dbPaymentMethod,
+            'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
+            'payment_proof' => $proofPath,
+            'status' => 'pending',
+            'phone' => $request->phone,
+        ]);
+        if ($isDiscounted && $discountReward) {
+            $discountReward->update(['is_used' => true]);
+            session()->flash('success', 'Booking Berhasil! Diskon Hadiah 10% telah digunakan.');
+        } else {
+            session()->flash('success', 'Booking Berhasil!');
+        }
 
-    return redirect()->route('booking.success', $booking->id);
-}
+        return redirect()->route('booking.success', $booking->id);
+    }
 }

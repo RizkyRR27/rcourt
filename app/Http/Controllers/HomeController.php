@@ -60,11 +60,27 @@ class HomeController extends Controller
 
     public function index()
     {
+        $totalCourts = Court::count();
+        $totalMembers = User::where('role', '!=', 'admin')->count();
+        $totalBookings = Booking::where('status', 'approved')->count();
 
-    $totalCourts = Court::count();
-    $totalMembers = User::where('role', '!=', 'admin')->count();
-    $totalBookings = Booking::where('status', 'approved')->count();
+        $facilities = $this->getFacilitiesData();
 
+        return view('home', compact(
+            'facilities',
+            'totalCourts',
+            'totalMembers',
+            'totalBookings'
+        ));
+    }
+
+    public function facilities()
+    {
+        return view('facilities');
+    }
+
+    private function getFacilitiesData()
+    {
         // Ambil semua tipe lapangan yang ada di database dan hitung jumlahnya
         $courtTypes = Court::selectRaw('type, COUNT(*) as total')
             ->groupBy('type')
@@ -87,15 +103,6 @@ class HomeController extends Controller
             ]);
         }
 
-        return view('home', compact(
-        'facilities', 
-        'totalCourts', 
-        'totalMembers', 
-        'totalBookings'
-    ));
+        return $facilities;
     }
-    public function facilities()
-{
-    return view('home', compact('facilities'));
-}
 }
