@@ -22,13 +22,17 @@
 
 <body
     class="flex min-h-screen flex-col bg-[var(--color-court-paper)] text-[var(--color-court-green)] selection:bg-[var(--color-court-clay)] selection:text-white">
-    <x-navbar :current-route="$currentRoute ?? ''" />
+    @unless ($hideNavbar ?? false)
+        <x-navbar :current-route="$currentRoute ?? ''" />
+    @endunless
 
     <div class="flex-grow">
         {{ $slot }}
     </div>
 
-    <x-footer />
+    @unless ($hideFooter ?? false)
+        <x-footer />
+    @endunless
 </body>
 
 </html>
