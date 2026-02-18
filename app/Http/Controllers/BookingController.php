@@ -113,6 +113,12 @@ class BookingController extends Controller
         $openTime = 8;
         $closeTime = 24;
 
+        // Jika tanggal booking = HARI INI, mulai dari jam sekarang (bukan jam 8)
+        if (Carbon::parse($date)->isToday()) {
+            $currentHour = Carbon::now()->hour;
+            $openTime = max($openTime, $currentHour);
+        }
+
         foreach ($courts as $court) {
             // --- PERBAIKAN HARGA DI SINI ---
             // Kita ambil harga dari database.
