@@ -148,7 +148,7 @@
 
                         <div class="bg-gray-200 h-6 w-full border-2 border-black rounded-full overflow-hidden relative">
                             <div class="bg-[var(--color-court-green)] h-full" style="width:{{ $progress }}%;"></div>
-                            <span class="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold">
+                            <span class="absolute inset-0 flex items-center justify-center font-mono text-xs font-bold text-yellow-800">
                                 Progress Anda: {{ $myHours }} / 30 Jam
                             </span>
                         </div>
