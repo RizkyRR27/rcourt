@@ -20,17 +20,22 @@
                     Navigasi
                 </h3>
                 <ul class="space-y-4 font-mono text-sm">
-                    <li><a href="#"
+                    <li><a href="{{ route('home') }}"
                             class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">HOME</a>
                     </li>
-                    <li><a href="#"
-                            class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">BOOKING
-                            LAPANGAN</a></li>
-                    <li><a href="#"
-                            class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">KONTAK
-                            KAMI</a></li>
-                    <li><a href="#"
-                            class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">PERATURAN</a>
+                    @auth
+                        <li><a href="{{ route('booking') }}"
+                                class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">BOOKING
+                                LAPANGAN</a></li>
+                    @endauth
+                    <li><a href="{{ route('tournament') }}"
+                            class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">TURNAMEN</a>
+                    </li>
+                    <li><a href="{{ route('facilities') }}"
+                            class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">FASILITAS</a>
+                    </li>
+                    <li><a href="{{ route('contact') }}"
+                            class="hover:text-[var(--color-court-clay)] hover:underline decoration-2 underline-offset-4 transition-colors">KONTAK</a>
                     </li>
                 </ul>
             </div>
