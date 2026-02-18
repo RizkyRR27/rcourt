@@ -19,7 +19,7 @@
 <div class="mt-8 max-w-4xl mx-auto">
     <div class="border-2 border-black bg-yellow-50 p-6 shadow-hard relative">
         <div class="absolute -top-3 -left-3 bg-red-600 text-white font-mono font-bold px-4 py-1 transform -rotate-2 border-2 border-black shadow-sm">
-            📢 INFO PENTING
+            INFO PENTING
         </div>
 
         <h3 class="font-display text-xl uppercase mt-2 mb-4">Jadwal Penutupan Lapangan:</h3>
