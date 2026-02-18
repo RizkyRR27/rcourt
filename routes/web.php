@@ -86,5 +86,6 @@ Route::middleware('auth')->group(function () {
 // Halaman Reward (Member Only)
 Route::middleware('auth')->group(function () {
     Route::get('/reward', [App\Http\Controllers\RewardController::class, 'index'])->name('reward.index');
+    Route::get('/reward/history', [App\Http\Controllers\RewardController::class, 'history'])->name('reward.history');
     Route::post('/reward/{id}/choose', [App\Http\Controllers\RewardController::class, 'choose'])->name('reward.choose');
 });

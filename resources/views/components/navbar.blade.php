@@ -82,13 +82,24 @@
                                     My Profile
                                 </a>
                                 <a href="{{ route('history') }}"
-                                    class="flex items-center gap-2 px-4 py-3 font-mono text-sm border-b-2 border-black hover:bg-gray-100 transition-colors text-black">
+                                    class="flex items-center gap-2 px-4 py-3 font-mono text-sm hover:bg-gray-100 transition-colors text-black">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         viewBox="0 0 24 24">
                                         <path fill="currentColor"
                                             d="M3 5.75A2.75 2.75 0 0 1 5.75 3h12.5A2.75 2.75 0 0 1 21 5.75v1.5c0 .788-.331 1.499-.863 2c.532.501.863 1.212.863 2v1.5c0 .788-.331 1.499-.863 2c.532.501.863 1.212.863 2v1.5A2.75 2.75 0 0 1 18.25 21H5.75A2.75 2.75 0 0 1 3 18.25v-1.5c0-.788.331-1.499.863-2a2.74 2.74 0 0 1-.863-2v-1.5c0-.788.331-1.499.863-2a2.74 2.74 0 0 1-.863-2zm16.5 1.5v-1.5c0-.69-.56-1.25-1.25-1.25H9.5v4h8.75c.69 0 1.25-.56 1.25-1.25M8 4.5H5.75c-.69 0-1.25.56-1.25 1.25v1.5c0 .69.56 1.25 1.25 1.25H8zM8 10H5.75c-.69 0-1.25.56-1.25 1.25v1.5c0 .69.56 1.25 1.25 1.25H8zm0 5.5H5.75c-.69 0-1.25.56-1.25 1.25v1.5c0 .69.56 1.25 1.25 1.25H8zm1.5 4h8.75c.69 0 1.25-.56 1.25-1.25v-1.5c0-.69-.56-1.25-1.25-1.25H9.5zm0-5.5h8.75c.69 0 1.25-.56 1.25-1.25v-1.5c0-.69-.56-1.25-1.25-1.25H9.5z" />
                                     </svg>
                                     Riwayat Booking
+                                </a>
+                                <a href="{{ route('reward.history') }}"
+                                    class="flex items-center gap-2 px-4 py-3 font-mono text-sm border-b-2 border-black hover:bg-gray-100 transition-colors text-black">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" />
+                                        <path d="M4 6v12c0 1.1.9 2 2 2h14v-4" />
+                                        <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                                    </svg>
+                                    Riwayat Hadiah
                                 </a>
 
                                 <button type="button" @click="showLogoutModal = true"
@@ -168,6 +179,10 @@
                 <a href="{{ route('history') }}"
                     class="flex items-center gap-2 w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                     Riwayat Booking
+                </a>
+                <a href="{{ route('reward.history') }}"
+                    class="flex items-center gap-2 w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
+                    Riwayat Hadiah
                 </a>
 
                 <button type="button" @click="showLogoutModal = true"
