@@ -57,6 +57,16 @@
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95" style="display: none;"
                                 class="absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-hard-lg z-50">
+                                <a href="{{ route('profile') }}"
+                                    class="flex items-center gap-2 px-4 py-3 font-mono text-sm  hover:bg-gray-100 transition-colors text-black">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                        <circle cx="12" cy="7" r="4" />
+                                    </svg>
+                                    My Profile
+                                </a>
                                 <a href="{{ route('history') }}"
                                     class="flex items-center gap-2 px-4 py-3 font-mono text-sm border-b-2 border-black hover:bg-gray-100 transition-colors text-black">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -123,6 +133,10 @@
 
             {{-- LOGIKA AUTHENTICATION (Mobile) --}}
             @auth
+                <a href="{{ route('profile') }}"
+                    class="flex items-center gap-2 w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
+                    My Profile
+                </a>
                 <a href="{{ route('history') }}"
                     class="flex items-center gap-2 w-full border-2 border-black bg-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none text-black">
                     Riwayat Booking

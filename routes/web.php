@@ -8,6 +8,8 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\AuthController;
 
+use App\Http\Controllers\ProfileController;
+
 // Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -70,3 +72,10 @@ Route::post('/logout', [AuthController::class, 'logout'])
 Route::get('/my-history', [HistoryController::class, 'index'])
     ->name('history')
     ->middleware('auth'); // Wajib Login
+
+// Profil User
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+});
