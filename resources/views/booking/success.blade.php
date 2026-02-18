@@ -1,22 +1,69 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Berhasil! - RCourt</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<x-layouts.app current-route="booking">
+    <div class="flex min-h-[80vh] items-center justify-center bg-[var(--color-court-paper)] px-4 py-12">
+        <div class="animate-slide-up w-full max-w-lg border-2 border-black bg-white p-8 shadow-hard"
+            style="animation-duration: 0.5s;">
+            {{-- Header --}}
+            <div class="mb-8 text-center">
+                <div
+                    class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-black bg-[var(--color-court-green)] text-white shadow-hard-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h1 class="font-display text-4xl uppercase tracking-tight text-black">Booking Berhasil!</h1>
+                <p class="mt-2 font-mono text-sm text-gray-500">Terima kasih telah melakukan pemesanan.</p>
+            </div>
 
-    <div class="bg-white p-8 rounded-xl shadow-lg text-center max-w-md">
-        <div class="text-green-500 text-6xl mb-4">✅</div>
-        <h2 class="text-2xl font-bold mb-2">Booking Berhasil!</h2>
-        <p class="text-gray-600 mb-6">
-            ID Booking Anda: <strong>#{{ $id }}</strong>.<br>
-            Silakan tunggu konfirmasi dari Admin. <span class ="bg-red-700 text-white text-xl">DIHIMBAU UNTUK PARA PEMAIN UNTUK DATANG TEPAT WAKTU</span>
-            Status saat ini: <span class="bg-yellow-100 text-yellow-600 px-2 py-1 rounded text-m">Pending</span>
-        </p>
-        <a href="{{ route('home') }}" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Kembali ke Home</a>
+            {{-- Ticket / Receipt Content --}}
+            <div class="mb-8 border-2 border-black bg-[var(--color-court-paper)] p-6">
+                <div
+                    class="flex flex-col items-center justify-center gap-2 border-b-2 border-dashed border-black/30 pb-6 text-center">
+                    <span class="font-mono text-xs font-bold uppercase text-gray-500">KODE BOOKING</span>
+                    <span
+                        class="font-mono text-3xl font-bold tracking-widest text-[var(--color-court-primary)]">#{{ $id }}</span>
+                </div>
+
+                <div class="pt-6 text-center">
+                    <span class="mb-2 block font-mono text-xs font-bold uppercase text-gray-500">STATUS
+                        PEMBAYARAN</span>
+                    <span
+                        class="inline-block border-2 border-black bg-[var(--color-court-yellow)] px-3 py-1 font-mono text-sm font-bold uppercase tracking-wider text-black shadow-hard-sm">
+                        PENDING CONFIRMATION
+                    </span>
+                </div>
+            </div>
+
+            {{-- Warning Message --}}
+            <div class="mb-8 border-l-4 border-red-600 bg-red-100 p-4">
+                <div class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 text-red-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                        <h4 class="font-display text-lg uppercase text-red-700">PENTING!</h4>
+                        <p class="font-mono text-xs font-bold uppercase leading-relaxed text-red-800">
+                            DIMOHON UNTUK PARA PEMAIN DATANG TEPAT WAKTU
+                        </p>
+                        <p class="mt-1 font-mono text-xs text-red-700">
+                            Keterlambatan dapat mengurangi waktu bermain Anda. Silakan tunjukkan Kode Booking ini ke
+                            petugas di lapangan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Actions --}}
+            <div class="space-y-3">
+
+
+                <a href="{{ route('history') }}"
+                    class="flex w-full items-center justify-center border-2 border-black bg-white px-6 py-4 font-mono font-bold uppercase text-black shadow-hard transition-all hover:-translate-y-1 hover:bg-gray-100 active:translate-y-0 active:shadow-none">
+                    Lihat Riwayat Booking
+                </a>
+            </div>
+        </div>
     </div>
-
-</body>
-</html>
+</x-layouts.app>
