@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LoyaltyProgress;
+use App\Models\UserReward;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Log; // Tetap pakai Log untuk debugging
@@ -23,10 +25,52 @@ class AdminController extends Controller
         ]);
 
         $booking = Booking::findOrFail($id);
-        $status = $request->status; 
+
+        $oldStatus = $booking->status;
+        $newStatus = $request->status; 
 
         // Update Status di Database
-        $booking->update(['status' => $status]);
+        $booking->update(['status' => $newStatus]);
+        
+        if ($newStatus == 'approved' && $oldStatus != 'approved') {
+            
+            // a. Hitung Durasi Main (Selisih Jam)
+            $start = \Carbon\Carbon::parse($booking->start_time);
+            $end = \Carbon\Carbon::parse($booking->end_time);
+            $hours = $end->diffInHours($start);
+
+            // b. Ambil Tipe Olahraga (Karena progress dipisah per cabang)
+            $sportType = $booking->court->type; 
+
+            // c. Ambil Data Progress User (Buat baru jika belum ada)
+            // Pastikan Anda sudah import model: use App\Models\LoyaltyProgress;
+            $progress = LoyaltyProgress::firstOrCreate(
+                ['user_id' => $booking->user_id, 'sport_type' => $sportType],
+                ['total_hours' => 0]
+            );
+
+            // d. Tambahkan Jam Main ke Progress
+            $progress->total_hours += $hours;
+
+            // e. Cek Apakah Tembus 30 Jam?
+            if ($progress->total_hours >= 30) {
+                // RESET POIN: Kurangi 30 jam
+                // (Sisa jam, misal total 32, maka sisa 2 jam tetap disimpan untuk periode berikutnya)
+                $progress->total_hours = $progress->total_hours - 30;
+
+                // BERIKAN HADIAH (UserReward)
+                // Pastikan Anda sudah import model: use App\Models\UserReward;
+                UserReward::create([
+                    'user_id' => $booking->user_id,
+                    'reward_type' => 'pending', // Pending = User belum milih hadiah
+                    'is_used' => false
+                ]);
+            }
+
+            // Simpan Perubahan Poin ke Database
+            $progress->save();
+        }
+
 
         // ======================================================
         // 🚀 LOGIKA PENGIRIMAN NOTIFIKASI WHATSAPP
@@ -34,7 +78,7 @@ class AdminController extends Controller
         
         if ($booking->phone) {
             try {
-                $this->sendWhatsappNotification($booking, $status);
+                $this->sendWhatsappNotification($booking, $newStatus);
             } catch (\Exception $e) {
                 // Jika WA gagal, aplikasi tidak error, cuma dicatat di log
                 Log::error("Gagal kirim WA Booking ID " . $booking->id . ": " . $e->getMessage());
