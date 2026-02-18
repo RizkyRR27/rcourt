@@ -140,7 +140,7 @@
 
             <div class="mb-16 text-center">
                 <span class="mb-4 inline-block border-2 border-black bg-[var(--color-court-yellow)] px-4 py-1 font-mono text-sm font-bold uppercase tracking-widest shadow-hard-sm">
-                    Fasilitas Kami
+                    Lapangan Kami
                 </span>
                 <h2 class="mt-4 font-display text-5xl uppercase md:text-7xl text-black">
                     CHOOSE YOUR <span class="text-stroke-black md:text-black">ARENA</span>

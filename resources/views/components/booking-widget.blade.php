@@ -129,25 +129,30 @@
 
             {{-- 3. PILIH DURASI (SAYA TAMBAHKAN INI) --}}
             <div class="space-y-2">
-                <label class="block font-mono text-xs font-bold uppercase text-gray-500">
-                    Durasi Main <span class="text-red-500">*</span>
-                </label>
-                <div class="relative">
-                    <select name="duration" required
-                        class="w-full appearance-none border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none">
-                        <option value="1" {{ old('duration') == '1' ? 'selected' : '' }}>1 Jam</option>
-                        <option value="2" {{ old('duration') == '2' ? 'selected' : '' }}>2 Jam</option>
-                        <option value="3" {{ old('duration') == '3' ? 'selected' : '' }}>3 Jam</option>
-                        <option value="4" {{ old('duration') == '4' ? 'selected' : '' }}>4 Jam</option>
-                        <option value="5" {{ old('duration') == '5' ? 'selected' : '' }}>5 Jam</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4">
-                        <div
-                            class="h-0 w-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black">
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <label class="block font-mono text-xs font-bold uppercase text-gray-500">
+        Durasi Main <span class="text-red-500">*</span>
+    </label>
+    
+    <div class="flex items-center">
+        {{-- Input Angka --}}
+        <input type="number" 
+               name="duration" 
+               required 
+               min="1" 
+               max="15" 
+               value="{{ old('duration', 1) }}" 
+               placeholder="1"
+               class="w-full border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none placeholder-gray-400">
+        
+        {{-- Label Satuan (Hiasan) --}}
+        <div class="border-y-2 border-r-2 border-black bg-black px-4 py-3 text-white font-mono text-sm font-bold uppercase">
+            JAM
+        </div>
+    </div>
+    
+    {{-- Info kecil di bawahnya --}}
+    <p class="text-[10px] font-mono text-black-400 mt-1">*Min. 1 jam, Max. 15 jam</p>
+</div>
 
             {{-- TOMBOL SUBMIT --}}
             <div class="md:col-span-3 mt-2">
