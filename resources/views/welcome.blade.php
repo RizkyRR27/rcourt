@@ -30,39 +30,45 @@
     {{-- STATISTIK BAR (Retro Style) --}}
     <div class="bg-[var(--color-court-paper)] border-b-2 border-black py-8">
         <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div class="border-2 border-black bg-white p-4 shadow-hard" x-data="{ current: 0, target: {{ $totalCourts }} }" x-init="let step = Math.ceil(target / 100);
-            if (step < 1) step = 1;
-            let timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-            }, 40);">
+            <div class="animate-slide-up border-2 border-black bg-white p-4 shadow-hard"
+                style="animation-delay: 100ms; animation-fill-mode: both;" x-data="{ current: 0, target: {{ $totalCourts }} }"
+                x-init="let step = Math.ceil(target / 100);
+                if (step < 1) step = 1;
+                let timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                }, 40);">
                 <h3 class="font-display text-4xl"><span x-text="current"></span>+</h3>
                 <p class="font-mono text-xs uppercase text-gray-500">Lapangan Tersedia</p>
             </div>
-            <div class="border-2 border-black bg-white p-4 shadow-hard" x-data="{ current: 0, target: {{ $totalMembers }} }" x-init="let step = Math.ceil(target / 100);
-            if (step < 1) step = 1;
-            let timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-            }, 40);">
+            <div class="animate-slide-up border-2 border-black bg-white p-4 shadow-hard"
+                style="animation-delay: 200ms; animation-fill-mode: both;" x-data="{ current: 0, target: {{ $totalMembers }} }"
+                x-init="let step = Math.ceil(target / 100);
+                if (step < 1) step = 1;
+                let timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                }, 40);">
                 <h3 class="font-display text-4xl"><span x-text="current"></span>+</h3>
                 <p class="font-mono text-xs uppercase text-gray-500">Member Aktif</p>
             </div>
-            <div class="border-2 border-black bg-white p-4 shadow-hard" x-data="{ current: 0, target: {{ $totalBookings }} }" x-init="let step = Math.ceil(target / 100);
-            if (step < 1) step = 1;
-            let timer = setInterval(() => {
-                current += step;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-            }, 40);">
+            <div class="animate-slide-up border-2 border-black bg-white p-4 shadow-hard"
+                style="animation-delay: 300ms; animation-fill-mode: both;" x-data="{ current: 0, target: {{ $totalBookings }} }"
+                x-init="let step = Math.ceil(target / 100);
+                if (step < 1) step = 1;
+                let timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                }, 40);">
                 <h3 class="font-display text-4xl"><span x-text="current"></span>+</h3>
                 <p class="font-mono text-xs uppercase text-gray-500">Pertandingan Sukses</p>
             </div>
@@ -79,8 +85,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {{-- Feature 1 --}}
-                <div
-                    class="p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform">
+                <div class="animate-slide-up p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform"
+                    style="animation-delay: 400ms; animation-fill-mode: both;">
                     <div class="text-6xl mb-4">🏆</div>
                     <h3 class="font-display text-xl uppercase mb-2">Standar Internasional</h3>
                     <p class="font-mono text-sm text-gray-600">Lantai karpet vinyl & rumput sintetis kualitas terbaik
@@ -89,8 +95,8 @@
                 </div>
 
                 {{-- Feature 2 --}}
-                <div
-                    class="p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform">
+                <div class="animate-slide-up p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform"
+                    style="animation-delay: 500ms; animation-fill-mode: both;">
                     <div class="text-6xl mb-4">📍</div>
                     <h3 class="font-display text-xl uppercase mb-2">Lokasi Strategis</h3>
                     <p class="font-mono text-sm text-gray-600">Mudah diakses dari pusat kota, parkir luas, dan aman 24
@@ -99,8 +105,8 @@
                 </div>
 
                 {{-- Feature 3 --}}
-                <div
-                    class="p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform">
+                <div class="animate-slide-up p-6 border-2 border-black bg-[var(--color-court-paper)] shadow-hard hover:-translate-y-2 hover:shadow-hard-lg transition-transform"
+                    style="animation-delay: 600ms; animation-fill-mode: both;">
                     <div class="text-6xl mb-4">💡</div>
                     <h3 class="font-display text-xl uppercase mb-2">Fasilitas Lengkap</h3>
                     <p class="font-mono text-sm text-gray-600">Wi-Fi, Kantin, Musholla, dan Ruang Ganti yang bersih dan
@@ -162,7 +168,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {{-- Testimoni 1 --}}
-                <div class="bg-white p-6 border-2 border-black shadow-hard relative">
+                <div class="animate-slide-up bg-white p-6 border-2 border-black shadow-hard relative"
+                    style="animation-delay: 700ms; animation-fill-mode: both;">
                     <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
                     <p class="font-mono text-sm italic mb-4">"Lapangannya gokil! Karpetnya empuk banget, lutut aman buat
                         main 3 set berturut-turut. Recommended!"</p>
@@ -171,7 +178,8 @@
                 </div>
 
                 {{-- Testimoni 2 --}}
-                <div class="bg-white p-6 border-2 border-black shadow-hard relative">
+                <div class="animate-slide-up bg-white p-6 border-2 border-black shadow-hard relative"
+                    style="animation-delay: 800ms; animation-fill-mode: both;">
                     <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
                     <p class="font-mono text-sm italic mb-4">"Mini Soccernya mantap. Rumput sintetisnya standar FIFA.
                         Booking gampang, admin ramah."</p>
@@ -179,7 +187,8 @@
                 </div>
 
                 {{-- Testimoni 3 --}}
-                <div class="bg-white p-6 border-2 border-black shadow-hard relative">
+                <div class="animate-slide-up bg-white p-6 border-2 border-black shadow-hard relative"
+                    style="animation-delay: 900ms; animation-fill-mode: both;">
                     <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
                     <p class="font-mono text-sm italic mb-4">"Tempat paling asik buat sparing basket. Ringnya enak,
                         bolanya
