@@ -82,14 +82,21 @@
                             @endphp
 
                             <div
-                                class="border-2 border-black {{ $current >= 30 ? 'bg-yellow-50 ring-2 ring-[var(--color-court-yellow)]' : 'bg-gray-50' }} p-4 transition-transform hover:-translate-y-1">
+                                class="border-2 border-black {{ $current >= 30 ? 'bg-yellow-50 ring-2 ring-[var(--color-court-yellow)] cursor-pointer' : 'bg-gray-50' }} p-4 transition-transform hover:-translate-y-1 group">
                                 <div class="flex justify-between items-end mb-2">
                                     <span
                                         class="font-mono font-bold uppercase text-sm">{{ str_replace('_', ' ', $sport) }}</span>
-                                    <span
-                                        class="font-mono text-xs font-bold {{ $current >= 30 ? 'bg-[var(--color-court-green)] text-white' : 'bg-black text-white' }} px-2 py-0.5">
-                                        {{ $current >= 30 ? '✓ SELESAI' : $current . ' / 30 JAM' }}
-                                    </span>
+                                    @if ($current >= 30)
+                                        <span
+                                            class="font-mono text-xs font-bold bg-[var(--color-court-green)] text-white px-2 py-0.5 relative">
+                                            <span class="group-hover:hidden">✓ SELESAI</span>
+                                            <span class="hidden group-hover:inline">CLAIM</span>
+                                        </span>
+                                    @else
+                                        <span class="font-mono text-xs font-bold bg-black text-white px-2 py-0.5">
+                                            {{ $current }} / 30 JAM
+                                        </span>
+                                    @endif
                                 </div>
                                 <div class="w-full h-4 bg-gray-200 border-2 border-black relative">
                                     <div class="h-full {{ $current >= 30 ? 'bg-[var(--color-court-yellow)]' : 'bg-[var(--color-court-green)]' }} transition-all duration-1000"
