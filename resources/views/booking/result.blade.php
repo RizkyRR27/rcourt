@@ -8,13 +8,13 @@
             </h2>
             <div class="mt-4 flex flex-wrap justify-center gap-4 font-mono text-sm text-gray-600">
                 <span class="border-2 border-black bg-white px-3 py-1 shadow-sm">
-                    🎾 {{ ucfirst($type) }}
+                    {{ ucfirst($type) }}
                 </span>
                 <span class="border-2 border-black bg-white px-3 py-1 shadow-sm">
-                    📅 {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}
+                    {{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}
                 </span>
                 <span class="border-2 border-black bg-white px-3 py-1 shadow-sm">
-                    ⏱ {{ $duration }} Jam
+                    {{ $duration }} Jam
                 </span>
             </div>
         </div>
