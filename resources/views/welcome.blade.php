@@ -183,7 +183,7 @@
                     <div class="absolute -top-4 -left-4 text-6xl text-[var(--color-court-yellow)] opacity-50">"</div>
                     <p class="font-mono text-sm italic mb-4">"Mini Soccernya mantap. Rumput sintetisnya standar FIFA.
                         Booking gampang, admin ramah."</p>
-                    <div class="font-bold uppercase text-xs border-t-2 border-black pt-2">FC Harimau - Tim Futsal</div>
+                    <div class="font-bold uppercase text-xs border-t-2 border-black pt-2">Arema - Tim Futsal</div>
                 </div>
 
                 {{-- Testimoni 3 --}}
