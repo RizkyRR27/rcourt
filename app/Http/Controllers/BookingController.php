@@ -290,12 +290,22 @@ class BookingController extends Controller
             'total_price' => $price,
         ]]);
 
+        // 5. Ambil Voucher Diskon yang dimiliki user
+        $discountVouchers = collect();
+        if (Auth::check()) {
+            $discountVouchers = \App\Models\UserReward::where('user_id', Auth::id())
+                ->where('reward_type', 'discount')
+                ->where('is_used', false)
+                ->get();
+        }
+
         return view('booking.checkout', [
             'court' => $availableCourt,
             'date' => $date,
             'startTime' => $startTime,
             'endTime' => $endTime,
-            'price' => $price
+            'price' => $price,
+            'discountVouchers' => $discountVouchers,
         ]);
     }
 
@@ -338,21 +348,23 @@ class BookingController extends Controller
             );
         }
         // $duration = (int)$request->duration;
-        $discountReward = \App\Models\UserReward::where('user_id', $user->id)
-            ->where('reward_type', 'discount') // Hanya tipe diskon
-            ->where('is_used', false)          // Yang belum dipakai
-            ->first();
-
         $finalPrice = $request->total_price;
         $isDiscounted = false;
+        $discountReward = null;
 
-        if ($discountReward) {
-            // Terapkan Diskon 10%
-            $discountAmount = $finalPrice * 0.10;
-            $finalPrice = $finalPrice - $discountAmount;
-            $isDiscounted = true;
-            // PENTING: Kita tandai 'used' NANTI setelah booking berhasil disimpan (di bawah)
-            // supaya kalau booking gagal (karena bentrok), tiketnya tidak hangus duluan.
+        // Cek apakah user memilih voucher diskon
+        if ($request->filled('voucher_id')) {
+            $discountReward = \App\Models\UserReward::where('id', $request->voucher_id)
+                ->where('user_id', $user->id)
+                ->where('reward_type', 'discount')
+                ->where('is_used', false)
+                ->first();
+
+            if ($discountReward) {
+                $discountAmount = $finalPrice * 0.10;
+                $finalPrice = $finalPrice - $discountAmount;
+                $isDiscounted = true;
+            }
         }
         // =================================================================
         // SATPAM 2: CEK BENTROK JAM (LAGI)
@@ -392,6 +404,7 @@ class BookingController extends Controller
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'total_price' => $finalPrice, // <--- HARGA SETELAH DISKON (JIKA ADA)
+            'discount' => $isDiscounted ? 10 : 0, // Persentase diskon
             'payment_method' => $dbPaymentMethod,
             'payment_type' => ($dbPaymentMethod == 'transfer') ? 'full' : null,
             'payment_proof' => $proofPath,

@@ -28,11 +28,41 @@
                         <span class="text-gray-500">Jam:</span>
                         <span class="font-bold">{{ substr($startTime, 0, 5) }} - {{ substr($endTime, 0, 5) }}</span>
                     </div>
+
+                    {{-- Diskon Voucher --}}
+                    @auth
+                        @if ($discountVouchers->count() > 0)
+                            <div class="flex justify-between items-center" x-data="{
+                                selectedVoucher: '',
+                                originalPrice: {{ $price }},
+                                get finalPrice() { return this.selectedVoucher ? Math.round(this.originalPrice * 0.9) : this.originalPrice }
+                            }">
+                                <span class="text-gray-500">Diskon:</span>
+                                <div class="relative">
+                                    <select x-model="selectedVoucher"
+                                        @change="$dispatch('voucher-changed', { id: selectedVoucher, price: finalPrice })"
+                                        class="appearance-none border-2 border-black bg-[#39ff14] px-3 py-1 pr-8 font-mono text-xs font-bold cursor-pointer focus:outline-none">
+                                        <option value="">Tanpa Diskon</option>
+                                        @foreach ($discountVouchers as $voucher)
+                                            <option value="{{ $voucher->id }}">Diskon 10%</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+                                        <div
+                                            class="h-0 w-0 border-l-[4px] border-r-[4px] border-t-[6px] border-l-transparent border-r-transparent border-t-black">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endauth
                 </div>
 
-                <div class="mt-6 pt-4 border-t-2 border-black flex justify-between items-center">
+                <div class="mt-6 pt-4 border-t-2 border-black flex justify-between items-center" x-data="{ totalPrice: {{ $price }} }"
+                    @voucher-changed.window="totalPrice = $event.detail.price">
                     <span class="font-display text-lg uppercase">Total Bayar:</span>
-                    <span class="font-display text-2xl text-[var(--color-court-clay)]">
+                    <span class="font-display text-2xl text-[var(--color-court-clay)]"
+                        x-text="'Rp ' + totalPrice.toLocaleString('id-ID')">
                         Rp {{ number_format($price, 0, ',', '.') }}
                     </span>
                 </div>
@@ -62,6 +92,16 @@
                     <input type="hidden" name="start_time" value="{{ $startTime }}">
                     <input type="hidden" name="end_time" value="{{ $endTime }}">
                     <input type="hidden" name="total_price" value="{{ $price }}">
+                    <input type="hidden" name="voucher_id" id="voucher_id_input" value="">
+
+                    {{-- Sync voucher dropdown with hidden input --}}
+                    <script>
+                        document.addEventListener('alpine:init', () => {
+                            window.addEventListener('voucher-changed', (e) => {
+                                document.getElementById('voucher_id_input').value = e.detail.id;
+                            });
+                        });
+                    </script>
 
                     {{-- Input Nama --}}
                     <div>
