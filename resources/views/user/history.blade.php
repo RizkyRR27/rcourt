@@ -14,6 +14,7 @@
                 <table class="w-full font-mono text-sm text-left">
                     <thead class="bg-black text-white uppercase">
                         <tr>
+                            <th class="p-3">Kode</th>
                             <th class="p-3">Tanggal</th>
                             <th class="p-3">Lapangan</th>
                             <th class="p-3">Jam</th>
@@ -25,6 +26,7 @@
                     <tbody class="bg-white divide-y-2 divide-black">
                         @foreach ($bookings as $booking)
                             <tr class="hover:bg-gray-100">
+                                <td class="p-3 font-bold text-xs">{{ $booking->code }}</td>
                                 <td class="p-3">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</td>
                                 <td class="p-3 font-bold">{{ $booking->court->name }}</td>
                                 <td class="p-3">{{ $booking->start_time }} - {{ $booking->end_time }}</td>

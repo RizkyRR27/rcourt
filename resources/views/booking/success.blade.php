@@ -21,7 +21,7 @@
                     class="flex flex-col items-center justify-center gap-2 border-b-2 border-dashed border-black/30 pb-6 text-center">
                     <span class="font-mono text-xs font-bold uppercase text-gray-500">KODE BOOKING</span>
                     <span
-                        class="font-mono text-3xl font-bold tracking-widest text-[var(--color-court-primary)]">#{{ $booking->id }}</span>
+                        class="font-mono text-3xl font-bold tracking-widest text-[var(--color-court-primary)]">{{ $booking->code }}</span>
                 </div>
 
                 <div class="pt-6 text-center">
@@ -49,7 +49,7 @@
                     <div class="mt-6 border-t-2 border-dashed border-black/30 pt-6 text-center">
                         <span class="mb-3 block font-mono text-xs font-bold uppercase text-gray-500">KODE TIKET</span>
                         <div class="mx-auto inline-block border-2 border-black bg-white p-3 shadow-hard-sm">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('history.ticket', $booking->id)) }}"
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ urlencode(route('booking.success', $booking->id)) }}"
                                 alt="QR Code Tiket" width="150" height="150" class="block">
                         </div>
                         <p class="mt-3 font-mono text-xs text-gray-500">Tunjukkan QR ini ke petugas di lapangan</p>

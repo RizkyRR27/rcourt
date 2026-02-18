@@ -20,7 +20,7 @@
                 <table class="w-full text-left font-mono text-sm">
                     <thead class="bg-black text-white uppercase">
                         <tr>
-                            <th class="p-4">ID</th>
+                            <th class="p-4">KODE</th>
                             <th class="p-4">Penyewa</th>
                             <th class="p-4">Jadwal Main</th>
                             <th class="p-4">Total</th>
@@ -33,7 +33,7 @@
                     <tbody class="divide-y-2 divide-black bg-white">
                         @forelse($bookings as $booking)
                             <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="p-4 font-bold">#{{ $booking->id }}</td>
+                                <td class="p-4 font-bold">{{ $booking->code }}</td>
                                 <td class="p-4">
                                     <div class="font-bold uppercase">{{ $booking->user->name ?? 'User Hapus' }}</div>
                                     <div class="text-xs text-gray-500">{{ $booking->user->email ?? '-' }}</div>
