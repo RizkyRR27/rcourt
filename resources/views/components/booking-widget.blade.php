@@ -5,7 +5,8 @@
             <p class="font-mono text-sm text-gray-500">Isi form di bawah untuk mencari jadwal</p>
         </div>
 
-        <form action="{{ route('booking.search') }}" method="GET" class="grid gap-6 md:grid-cols-3">
+        <form action="{{ route('booking.search') }}" method="GET" class="grid gap-6 md:grid-cols-3" id="bookingForm"
+            onsubmit="return handleBookingSubmit(event)">
             {{-- Perubahan: Pakai method GET dan Grid jadi 3 kolom agar muat Durasi --}}
 
             {{-- 1. PILIH LAPANGAN --}}
@@ -129,30 +130,26 @@
 
             {{-- 3. PILIH DURASI (SAYA TAMBAHKAN INI) --}}
             <div class="space-y-2">
-    <label class="block font-mono text-xs font-bold uppercase text-gray-500">
-        Durasi Main <span class="text-red-500">*</span>
-    </label>
-    
-    <div class="flex items-center">
-        {{-- Input Angka --}}
-        <input type="number" 
-               name="duration" 
-               required 
-               min="1" 
-               max="15" 
-               value="{{ old('duration', 1) }}" 
-               placeholder="1"
-               class="w-full border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none placeholder-gray-400">
-        
-        {{-- Label Satuan (Hiasan) --}}
-        <div class="border-y-2 border-r-2 border-black bg-black px-4 py-3 text-white font-mono text-sm font-bold uppercase">
-            JAM
-        </div>
-    </div>
-    
-    {{-- Info kecil di bawahnya --}}
-    <p class="text-[10px] font-mono text-black-400 mt-1">*Min. 1 jam, Max. 15 jam</p>
-</div>
+                <label class="block font-mono text-xs font-bold uppercase text-gray-500">
+                    Durasi Main <span class="text-red-500">*</span>
+                </label>
+
+                <div class="flex items-center">
+                    {{-- Input Angka --}}
+                    <input type="number" name="duration" required min="1" max="15"
+                        value="{{ old('duration', 1) }}" placeholder="1"
+                        class="w-full border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none placeholder-gray-400">
+
+                    {{-- Label Satuan (Hiasan) --}}
+                    <div
+                        class="border-y-2 border-r-2 border-black bg-black px-4 py-3 text-white font-mono text-sm font-bold uppercase">
+                        JAM
+                    </div>
+                </div>
+
+                {{-- Info kecil di bawahnya --}}
+                <p class="text-[10px] font-mono text-black-400 mt-1">*Min. 1 jam, Max. 15 jam</p>
+            </div>
 
             {{-- TOMBOL SUBMIT --}}
             <div class="md:col-span-3 mt-2">
@@ -272,4 +269,81 @@
             }
         }
     }
+</script>
+
+{{-- LOGIN MODAL UNTUK GUEST --}}
+@guest
+    <div id="loginModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm"
+        onclick="hideLoginModal(event)">
+        <div class="relative mx-4 w-full max-w-md border-4 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+            onclick="event.stopPropagation()">
+
+            {{-- Close Button --}}
+            <button onclick="hideLoginModal()"
+                class="absolute -right-3 -top-3 flex h-10 w-10 items-center justify-center border-2 border-black bg-red-500 font-bold text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                ✕
+            </button>
+
+            {{-- Title --}}
+            <h3 class="mb-2 text-center font-display text-2xl uppercase tracking-wide">
+                Login <span class="text-[var(--color-court-clay)]">Dulu, Yuk!</span>
+            </h3>
+
+            {{-- Description --}}
+            <p class="mb-8 text-center font-mono text-sm text-gray-600">
+                Kamu harus login atau daftar terlebih dahulu untuk melakukan booking lapangan.
+            </p>
+
+            {{-- Buttons --}}
+            <div class="flex flex-col gap-3">
+                <a href="{{ route('login') }}"
+                    class="block border-3 border-black bg-[var(--color-court-yellow)] py-3 text-center font-display text-lg uppercase tracking-wider text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                    Masuk / Login
+                </a>
+                <a href="{{ route('register') }}"
+                    class="block border-3 border-black bg-[var(--color-court-green)] py-3 text-center font-display text-lg uppercase tracking-wider text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                    Daftar Baru
+                </a>
+            </div>
+
+            {{-- Footer --}}
+            <p class="mt-6 text-center font-mono text-xs text-gray-400">
+                Sudah punya akun? Langsung login aja!
+            </p>
+        </div>
+    </div>
+@endguest
+
+<script>
+    const isGuest = {{ auth()->guest() ? 'true' : 'false' }};
+
+    function handleBookingSubmit(event) {
+        if (isGuest) {
+            event.preventDefault();
+            showLoginModal();
+            return false;
+        }
+        return true;
+    }
+
+    function showLoginModal() {
+        const modal = document.getElementById('loginModal');
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function hideLoginModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        const modal = document.getElementById('loginModal');
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') hideLoginModal();
+    });
 </script>

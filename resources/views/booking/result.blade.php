@@ -1,6 +1,6 @@
 <x-layouts.app :current-route="'booking'">
     <div class="bg-[var(--color-court-paper)] pb-20 pt-10">
-        
+
         {{-- HEADER --}}
         <div class="mx-auto mb-10 max-w-7xl px-4 text-center">
             <h2 class="font-display text-4xl uppercase md:text-6xl text-black">
@@ -21,17 +21,18 @@
 
         {{-- CONTENT --}}
         <div class="mx-auto max-w-5xl px-4">
-            
+
             <div class="mb-8">
-                <a href="{{ route('booking') }}" class="group inline-flex items-center gap-2 font-mono font-bold uppercase text-gray-500 hover:text-black">
+                <a href="{{ route('booking') }}"
+                    class="group inline-flex items-center gap-2 font-mono font-bold uppercase text-gray-500 hover:text-black">
                     <span>←</span> Cari Jadwal Lain
                 </a>
             </div>
 
             @forelse ($results as $court)
-                @if(count($court['slots']) > 0)
+                @if (count($court['slots']) > 0)
                     <div class="mb-10 border-2 border-black bg-white p-6 shadow-hard">
-                        
+
                         <div class="mb-6 flex items-center justify-between border-b-2 border-black pb-4">
                             <h3 class="font-display text-2xl uppercase">{{ $court['court_name'] }}</h3>
                             <span class="bg-[var(--color-court-green)] px-3 py-1 font-mono text-xs text-white">
@@ -41,24 +42,25 @@
 
                         <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
                             @foreach ($court['slots'] as $slot)
-                                {{-- PERHATIKAN: Saya sudah menambahkan 'date' => $date di sini --}}
                                 <a href="{{ route('booking.create', [
-                                        'court_id'   => $court['court_id'],
-                                        'type'       => $type,
-                                        'date'       => $date,    // <--- INI KUNCINYA! JANGAN DIHAPUS
-                                        'start_time' => $slot['start_time'],
-                                        'end_time'   => $slot['end_time'],
-                                        'price'      => $slot['price']
-                                    ]) }}" 
-                                   class="group relative flex flex-col items-center justify-center border-2 border-black bg-[var(--color-court-paper)] py-4 text-center transition-all hover:-translate-y-1 hover:bg-[var(--color-court-yellow)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                    
+                                    'court_id' => $court['court_id'],
+                                    'type' => $type,
+                                    'date' => $date,
+                                    'start_time' => $slot['start_time'],
+                                    'end_time' => $slot['end_time'],
+                                    'price' => $slot['price'],
+                                ]) }}"
+                                    class="group relative flex flex-col items-center justify-center border-2 border-black bg-[var(--color-court-paper)] py-4 text-center transition-all hover:-translate-y-1 hover:bg-[var(--color-court-yellow)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+
                                     <span class="font-mono text-lg font-bold">
                                         {{ substr($slot['start_time'], 0, 5) }}
                                     </span>
-                                    <span class="text-xs text-gray-500 group-hover:text-black">s/d {{ substr($slot['end_time'], 0, 5) }}</span>
-                                    
+                                    <span class="text-xs text-gray-500 group-hover:text-black">s/d
+                                        {{ substr($slot['end_time'], 0, 5) }}</span>
+
                                     <div class="mt-2 border-t border-black pt-2 w-full">
-                                        <span class="font-mono text-sm font-bold text-[var(--color-court-clay)] group-hover:text-black">
+                                        <span
+                                            class="font-mono text-sm font-bold text-[var(--color-court-clay)] group-hover:text-black">
                                             Rp {{ number_format($slot['price'], 0, ',', '.') }}
                                         </span>
                                     </div>

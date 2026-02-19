@@ -23,23 +23,26 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-// Halaman Form Booking (Pilih Tanggal & Jenis)
-Route::get('/booking', [BookingController::class, 'index'])->name('booking');
+// Halaman Booking (Wajib Login)
+Route::middleware('auth')->group(function () {
+    // Halaman Form Booking (Pilih Tanggal & Jenis)
+    Route::get('/booking', [BookingController::class, 'index'])->name('booking');
 
-// Route untuk memproses pencarian jadwal (Nanti kita pakai ini)
-Route::get('/booking/search', [BookingController::class, 'search'])->name('booking.search');
+    // Route untuk memproses pencarian jadwal
+    Route::get('/booking/search', [BookingController::class, 'search'])->name('booking.search');
 
-// Menampilkan Halaman Checkout/Pembayaran
-Route::get('/booking/checkout', [BookingController::class, 'create'])->name('booking.create');
+    // Menampilkan Halaman Checkout/Pembayaran
+    Route::get('/booking/checkout', [BookingController::class, 'create'])->name('booking.create');
 
-// Menyimpan Data Booking ke Database
-Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
+    // Menyimpan Data Booking ke Database
+    Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
 
-// Halaman Sukses (Setelah booking)
-Route::get('/booking/success/{id}', function ($id) {
-    $booking = \App\Models\Booking::findOrFail($id);
-    return view('booking.success', compact('booking'));
-})->name('booking.success');
+    // Halaman Sukses (Setelah booking)
+    Route::get('/booking/success/{id}', function ($id) {
+        $booking = \App\Models\Booking::findOrFail($id);
+        return view('booking.success', compact('booking'));
+    })->name('booking.success');
+});
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
