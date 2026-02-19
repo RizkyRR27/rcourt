@@ -1,12 +1,9 @@
-<x-layouts.app :hide-navbar="true" :hide-footer="true">
+<x-layouts.admin>
     <div class="mx-auto max-w-7xl px-4 py-12" x-data="{ showRejectModal: false, rejectAction: '' }">
-        <div class="mb-8 flex items-center justify-between">
-            <h1 class="font-display text-4xl uppercase text-black">Admin <span
-                    class="text-[var(--color-court-clay)]">Dashboard</span></h1>
-            <a href="{{ route('home') }}"
-                class="font-mono text-sm font-bold uppercase text-gray-500 hover:text-black hover:underline">
-                Ke Homepage &rarr;
-            </a>
+        <div class="mb-8">
+            <h1 class="font-display text-4xl uppercase text-black">Kelola <span
+                    class="text-[var(--color-court-clay)]">Booking</span></h1>
+            <p class="mt-1 font-mono text-sm text-gray-500">Approve atau reject booking yang masuk</p>
         </div>
 
         @if (session('success'))
@@ -197,4 +194,4 @@
             </div>
         </div>
     </div>
-</x-layouts.app>
+</x-layouts.admin>

@@ -44,8 +44,11 @@ Route::middleware('auth')->group(function () {
     })->name('booking.success');
 });
 
+use App\Http\Controllers\AdminDashboardController;
+
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.home');
+    Route::get('/admin/bookings', [AdminController::class, 'index'])->name('admin.bookings');
 
     // Proses Update Status (Approve/Reject)
     Route::post('/admin/booking/{id}/update', [AdminController::class, 'updateStatus'])->name('admin.booking.update');

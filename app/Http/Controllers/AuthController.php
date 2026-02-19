@@ -27,7 +27,7 @@ class AuthController extends Controller
 
             // Redirect admin ke dashboard, user biasa ke homepage
             if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('success', 'Selamat Datang, Admin!');
+                return redirect()->route('admin.home')->with('success', 'Selamat Datang, Admin!');
             }
 
             return redirect()->intended('/')->with('success', 'Selamat Datang kembali!');

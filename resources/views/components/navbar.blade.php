@@ -58,7 +58,7 @@
                                 x-transition:leave-end="transform opacity-0 scale-95" style="display: none;"
                                 class="absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-hard-lg z-50">
                                 @if (Auth::user()->role === 'admin')
-                                    <a href="{{ route('admin.dashboard') }}"
+                                    <a href="{{ route('admin.home') }}"
                                         class="flex items-center gap-2 px-4 py-3 font-mono text-sm border-b-2 border-black hover:bg-gray-100 transition-colors text-black font-bold">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -159,7 +159,7 @@
             {{-- LOGIKA AUTHENTICATION (Mobile) --}}
             @auth
                 @if (Auth::user()->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}"
+                    <a href="{{ route('admin.home') }}"
                         class="flex items-center gap-2 w-full border-2 border-black bg-[var(--color-court-clay)] text-white px-4 py-3 text-left font-mono font-bold uppercase shadow-hard-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-none mb-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
