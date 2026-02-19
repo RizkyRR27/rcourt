@@ -21,7 +21,17 @@
             @endif
 
             {{-- List Rewards --}}
-            @forelse ($rewards as $reward)
+            @if ($reward)
+                {{-- Counter: berapa hadiah tersisa --}}
+                @if ($totalPending > 1)
+                    <div class="mb-6 text-center">
+                        <span
+                            class="inline-block border-2 border-black bg-[var(--color-court-yellow)] px-4 py-2 font-mono text-sm font-bold shadow-hard">
+                            HADIAH 1 dari {{ $totalPending }}
+                        </span>
+                    </div>
+                @endif
+
                 <div
                     class="bg-[var(--color-court-paper)] border-2 border-black p-8 shadow-hard mb-8 relative overflow-hidden group">
 
@@ -53,7 +63,10 @@
                                         <div>
                                             <div class="font-bold font-mono text-lg mb-1 uppercase">DISKON 10%</div>
                                             <p class="text-xs text-gray-500 font-mono">Potongan langsung untuk booking
-                                                selanjutnya.</p>
+                                                <span
+                                                    class="font-bold text-black">{{ ucfirst(str_replace('_', ' ', $reward->sport_type)) }}</span>
+                                                selanjutnya.
+                                            </p>
                                         </div>
                                     </div>
 
@@ -106,7 +119,7 @@
                         </div>
                     </div>
                 </div>
-            @empty
+            @else
                 <div class="text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
                     <h3 class="font-mono font-bold text-xl text-gray-500 mb-2 uppercase">Belum Ada Hadiah</h3>
                     <p class="text-gray-400 font-mono text-sm max-w-md mx-auto mb-6">
@@ -117,7 +130,7 @@
                         Main Lagi Yuk!
                     </a>
                 </div>
-            @endforelse
+            @endif
 
         </div>
     </div>

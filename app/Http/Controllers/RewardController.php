@@ -12,11 +12,17 @@ class RewardController extends Controller
 
     public function index()
     {
-        // Tampilkan halaman pilih hadiah
-        $rewards = UserReward::where('user_id', Auth::id())
+        // Ambil total hadiah pending
+        $totalPending = UserReward::where('user_id', Auth::id())
             ->where('reward_type', 'pending')
-            ->get();
-        return view('user.rewards', compact('rewards'));
+            ->count();
+
+        // Ambil HANYA 1 hadiah pertama (tampil satu-satu)
+        $reward = UserReward::where('user_id', Auth::id())
+            ->where('reward_type', 'pending')
+            ->first();
+
+        return view('user.rewards', compact('reward', 'totalPending'));
     }
 
     public function history()
