@@ -134,7 +134,12 @@
                                             $canExtend = now()->lessThan($endDt) && !$isAtClosing;
                                         @endphp
 
-                                        @if ($canExtend)
+                                        @if ($booking->is_extended)
+                                            <button type="button" disabled
+                                                class="cursor-not-allowed border border-gray-300 bg-blue-100 px-3 py-1 font-mono text-xs font-bold uppercase text-blue-800">
+                                                ✔ Sudah Extend
+                                            </button>
+                                        @elseif ($canExtend)
                                             @php
                                                 // Hitung sisa jam sampai jam 24:00
                                                 // Ambil jam saja dari end_time

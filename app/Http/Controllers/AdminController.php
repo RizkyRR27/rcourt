@@ -166,6 +166,11 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Hanya booking yang sudah approved bisa di-extend.');
         }
 
+        // Cek apakah sudah pernah extend
+        if ($booking->is_extended) {
+            return redirect()->back()->with('error', 'Booking ini sudah pernah di-extend. Tidak bisa extend lagi.');
+        }
+
         // Cek apakah booking sudah lewat (tanggal atau jam)
         $now = \Carbon\Carbon::now();
         $dateStr = \Carbon\Carbon::parse($booking->date)->format('Y-m-d');
