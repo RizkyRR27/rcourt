@@ -33,7 +33,7 @@
             <div class="mb-16 text-center">
                 <span
                     class="mb-4 inline-block border-2 border-black bg-[var(--color-court-clay)] px-4 py-1 font-mono text-sm font-bold uppercase tracking-widest text-white shadow-hard-sm">
-                    🎉 Event Spesial
+                    Event Spesial
                 </span>
                 <h2 class="mt-4 font-display text-5xl uppercase md:text-7xl text-black">
                     GRAND <span class="text-[var(--color-court-clay)]">OPENING</span>
@@ -96,7 +96,7 @@
             <div class="mb-16 text-center">
                 <span
                     class="mb-4 inline-block border-2 border-black bg-[var(--color-court-yellow)] px-4 py-1 font-mono text-sm font-bold uppercase tracking-widest shadow-hard-sm">
-                    🏆 Piala Bergilir Tahunan
+                    Piala Bergilir Tahunan
                 </span>
                 <h2 class="mt-4 font-display text-5xl uppercase md:text-7xl text-black">
                     R <span class="text-[var(--color-court-clay)]">CUP</span>
@@ -109,7 +109,7 @@
                 </p>
                 <div
                     class="mt-4 inline-flex items-center gap-2 border-2 border-black bg-[var(--color-court-paper)] px-4 py-2 font-mono text-sm font-bold shadow-hard-sm">
-                    🗓 Setiap Tanggal: 12 - 17 Januari
+                    Setiap Tanggal: 12 - 17 Januari
                 </div>
             </div>
 
