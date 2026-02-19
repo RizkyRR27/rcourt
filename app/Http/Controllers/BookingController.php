@@ -290,12 +290,14 @@ class BookingController extends Controller
             'total_price' => $price,
         ]]);
 
-        // 5. Ambil Voucher Diskon yang dimiliki user
+        // 5. Ambil Voucher Diskon yang dimiliki user (HANYA untuk jenis lapangan yang sama)
         $discountVouchers = collect();
         if (Auth::check()) {
+            $courtType = $availableCourt->type; // Tipe olahraga lapangan ini
             $discountVouchers = \App\Models\UserReward::where('user_id', Auth::id())
                 ->where('reward_type', 'discount')
                 ->where('is_used', false)
+                ->where('sport_type', $courtType) // Filter by sport type
                 ->get();
         }
 
@@ -354,10 +356,15 @@ class BookingController extends Controller
 
         // Cek apakah user memilih voucher diskon
         if ($request->filled('voucher_id')) {
+            // Ambil tipe olahraga dari lapangan yang dibooking
+            $bookedCourt = Court::find($request->court_id);
+            $bookedSportType = $bookedCourt ? $bookedCourt->type : null;
+
             $discountReward = \App\Models\UserReward::where('id', $request->voucher_id)
                 ->where('user_id', $user->id)
                 ->where('reward_type', 'discount')
                 ->where('is_used', false)
+                ->where('sport_type', $bookedSportType) // Validasi sport type harus cocok
                 ->first();
 
             if ($discountReward) {

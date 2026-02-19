@@ -71,6 +71,7 @@ class AdminController extends Controller
                 UserReward::create([
                     'user_id' => $booking->user_id,
                     'reward_type' => 'pending', // Pending = User belum milih hadiah
+                    'sport_type' => $sportType, // Jenis olahraga asal klaim
                     'is_used' => false
                 ]);
             }
