@@ -41,7 +41,24 @@
                     <h2 class="font-display text-2xl uppercase text-white tracking-wider">Informasi Profil</h2>
                 </div>
 
-                <form action="{{ route('profile.update') }}" method="POST" class="p-6 md:p-8 space-y-6">
+                <form action="{{ route('profile.update') }}" method="POST" class="p-6 md:p-8 space-y-6"
+                    x-data="{
+                        original: {
+                            name: '{{ addslashes(old('name', $user->name)) }}',
+                            email: '{{ addslashes(old('email', $user->email)) }}',
+                            phone: '{{ addslashes(old('phone', $user->phone)) }}'
+                        },
+                        current: {
+                            name: '{{ addslashes(old('name', $user->name)) }}',
+                            email: '{{ addslashes(old('email', $user->email)) }}',
+                            phone: '{{ addslashes(old('phone', $user->phone)) }}'
+                        },
+                        get hasChanges() {
+                            return this.current.name !== this.original.name ||
+                                this.current.email !== this.original.email ||
+                                this.current.phone !== this.original.phone;
+                        }
+                    }">
                     @csrf
                     @method('PUT')
 
@@ -64,7 +81,7 @@
                     <div>
                         <label class="block font-mono text-xs font-bold uppercase text-gray-600 mb-2">Nama
                             Lengkap</label>
-                        <input type="text" name="name" value="{{ old('name', $user->name) }}"
+                        <input type="text" name="name" x-model="current.name"
                             class="w-full border-2 border-black px-4 py-3 font-mono text-sm shadow-hard-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-court-clay)]"
                             required>
                     </div>
@@ -72,7 +89,7 @@
                     {{-- Email --}}
                     <div>
                         <label class="block font-mono text-xs font-bold uppercase text-gray-600 mb-2">Email</label>
-                        <input type="email" name="email" value="{{ old('email', $user->email) }}"
+                        <input type="email" name="email" x-model="current.email"
                             class="w-full border-2 border-black px-4 py-3 font-mono text-sm shadow-hard-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-court-clay)]"
                             required>
                     </div>
@@ -81,15 +98,19 @@
                     <div>
                         <label class="block font-mono text-xs font-bold uppercase text-gray-600 mb-2">Nomor
                             Telepon</label>
-                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
+                        <input type="text" name="phone" x-model="current.phone"
                             class="w-full border-2 border-black px-4 py-3 font-mono text-sm shadow-hard-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-court-clay)]"
                             required>
                     </div>
 
                     {{-- Buttons: Simpan + Ubah Password --}}
                     <div class="pt-4 flex flex-col sm:flex-row gap-3">
-                        <button type="submit"
-                            class="flex-1 border-2 border-black bg-[var(--color-court-clay)] px-6 py-4 font-mono font-bold uppercase text-white shadow-hard transition-all hover:-translate-y-px active:translate-y-0 active:shadow-none">
+                        <button type="submit" :disabled="!hasChanges"
+                            :class="hasChanges
+                                ?
+                                'bg-[var(--color-court-clay)] text-white shadow-hard hover:-translate-y-px cursor-pointer' :
+                                'bg-gray-300 text-gray-500 shadow-none cursor-not-allowed'"
+                            class="flex-1 border-2 border-black px-6 py-4 font-mono font-bold uppercase transition-all active:translate-y-0 active:shadow-none">
                             Simpan Perubahan
                         </button>
                         <button type="button" @click="showPasswordModal = true"
@@ -125,7 +146,17 @@
                 </div>
 
                 {{-- Modal Body --}}
-                <form action="{{ route('profile.password') }}" method="POST" class="p-6 space-y-5">
+                <form action="{{ route('profile.password') }}" method="POST" class="p-6 space-y-5"
+                    x-data="{
+                        currentPassword: '',
+                        newPassword: '',
+                        confirmPassword: '',
+                        get allFilled() {
+                            return this.currentPassword.length > 0 &&
+                                this.newPassword.length > 0 &&
+                                this.confirmPassword.length > 0;
+                        }
+                    }">
                     @csrf
                     @method('PUT')
 
@@ -134,6 +165,7 @@
                             Ini</label>
                         <div class="relative">
                             <input id="profile_current_password" type="password" name="current_password"
+                                x-model="currentPassword"
                                 class="w-full border-2 border-black px-4 py-3 pr-12 font-mono text-sm shadow-hard-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-court-clay)]"
                                 required>
                             <button type="button" onclick="togglePassword('profile_current_password', this)"
@@ -158,7 +190,7 @@
                         <label class="block font-mono text-xs font-bold uppercase text-gray-600 mb-2">Password
                             Baru</label>
                         <div class="relative">
-                            <input id="profile_new_password" type="password" name="password"
+                            <input id="profile_new_password" type="password" name="password" x-model="newPassword"
                                 class="w-full border-2 border-black px-4 py-3 pr-12 font-mono text-sm shadow-hard-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-court-clay)]"
                                 required>
                             <button type="button" onclick="togglePassword('profile_new_password', this)"
@@ -184,6 +216,7 @@
                             Password Baru</label>
                         <div class="relative">
                             <input id="profile_password_confirmation" type="password" name="password_confirmation"
+                                x-model="confirmPassword"
                                 class="w-full border-2 border-black px-4 py-3 pr-12 font-mono text-sm shadow-hard-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-court-clay)]"
                                 required>
                             <button type="button" onclick="togglePassword('profile_password_confirmation', this)"
@@ -209,8 +242,12 @@
                             class="flex-1 border-2 border-black bg-white px-4 py-3 font-mono font-bold uppercase text-black shadow-hard-sm transition-all hover:-translate-y-px active:translate-y-0 active:shadow-none">
                             Batal
                         </button>
-                        <button type="submit"
-                            class="flex-1 border-2 border-black bg-red-600 px-4 py-3 font-mono font-bold uppercase text-white shadow-hard-sm transition-all hover:-translate-y-px hover:bg-red-700 active:translate-y-0 active:shadow-none">
+                        <button type="submit" :disabled="!allFilled"
+                            :class="allFilled
+                                ?
+                                'bg-red-600 text-white shadow-hard-sm hover:-translate-y-px hover:bg-red-700 cursor-pointer' :
+                                'bg-gray-300 text-gray-500 shadow-none cursor-not-allowed'"
+                            class="flex-1 border-2 border-black px-4 py-3 font-mono font-bold uppercase transition-all active:translate-y-0 active:shadow-none">
                             Ubah Password
                         </button>
                     </div>
