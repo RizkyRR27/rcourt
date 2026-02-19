@@ -52,6 +52,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Proses Update Status (Approve/Reject)
     Route::post('/admin/booking/{id}/update', [AdminController::class, 'updateStatus'])->name('admin.booking.update');
+
+    // Extend Booking (Tambah Jam)
+    Route::post('/admin/booking/{id}/extend', [AdminController::class, 'extendBooking'])->name('admin.booking.extend');
 });
 
 // Halaman Riwayat Booking User

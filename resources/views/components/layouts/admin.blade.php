@@ -18,6 +18,11 @@
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body class="min-h-screen bg-[var(--color-court-paper)] text-[var(--color-court-green)]" x-data="{ sidebarOpen: false }">

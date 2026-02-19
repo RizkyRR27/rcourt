@@ -151,4 +151,115 @@ class AdminController extends Controller
 
         curl_close($curl);
     }
+
+    // 3. EXTEND BOOKING (Tambah Jam)
+    public function extendBooking(Request $request, $id)
+    {
+        $request->validate([
+            'extend_hours' => 'required|integer|min:1|max:4'
+        ]);
+
+        $booking = Booking::with('court')->findOrFail($id);
+
+        // Hanya booking approved yang bisa di-extend
+        if ($booking->status !== 'approved') {
+            return redirect()->back()->with('error', 'Hanya booking yang sudah approved bisa di-extend.');
+        }
+
+        // Cek apakah booking sudah lewat (tanggal atau jam)
+        $now = \Carbon\Carbon::now();
+        $dateStr = \Carbon\Carbon::parse($booking->date)->format('Y-m-d');
+
+        // Cek apakah end_time sudah jam 24:00 (tutup) — bisa disimpan sebagai '24:00:00' atau '00:00:00'
+        $isAtClosing = in_array($booking->end_time, ['24:00:00', '00:00:00']);
+
+        if ($isAtClosing) {
+            $bookingEndDateTime = \Carbon\Carbon::parse($dateStr)->addDay();
+        } else {
+            $bookingEndDateTime = \Carbon\Carbon::parse($dateStr . ' ' . $booking->end_time);
+        }
+
+        if ($now->greaterThanOrEqualTo($bookingEndDateTime)) {
+            return redirect()->back()->with('error', 'Tidak bisa extend! Booking ini sudah melewati waktu bermain.');
+        }
+
+        if ($isAtClosing) {
+            return redirect()->back()->with('error', 'Tidak bisa extend! Jam akhir sudah mencapai batas operasional (24:00).');
+        }
+
+        $extendHours = (int) $request->extend_hours;
+        $currentEnd = \Carbon\Carbon::parse($booking->end_time);
+        $newEnd = $currentEnd->copy()->addHours($extendHours);
+        $newEndHour = (int) $currentEnd->format('H') + $extendHours;
+
+        // Batas operasional: max jam 24
+        if ($newEndHour > 24) {
+            return redirect()->back()->with('error', 'Tidak bisa extend melewati jam operasional (max 24:00).');
+        }
+
+        // Simpan konsisten sebagai 24:00:00 jika tepat tengah malam
+        $newEndStr = ($newEndHour == 24) ? '24:00:00' : $newEnd->format('H:i:s');
+
+        // Cek bentrok dengan booking lain di court & tanggal yang sama
+        $hasConflict = Booking::where('court_id', $booking->court_id)
+            ->where('date', $booking->date)
+            ->where('id', '!=', $booking->id)
+            ->where('status', '!=', 'rejected')
+            ->where(function ($query) use ($currentEnd, $newEndStr) {
+                // Cek apakah ada booking yang overlap di rentang waktu extend
+                $query->where('start_time', '<', $newEndStr)
+                    ->where('end_time', '>', $currentEnd->format('H:i:s'));
+            })
+            ->exists();
+
+        if ($hasConflict) {
+            return redirect()->back()->with('error', 'Tidak bisa extend! Ada booking lain di jam tersebut.');
+        }
+
+        // Hitung harga tambahan
+        $courtType = $booking->court->type;
+        $isWeekend = \Carbon\Carbon::parse($booking->date)->isWeekend();
+        $additionalPrice = 0;
+
+        for ($h = 0; $h < $extendHours; $h++) {
+            $hourNum = $currentEnd->copy()->addHours($h)->hour;
+
+            // Harga dasar per jenis lapangan
+            $hourPrice = match ($courtType) {
+                'badminton' => $isWeekend ? 45000 : 30000,
+                'futsal' => $isWeekend ? 110000 : 90000,
+                'basket_indoor' => $isWeekend ? 230000 : 200000,
+                'tennis' => $isWeekend ? 90000 : 70000,
+                'mini_soccer' => $isWeekend ? 700000 : 650000,
+                'padel' => $isWeekend ? 320000 : 300000,
+                default => 50000,
+            };
+
+            // Biaya lampu malam (>=17:00)
+            if ($hourNum >= 17) {
+                $hourPrice += match ($courtType) {
+                    'mini_soccer' => 50000,
+                    'tennis', 'padel' => 30000,
+                    'futsal', 'basket_indoor' => 25000,
+                    default => 10000,
+                };
+            }
+
+            $additionalPrice += $hourPrice;
+        }
+
+        // Update booking
+        $booking->update([
+            'end_time' => $newEndStr,
+            'total_price' => $booking->total_price + $additionalPrice,
+            'is_extended' => true,
+            'extend_cost' => $booking->extend_cost + $additionalPrice,
+            'extend_duration' => $booking->extend_duration + $extendHours,
+        ]);
+
+        return redirect()->back()->with(
+            'success',
+            'Booking berhasil di-extend ' . $extendHours . ' jam! Tambahan biaya: Rp ' . number_format($additionalPrice, 0, ',', '.')
+        );
+    }
 }

@@ -29,8 +29,23 @@
                                 <td class="p-3 font-bold text-xs">{{ $booking->code }}</td>
                                 <td class="p-3">{{ \Carbon\Carbon::parse($booking->date)->format('d M Y') }}</td>
                                 <td class="p-3 font-bold">{{ $booking->court->name }}</td>
-                                <td class="p-3">{{ $booking->start_time }} - {{ $booking->end_time }}</td>
-                                <td class="p-3">Rp {{ number_format($booking->total_price) }}</td>
+                                <td class="p-3">
+                                    {{ $booking->start_time }} - {{ $booking->end_time }}
+                                    @if ($booking->is_extended && $booking->extend_duration > 0)
+                                        <span class="block text-xs font-bold text-blue-600">
+                                            (+ {{ $booking->extend_duration }} Jam)
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="p-3">
+                                    <div class="font-bold">Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                                    </div>
+                                    @if ($booking->is_extended)
+                                        <div class="mt-1 text-xs font-bold text-blue-600">
+                                            (Termasuk Extend Rp {{ number_format($booking->extend_cost, 0, ',', '.') }})
+                                        </div>
+                                    @endif
+                                </td>
                                 <td class="p-3">
                                     @if ($booking->status == 'approved')
                                         <span
