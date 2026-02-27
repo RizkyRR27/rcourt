@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\LoyaltyProgress;
 use App\Models\UserReward;
+use App\Helpers\PricingHelper;
 use Illuminate\Http\Request;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Log; // Tetap pakai Log untuk debugging
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -118,38 +119,25 @@ class AdminController extends Controller
                 "Silakan cek website kami untuk info slot lainnya.";
         }
 
-        // --- SKRIP API FONNTE ---
-        $curl = curl_init();
+        // Kirim via Fonnte API (token dari config/services.php)
+        $token = config('services.fonnte.token');
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.fonnte.com/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => array(
-                'target' => $target,
-                'message' => $pesan,
-                'countryCode' => '62', // Otomatis ubah 08 jadi 628
-            ),
-            CURLOPT_HTTPHEADER => array(
-                // GANTI TOKEN DI BAWAH INI DENGAN TOKEN ANDA
-                "Authorization: BpWsSn2H4cADV7kzaJW5"
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        // Cek error cURL
-        if (curl_errno($curl)) {
-            $error_msg = curl_error($curl);
-            Log::error("Fonnte cURL Error: " . $error_msg);
+        if (!$token) {
+            Log::warning("Fonnte token belum dikonfigurasi. Set FONNTE_API_TOKEN di .env");
+            return;
         }
 
-        curl_close($curl);
+        $response = \Illuminate\Support\Facades\Http::withHeaders([
+            'Authorization' => $token,
+        ])->post('https://api.fonnte.com/send', [
+            'target' => $target,
+            'message' => $pesan,
+            'countryCode' => '62',
+        ]);
+
+        if ($response->failed()) {
+            Log::error("Fonnte API Error (Booking #{$booking->id}): " . $response->body());
+        }
     }
 
     // 3. EXTEND BOOKING (Tambah Jam)
@@ -221,37 +209,14 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Tidak bisa extend! Ada booking lain di jam tersebut.');
         }
 
-        // Hitung harga tambahan
+        // Hitung harga tambahan via PricingHelper
         $courtType = $booking->court->type;
-        $isWeekend = \Carbon\Carbon::parse($booking->date)->isWeekend();
-        $additionalPrice = 0;
-
-        for ($h = 0; $h < $extendHours; $h++) {
-            $hourNum = $currentEnd->copy()->addHours($h)->hour;
-
-            // Harga dasar per jenis lapangan
-            $hourPrice = match ($courtType) {
-                'badminton' => $isWeekend ? 45000 : 30000,
-                'futsal' => $isWeekend ? 110000 : 90000,
-                'basket_indoor' => $isWeekend ? 230000 : 200000,
-                'tennis' => $isWeekend ? 90000 : 70000,
-                'mini_soccer' => $isWeekend ? 700000 : 650000,
-                'padel' => $isWeekend ? 320000 : 300000,
-                default => 50000,
-            };
-
-            // Biaya lampu malam (>=17:00)
-            if ($hourNum >= 17) {
-                $hourPrice += match ($courtType) {
-                    'mini_soccer' => 50000,
-                    'tennis', 'padel' => 30000,
-                    'futsal', 'basket_indoor' => 25000,
-                    default => 10000,
-                };
-            }
-
-            $additionalPrice += $hourPrice;
-        }
+        $additionalPrice = PricingHelper::calculateTotal(
+            $courtType,
+            $booking->date,
+            $currentEnd->format('H:i:s'),
+            $newEndStr
+        );
 
         // Update booking
         $booking->update([

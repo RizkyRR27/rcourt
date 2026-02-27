@@ -18,4 +18,17 @@ class HistoryController extends Controller
 
         return view('user.history', compact('bookings'));
     }
+
+    public function show($id)
+    {
+        // Ambil booking beserta relasi court
+        $booking = Booking::with('court')->findOrFail($id);
+
+        // Pastikan user hanya bisa lihat tiket miliknya sendiri
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses ke tiket ini.');
+        }
+
+        return view('user.ticket', compact('booking'));
+    }
 }

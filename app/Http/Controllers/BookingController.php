@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tournament;
+use App\Helpers\PricingHelper;
 use Illuminate\Http\Request;
 use App\Models\Court;
 use App\Models\Booking;
@@ -76,34 +77,7 @@ class BookingController extends Controller
             }
         }
 
-        $cekTglUser = $request->input('date');
-        $cekTurnamenSekali = \App\Models\Tournament::where('is_recurring', 0)->get();
 
-        // dd([
-        //     'STATUS' => 'DEBUGGING MODE',
-        //     'TANGGAL_YANG_DICARI_USER' => $cekTglUser,
-        //     'TOTAL_TURNAMEN_SEKALI_PAKAI' => $cekTurnamenSekali->count(),
-        //     'LIST_DATA_DATABASE' => $cekTurnamenSekali->toArray()
-        // ]);
-
-
-        // try {
-        //     $isTournament = Tournament::where('start_date', '<=', $date)
-        //         ->where('end_date', '>=', $date)
-        //         // ->where('category', $type) // Uncomment baris ini jika turnamen cuma blokir tipe tertentu (misal turnamen badminton doang)
-        //         ->first();
-
-        //     if ($isTournament) {
-        //         // KICK USER BALIK KE HALAMAN DEPAN
-        //         return redirect()->route('booking')->with('error', 
-        //             'Mohon Maaf! Tanggal ' . \Carbon\Carbon::parse($date)->translatedFormat('d F Y') . 
-        //             ' ditutup untuk kegiatan: ' . $isTournament->name . ' 🏆'
-        //         );
-        //     }
-        // } catch (\Exception $e) {
-        //     // Jaga-jaga kalau tabel tournaments belum dibuat, biar gak error 500
-        //     // (Lewati saja pengecekan kalau tabelnya gak ada)
-        // }
 
         // 2. Ambil Data Lapangan
         $courts = Court::where('type', $type)->get();
@@ -120,54 +94,6 @@ class BookingController extends Controller
         }
 
         foreach ($courts as $court) {
-            // --- PERBAIKAN HARGA DI SINI ---
-            // Kita ambil harga dari database.
-            // Cek kolom 'price', kalau null cek 'price_per_hour'.
-            // Kalau masih null/0, kita kasih harga default (misal 50rb) biar gak Rp 0.
-            $standardPrice = $court->price ?? $court->price_per_hour ?? 0;
-
-            // DEBUGGING: Kalau database ternyata kosong, kita kasih harga minimal 
-            // (Hapus baris ini kalau database sudah fix, tapi ini membantu biar gak Rp 0)
-            // ------- FIX HARGA DARURAT -------
-            if ($standardPrice == 0) {
-                // Gunakan Underscore (_) sesuai value di <option> HTML
-                if ($type == 'badminton') {
-                    $standardPrice = 30000;
-                } elseif ($type == 'futsal') {
-                    $standardPrice = 90000;
-                } elseif ($type == 'basket_indoor') { // <--- Pakai underscore
-                    $standardPrice = 200000;
-                } elseif ($type == 'tennis') {
-                    $standardPrice = 70000;
-                } elseif ($type == 'mini_soccer') { // <--- Pakai underscore
-                    $standardPrice = 650000;
-                } elseif ($type == 'padel') {
-                    $standardPrice = 300000;
-                } else {
-                    $standardPrice = 50000; // Harga default jika tidak ada yang cocok
-                }
-            }
-            $cekHari = Carbon::parse($date);
-
-            if ($cekHari->isWeekend()) {
-                // Jika Sabtu atau Minggu, harga dasar dinaikkan
-                if ($type == 'badminton') {
-                    $standardPrice = 45000;
-                } elseif ($type == 'futsal') {
-                    $standardPrice = 110000;
-                } elseif ($type == 'basket_indoor') { // <--- Pakai underscore
-                    $standardPrice = 230000;
-                } elseif ($type == 'tennis') {
-                    $standardPrice = 90000;
-                } elseif ($type == 'mini_soccer') { // <--- Pakai underscore
-                    $standardPrice = 700000;
-                } elseif ($type == 'padel') {
-                    $standardPrice = 320000;
-                } else {
-                    $standardPrice = 50000; // Harga default jika tidak ada yang cocok
-                }
-            }
-
             $slots = [];
 
             // Loop Waktu
@@ -186,37 +112,9 @@ class BookingController extends Controller
                     })
                     ->exists();
 
-                // B. HITUNG HARGA TOTAL
+                // B. HITUNG HARGA TOTAL (via PricingHelper — single source of truth)
                 if (!$isBooked) {
-                    $totalPrice = 0;
-
-                    for ($h = 0; $h < $duration; $h++) {
-                        $currentHour = $i + $h;
-
-                        // Mulai dari harga dasar yg sudah kita ambil di atas
-                        $hourPrice = $standardPrice;
-
-                        if ($currentHour >= 17) {
-                            $biayaLampu = 0;
-
-                            // Tentukan harga lampu berdasarkan jenis lapangan
-                            if ($type == 'mini_soccer') {
-                                $biayaLampu = 50000; // Paling Mahal (Lampu Sorot Besar)
-                            } elseif ($type == 'tennis' || $type == 'padel') {
-                                $biayaLampu = 30000; // Butuh penerangan ekstra
-                            } elseif ($type == 'futsal' || $type == 'basket_indoor') {
-                                $biayaLampu = 25000; // Standard Indoor Besar
-                            } else {
-                                // Badminton (Default)
-                                $biayaLampu = 10000; // Area kecil
-                            }
-
-                            // Tambahkan ke harga per jam
-                            $hourPrice += $biayaLampu;
-                        }
-
-                        $totalPrice += $hourPrice;
-                    }
+                    $totalPrice = PricingHelper::calculateTotal($type, $date, $slotStart, $slotEnd);
 
                     $slots[] = [
                         'start_time' => $slotStart,
@@ -326,8 +224,7 @@ class BookingController extends Controller
             'date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
-            'court_id' => 'required',
-            'total_price' => 'required',
+            'court_id' => 'required|exists:courts,id',
             'phone' => ['required', 'regex:/^(\+62|62|0)8[1-9][0-9]{6,9}$/'],
         ], [
             'phone.required' => 'Nomor WhatsApp wajib diisi untuk pengiriman notifikasi.',
@@ -343,28 +240,34 @@ class BookingController extends Controller
             ->first();
 
         if ($isTournament) {
-            // Kalau ketahuan tanggal turnamen, tolak mentah-mentah!
             return redirect()->route('booking')->with(
                 'error',
                 'GAGAL BOOKING! Tanggal ' . $request->date . ' dipakai untuk event: ' . $isTournament->name
             );
         }
-        // $duration = (int)$request->duration;
-        $finalPrice = $request->total_price;
+
+        // =================================================================
+        // HITUNG HARGA DI SERVER (Anti Price Tampering)
+        // Tidak percaya harga dari client — selalu hitung ulang
+        // =================================================================
+        $bookedCourt = Court::findOrFail($request->court_id);
+        $finalPrice = PricingHelper::calculateTotal(
+            $bookedCourt->type,
+            $request->date,
+            $request->start_time,
+            $request->end_time
+        );
+
         $isDiscounted = false;
         $discountReward = null;
 
         // Cek apakah user memilih voucher diskon
         if ($request->filled('voucher_id')) {
-            // Ambil tipe olahraga dari lapangan yang dibooking
-            $bookedCourt = Court::find($request->court_id);
-            $bookedSportType = $bookedCourt ? $bookedCourt->type : null;
-
             $discountReward = \App\Models\UserReward::where('id', $request->voucher_id)
                 ->where('user_id', $user->id)
                 ->where('reward_type', 'discount')
                 ->where('is_used', false)
-                ->where('sport_type', $bookedSportType) // Validasi sport type harus cocok
+                ->where('sport_type', $bookedCourt->type)
                 ->first();
 
             if ($discountReward) {
