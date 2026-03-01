@@ -2,7 +2,9 @@
     <!-- Load Anton display font for a bold, 'sangar' header -->
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <style>
-        .font-anton { font-family: 'Anton', Impact, sans-serif; }
+        .font-anton {
+            font-family: 'Anton', Impact, sans-serif;
+        }
     </style>
     <div class="bg-[var(--color-court-paper)] pb-20 pt-10">
 
@@ -50,7 +52,8 @@
                                         <option value="">Tanpa Diskon</option>
                                         @foreach ($discountVouchers as $voucher)
                                             <option value="{{ $voucher->id }}">Diskon 10%
-                                                ({{ ucfirst(str_replace('_', ' ', $voucher->sport_type)) }})</option>
+                                                ({{ ucfirst(str_replace('_', ' ', $voucher->sport_type)) }})
+                                            </option>
                                         @endforeach
                                     </select>
                                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
@@ -131,7 +134,7 @@
                         </div>
 
                         <input type="text" name="name" id="input_name" required
-                            class="w-full border-2 border-black p-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none"
+                            class="w-full border-2 border-black p-3 font-mono text-sm focus:bg-[var(--color-surface)] focus:outline-none"
                             placeholder="Masukkan nama pemesan">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -144,7 +147,7 @@
                             <input type="tel" name="phone" value="{{ old('phone') }}" inputmode="numeric"
                                 pattern="^(\+62|62|0)8[1-9][0-9]{6,9}$"
                                 oninput="this.value = this.value.replace(/[^0-9+]/g, '')"
-                                class="w-full border-2 border-black p-2 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none"
+                                class="w-full border-2 border-black p-2 font-mono text-sm focus:bg-[var(--color-surface)] focus:outline-none"
                                 placeholder="Contoh: 081234567890">
                             <p id="phone_format_error" class="hidden text-xs text-red-500 mt-1 font-bold">
                                 ⚠ Format Salah: Wajib diawali 08xx, min 10 digit, maks 13 digit.
@@ -170,7 +173,7 @@
                         {{-- Dropdown Pilih Bank --}}
                         <div class="relative">
                             <select name="payment_method" id="payment_method"
-                                class="w-full appearance-none border-2 border-black bg-white p-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none cursor-pointer">
+                                class="w-full appearance-none border-2 border-black bg-white p-3 font-mono text-sm focus:bg-[var(--color-surface)] focus:outline-none cursor-pointer">
                                 <option value="cod">Bayar di Tempat (COD)</option>
                                 {{-- Ubah value agar spesifik --}}
                                 <option value="transfer_bca">Transfer Bank (BCA 123456789)</option>

@@ -17,7 +17,7 @@
                     <div class="relative">
                         {{-- PENTING: name harus 'type' bukan 'category' --}}
                         <select name="type" required
-                            class="w-full appearance-none border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none">
+                            class="w-full appearance-none border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-surface)] focus:outline-none">
                             <option value="" disabled selected>-- Pilih Lapangan --</option>
 
                             {{-- Opsi Lapangan (Sesuai Controller) --}}
@@ -52,8 +52,8 @@
 
                         {{-- Display Input (Clickable) --}}
                         <button type="button" @click="isOpen = !isOpen"
-                            class="w-full flex items-center justify-between border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm text-left focus:bg-[var(--color-court-yellow)] focus:outline-none transition-colors"
-                            :class="{ 'bg-[var(--color-court-yellow)]': isOpen }">
+                            class="w-full flex items-center justify-between border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm text-left focus:bg-[var(--color-surface)] focus:outline-none transition-colors"
+                            :class="{ 'bg-[var(--color-surface)]': isOpen }">
                             <span x-text="selectedDate ? formatDisplay(selectedDate) : '-- Pilih Tanggal --'"
                                 :class="selectedDate ? 'text-black' : 'text-gray-400'"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black" fill="none"
@@ -140,7 +140,7 @@
                         {{-- Input Angka --}}
                         <input type="number" name="duration" required min="1" max="15"
                             value="{{ old('duration', 1) }}" placeholder="1"
-                            class="w-full border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-court-yellow)] focus:outline-none placeholder-gray-400">
+                            class="w-full border-2 border-black bg-[var(--color-court-paper)] px-4 py-3 font-mono text-sm focus:bg-[var(--color-surface)] focus:outline-none placeholder-gray-400">
 
                         {{-- Label Satuan (Hiasan) --}}
                         <div
