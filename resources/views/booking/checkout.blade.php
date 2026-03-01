@@ -1,4 +1,9 @@
 <x-layouts.app :current-route="'booking'">
+    <!-- Load Anton display font for a bold, 'sangar' header -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <style>
+        .font-anton { font-family: 'Anton', Impact, sans-serif; }
+    </style>
     <div class="bg-[var(--color-court-paper)] pb-20 pt-10">
 
         <div class="mx-auto max-w-3xl px-4">

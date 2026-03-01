@@ -81,7 +81,7 @@
                                 <circle cx="12" cy="10" r="3" />
                             </svg>
                         </div>
-                        <span>Jakarta Selatan, Indonesia</span>
+                        <span>Bromo, Jakarta Selatan, Indonesia</span>
                     </div>
                 </div>
             </div>
