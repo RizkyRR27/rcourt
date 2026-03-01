@@ -14,8 +14,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('courts', function (Blueprint $table) {
-            $table->unsignedInteger('price')->default(0)->after('type');         // Harga weekday per jam
-            $table->unsignedInteger('weekend_price')->default(0)->after('price'); // Harga weekend per jam
+            $table->unsignedInteger('price')->default(0)->after('type');         
+            $table->unsignedInteger('weekend_price')->default(0)->after('price'); 
         });
 
         // Isi harga default berdasarkan tipe lapangan yang sudah ada

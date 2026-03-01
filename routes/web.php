@@ -11,11 +11,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
 
-// ========================================
-// PUBLIC ROUTES (Tanpa Login)
-// ========================================
-
-// Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Halaman Kontak
@@ -29,10 +24,6 @@ Route::get('/facilities', [HomeController::class, 'facilities'])->name('faciliti
 // Halaman Turnamen
 Route::get('/turnamen', [TournamentController::class, 'index'])->name('tournament');
 
-// ========================================
-// AUTH ROUTES (Guest Only)
-// ========================================
-
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'processLogin']);
@@ -44,10 +35,7 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout')
     ->middleware('auth');
-
-// ========================================
-// USER ROUTES (Wajib Login)
-// ========================================
+    
 
 Route::middleware('auth')->group(function () {
     // --- Booking ---
@@ -74,10 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/reward/history', [RewardController::class, 'history'])->name('reward.history');
     Route::post('/reward/{id}/choose', [RewardController::class, 'choose'])->name('reward.choose');
 });
-
-// ========================================
-// ADMIN ROUTES (Wajib Login + Role Admin)
-// ========================================
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.home');

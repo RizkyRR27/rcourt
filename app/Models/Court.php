@@ -13,7 +13,6 @@ class Court extends Model
     protected $table = 'courts';
 
     // Kolom yang boleh diisi secara massal (mass assignment)
-    // Penting untuk Seeder agar data bisa masuk
     protected $fillable = [
         'name',
         'type',

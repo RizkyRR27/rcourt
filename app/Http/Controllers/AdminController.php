@@ -82,10 +82,8 @@ class AdminController extends Controller
         }
 
 
-        // ======================================================
+       
         // 🚀 LOGIKA PENGIRIMAN NOTIFIKASI WHATSAPP
-        // ======================================================
-
         if ($booking->phone) {
             try {
                 $this->sendWhatsappNotification($booking, $newStatus);

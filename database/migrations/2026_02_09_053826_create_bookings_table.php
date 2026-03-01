@@ -16,13 +16,13 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
         $table->foreignId('court_id')->constrained()->onDelete('cascade');
         
-        $table->date('date'); // Tanggal Main
-        $table->time('start_time'); // Jam Mulai
-        $table->time('end_time'); // Jam Selesai
+        $table->date('date'); 
+        $table->time('start_time');         
+        $table->time('end_time'); 
         
-        $table->decimal('total_price', 10, 2); // Harga yang harus dibayar
+        $table->decimal('total_price', 10, 2); 
         
-        // Opsi Pembayaran: Transfer atau Bayar di Tempat (COD)
+        // Opsi Pembayaran
         $table->enum('payment_method', ['transfer', 'cod']); 
         
         // Tipe Bayar: DP atau Lunas
@@ -30,11 +30,7 @@ return new class extends Migration
         
         // Bukti Bayar (Path file gambar)
         $table->string('payment_proof')->nullable(); 
-        
-        // Status Booking
-        // Pending: Baru booking/Upload bukti
-        // Approved: Admin sudah ACC
-        // Rejected: Admin tolak
+       
         $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
         
         $table->timestamps();

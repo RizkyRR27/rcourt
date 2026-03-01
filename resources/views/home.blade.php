@@ -1,8 +1,7 @@
 <x-layouts.app :current-route="'home'">
 
-    {{-- ===============================================================
-         1. HERO SECTION (Desain Retro Brutalist Anda)
-       =============================================================== --}}
+        <!-- 1. HERO SECTION (Desain Retro Brutalist Anda) -->
+     
     <section class="relative overflow-hidden bg-[var(--color-court-green)] pb-32 pt-20 text-[var(--color-court-paper)]">
 
         {{-- Background Grid Pattern --}}
@@ -34,7 +33,7 @@
                     class="font-mono font-bold uppercase transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none border-2 border-black px-6 py-3 text-sm md:text-base tracking-wider bg-[var(--color-court-clay)] text-white shadow-hard hover:bg-red-600 min-w-[200px] text-center">
                     BOOKING SEKARANG
                 </a>
-                <a href="#facilities"
+                <a href="/facilities"
                     class="font-mono font-bold uppercase transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none border-2 border-[var(--color-court-paper)] px-6 py-3 text-sm md:text-base tracking-wider bg-transparent text-[var(--color-court-paper)] shadow-hard hover:bg-[var(--color-court-paper)] hover:text-[var(--color-court-green)] min-w-[200px] text-center">
                     LIHAT FASILITAS
                 </a>
@@ -45,9 +44,7 @@
     {{-- Booking Widget (Keep as is) --}}
     <x-booking-widget />
 
-    {{-- ===============================================================
-         2. LOYALTY SECTION (HANYA MUNCUL JIKA LOGIN)
-       =============================================================== --}}
+    {{-- 2. LOYALTY SECTION (HANYA MUNCUL JIKA LOGIN) --}}
     @auth
         <section class="py-12 bg-[var(--color-court-paper)] border-b-2 border-black">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -149,9 +146,7 @@
         </section>
     @endauth
 
-    {{-- ===============================================================
-         3. FACILITIES SECTION (Desain Grid Card)
-       =============================================================== --}}
+    {{-- 3. FACILITIES SECTION (Desain Grid Card) --}}
     <section id="facilities" class="py-20 bg-[var(--color-court-paper)]">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -205,9 +200,7 @@
         </div>
     </section>
 
-    {{-- ===============================================================
-         4. CTA SECTION
-       =============================================================== --}}
+    {{-- 4. CTA SECTION --}}
     <section class="border-t-2 border-black bg-[var(--color-court-yellow)] py-20">
         <div class="mx-auto max-w-4xl px-4 text-center">
             <h2 class="mb-6 font-display text-5xl uppercase text-black md:text-7xl">

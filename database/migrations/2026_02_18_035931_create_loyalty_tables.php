@@ -24,7 +24,6 @@ return new class extends Migration
     Schema::create('user_rewards', function (Blueprint $table) {
         $table->id();
         $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        // Pilihan: 'pending' (belum pilih), 'discount', 'tumbler', 'towel', 'voucher'
         $table->string('reward_type')->default('pending'); 
         $table->boolean('is_used')->default(false); // False = Belum dipakai/diambil
         $table->timestamps();
