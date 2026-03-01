@@ -47,7 +47,7 @@
                                 {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
                             @endif
                         </p>
-                        <p class="text-[10px] text-gray-500 italic mt-1">"{{ $event->description }}"</p>
+                        <p class="text-[15px] text-gray-500 italic mt-1">"{{ $event->description }}"</p>
                     </div>
                 </div>
             @endforeach
