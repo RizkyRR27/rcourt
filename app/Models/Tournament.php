@@ -20,10 +20,11 @@ class Tournament extends Model
     public static function findBlockingEvent($date)
     {
         $userDate = Carbon::parse($date);
+        $dateString = $userDate->format('Y-m-d');
 
         $oneTimeEvent = self::where('is_recurring', false)
-            ->whereDate('start_date', '<=', $userDate)
-            ->whereDate('end_date', '>=', $userDate)
+            ->where('start_date', '<=', $dateString)
+            ->where('end_date', '>=', $dateString)
             ->first();
 
         if ($oneTimeEvent) {
