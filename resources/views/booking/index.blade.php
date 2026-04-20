@@ -30,28 +30,33 @@
                         $tournaments = \App\Models\Tournament::all();
                     @endphp
 
-                    @foreach ($tournaments as $event)
-                        <div class="flex items-start gap-3 border-b-2 border-black/10 pb-2">
-                            <!-- <div class="text-2xl">
-                        {{ $event->is_recurring }}
-                    </div> -->
-                            <div>
-                                <h4 class="font-bold font-mono text-sm uppercase">{{ $event->name }}</h4>
-                                <p class="text-xs text-gray-600 font-mono mt-1">
-                                    @if ($event->is_recurring)
-                                        <span class="bg-blue-100 px-1 border border-black text-[10px]">TIAP TAHUN</span>
-                                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M') }}
-                                        s/d
-                                        {{ \Carbon\Carbon::parse($event->end_date)->format('d M') }}
-                                    @else
-                                        <span class="bg-gray-200 px-1 border border-black text-[10px]">Seminggu</span>
-                                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
-                                    @endif
-                                </p>
-                                <p class="text-[15px] text-gray-500 italic mt-1">"{{ $event->description }}"</p>
-                            </div>
+                    @if ($tournaments->isEmpty())
+                        <div class="col-span-2 text-sm text-gray-600 italic">
+                            Belum ada jadwal penutupan lapangan yang terdaftar saat ini.
                         </div>
-                    @endforeach
+                    @else
+                        @foreach ($tournaments as $event)
+                            <div class="flex items-start gap-3 border-b-2 border-black/10 pb-2">
+                                <div>
+                                    <h4 class="font-bold font-mono text-sm uppercase">{{ $event->name }}</h4>
+                                    <p class="text-xs text-gray-600 font-mono mt-1">
+                                        @if ($event->is_recurring)
+                                            <span class="bg-blue-100 px-1 border border-black text-[10px]">TIAP TAHUN</span>
+                                            {{ \Carbon\Carbon::parse($event->start_date)->format('d M') }}
+                                            s/d
+                                            {{ \Carbon\Carbon::parse($event->end_date)->format('d M') }}
+                                        @else
+                                            <span class="bg-gray-200 px-1 border border-black text-[10px]">Seminggu</span>
+                                            {{ \Carbon\Carbon::parse($event->start_date)->format('d M Y') }}
+                                            s/d
+                                            {{ \Carbon\Carbon::parse($event->end_date)->format('d M Y') }}
+                                        @endif
+                                    </p>
+                                    <p class="text-[15px] text-gray-500 italic mt-1">"{{ $event->description }}"</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>

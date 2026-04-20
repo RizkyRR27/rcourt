@@ -40,41 +40,12 @@ class BookingController extends Controller
         }
         $userDate = Carbon::parse($date);
 
-        $oneTimeEvent = Tournament::where('is_recurring', false)
-            ->whereDate('start_date', '<=', $userDate)
-            ->whereDate('end_date', '>=', $userDate)
-            ->first();
-
-        if ($oneTimeEvent) {
-            // Kalau kena tanggal ini, langsung tolak!
+        $tournamentEvent = Tournament::findBlockingEvent($date);
+        if ($tournamentEvent) {
             return redirect()->route('booking')->with(
                 'error',
-                '⛔ MAAF! Tanggal ' . $userDate->format('d M Y') . ' ditutup untuk event: ' . $oneTimeEvent->name
+                '⛔ MAAF! Tanggal ' . $userDate->format('d M Y') . ' ditutup untuk event: ' . $tournamentEvent->name
             );
-        }
-
-        $recurringEvents = Tournament::where('is_recurring', true)->get();
-
-
-        foreach ($recurringEvents as $event) {
-            // Kita "paksa" tahun turnamen jadi tahun pilihan user
-            // Tambahkan startOfDay() agar jamnya mulai 00:00:00
-            $start = Carbon::parse($event->start_date)
-                ->setYear($userDate->year)
-                ->startOfDay();
-
-            // Tambahkan endOfDay() agar jamnya berakhir 23:59:59
-            $end   = Carbon::parse($event->end_date)
-                ->setYear($userDate->year)
-                ->endOfDay();
-
-            // Cek apakah tanggal user ada di antara rentang itu
-            if ($userDate->between($start, $end)) {
-                return redirect()->route('booking')->with(
-                    'error',
-                    '⛔ MAAF! Tanggal ini kena jadwal rutin tahunan: ' . $event->name
-                );
-            }
         }
 
 
@@ -178,6 +149,15 @@ class BookingController extends Controller
         // 3. Ambil Data Lapangan
         $availableCourt = Court::find($courtId);
 
+        // 2. VALIDASI JIKA TANGGAL TERKENA TURNAMEN
+        $tournamentEvent = Tournament::findBlockingEvent($date);
+        if ($tournamentEvent) {
+            return redirect()->route('booking')->with(
+                'error',
+                '⛔ MAAF! Tanggal ' . Carbon::parse($date)->format('d M Y') . ' ditutup untuk event: ' . $tournamentEvent->name
+            );
+        }
+
         // 4. Tampilkan Halaman Checkout
         // Simpan sementara ke session sebagai fallback jika form hidden hilang
         session(['booking' => [
@@ -235,14 +215,12 @@ class BookingController extends Controller
         // SATPAM 1: CEK TURNAMEN (LAGI)
         // Wajib cek lagi disini untuk mencegah pembobolan lewat URL / Backdoor
         // =================================================================
-        $isTournament = Tournament::where('start_date', '<=', $request->date)
-            ->where('end_date', '>=', $request->date)
-            ->first();
+        $tournamentEvent = Tournament::findBlockingEvent($request->date);
 
-        if ($isTournament) {
+        if ($tournamentEvent) {
             return redirect()->route('booking')->with(
                 'error',
-                'GAGAL BOOKING! Tanggal ' . $request->date . ' dipakai untuk event: ' . $isTournament->name
+                'GAGAL BOOKING! Tanggal ' . Carbon::parse($request->date)->format('d M Y') . ' dipakai untuk event: ' . $tournamentEvent->name
             );
         }
 
