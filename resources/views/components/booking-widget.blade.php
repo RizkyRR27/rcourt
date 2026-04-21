@@ -109,12 +109,13 @@
                                                 date),
                                             'border-transparent hover:border-black hover:bg-[var(--color-court-yellow)]':
                                                 !
-                                                isSelected(date) && !isPast(date),
-                                            'border-transparent text-gray-300 cursor-not-allowed': isPast(date),
+                                                isSelected(date) && !isDisabled(date),
+                                            'border-transparent text-gray-300 cursor-not-allowed': isDisabled(date),
                                             'border-black bg-[var(--color-court-paper)]': isToday(date) && !isSelected(
                                                 date)
                                         }"
-                                        :disabled="isPast(date)" x-text="date">
+                                        :disabled="isDisabled(date)"
+                                        x-text="date">
                                     </button>
                                 </template>
                             </div>
@@ -223,7 +224,7 @@
                         },
 
                         selectDate(day) {
-                            if (this.isPast(day)) return;
+                            if (this.isDisabled(day)) return;
                             const m = String(this.currentMonth + 1).padStart(2, '0');
                             const d = String(day).padStart(2, '0');
                             this.selectedDate = `${this.currentYear}-${m}-${d}`;
@@ -252,11 +253,11 @@
                                 this.currentYear === today.getFullYear();
                         },
 
-                        isPast(day) {
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
+                        isDisabled(day) {
+                            // Disable booking for January (1) and May (5)
                             const check = new Date(this.currentYear, this.currentMonth, day);
-                            return check < today;
+                            const month = check.getMonth() + 1; // getMonth() is 0-based
+                            return month === 1 || month === 5;
                         },
 
                         formatDisplay(dateStr) {
