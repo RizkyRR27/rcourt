@@ -253,11 +253,12 @@
                                 this.currentYear === today.getFullYear();
                         },
 
-                        isDisabled(day) {
-                            // Disable booking for January (1) and May (5)
-                            const check = new Date(this.currentYear, this.currentMonth, day);
-                            const month = check.getMonth() + 1; // getMonth() is 0-based
-                            return month === 1 || month === 5;
+                       isDisabled(day) {
+                        
+                            const checkDate = new Date(this.currentYear, this.currentMonth, day);
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return checkDate < today;
                         },
 
                         formatDisplay(dateStr) {
