@@ -40,15 +40,7 @@ class BookingController extends Controller
         }
         $userDate = Carbon::parse($date);
 
-        // =================================================================
-        // CEK BULAN TERLARANG (Januari dan Mei)
-        // =================================================================
-        if ($userDate->month == 1 || $userDate->month == 5) {
-            return redirect()->route('booking')->with(
-                'error',
-                'Maaf, booking tidak diperbolehkan di bulan Januari dan Mei.'
-            );
-        }
+       
 
         $tournamentEvent = Tournament::findBlockingEvent($date);
         if ($tournamentEvent) {
@@ -168,16 +160,7 @@ class BookingController extends Controller
             );
         }
 
-        // =================================================================
-        // CEK BULAN TERLARANG (Januari dan Mei)
-        // =================================================================
-        $bookingDate = Carbon::parse($date);
-        if ($bookingDate->month == 1 || $bookingDate->month == 5) {
-            return redirect()->route('booking')->with(
-                'error',
-                'Maaf, booking tidak diperbolehkan di bulan Januari dan Mei.'
-            );
-        }
+       
 
         // 4. Tampilkan Halaman Checkout
         // Simpan sementara ke session sebagai fallback jika form hidden hilang
@@ -232,16 +215,7 @@ class BookingController extends Controller
             'phone.regex' => 'Format nomor tidak valid. Gunakan format Indonesia (contoh: 081234567890).',
         ]);
 
-        // =================================================================
-        // CEK BULAN TERLARANG (Januari dan Mei)
-        // =================================================================
-        $bookingDate = Carbon::parse($request->date);
-        if ($bookingDate->month == 1 || $bookingDate->month == 5) {
-            return redirect()->route('booking')->with(
-                'error',
-                'Maaf, booking tidak diperbolehkan di bulan Januari dan Mei.'
-            );
-        }
+        
 
         // =================================================================
         // SATPAM 1: CEK TURNAMEN (LAGI)
