@@ -20,9 +20,10 @@ class Tournament extends Model
     public static function findBlockingEvent($date)
     {
         $userDate = Carbon::parse($date);
-        $dateString = $userDate->format('Y-m-d');
+        $dateString = $userDate->format('Y-m-d'); // Format pasti YYYY-MM-DD
 
-        $oneTimeEvent = self::where('is_recurring', false)
+        // 1. Cek Event Sekali Jalan (Gunakan angka 0 untuk TiDB)
+        $oneTimeEvent = self::where('is_recurring', 0)
             ->where('start_date', '<=', $dateString)
             ->where('end_date', '>=', $dateString)
             ->first();
@@ -31,7 +32,8 @@ class Tournament extends Model
             return $oneTimeEvent;
         }
 
-        $recurringEvents = self::where('is_recurring', true)->get();
+        // 2. Cek Event Tahunan/Berulang (Gunakan angka 1)
+        $recurringEvents = self::where('is_recurring', 1)->get();
 
         foreach ($recurringEvents as $event) {
             $start = Carbon::parse($event->start_date)
